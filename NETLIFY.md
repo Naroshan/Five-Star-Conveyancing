@@ -1,75 +1,82 @@
 # Deploying to Netlify
 
-## Repo layout this config assumes
+Same honesty note as `DEPLOYMENT.md`: I can't reach Netlify from this
+sandbox to test this myself. This is my best guidance based on how
+Netlify's Next.js Runtime works — the repo structure and database steps
+I've verified directly; the exact wording of Netlify's UI, I haven't.
+
+## What's already done for you
+- `@netlify/plugin-nextjs` is installed in `five-star-web/package.json`
+  and `package-lock.json` (real install, not just typed in by hand).
+- `netlify.toml` is ready — put it at the root of your Git repository.
+- `quote-engine/dist/` and the packed `.tgz` are already built (in the
+  files I've given you) — commit them rather than gitignoring them, same
+  reasoning as the Vercel guide: it means Netlify's standard `npm install`
+  just finds and extracts the tarball via the existing `file:` dependency
+  in `five-star-web/package.json`, no custom build orchestration needed.
+
+## Repository structure required
 
 ```
-/                     <- repo root (this file and netlify.toml live here)
-  netlify.toml
-  NETLIFY.md
-  quote-engine/        <- database schema + repository layer (this repo's current content)
-  five-star-web/        <- Next.js frontend that consumes quote-engine (NOT YET PRESENT in this repo)
+your-repo/
+├── netlify.toml              ← at the root, not inside either project
+├── quote-engine/
+│   ├── dist/                 ← commit this
+│   ├── five-star-conveyancing-quote-engine-0.2.0.tgz   ← commit this
+│   └── ...
+└── five-star-web/
+    └── ...
 ```
 
-`netlify.toml` sits at the repo root as a sibling to both `quote-engine/`
-and `five-star-web/` — not inside either one. Netlify always checks out the
-whole repo (unlike some other platforms, there's no "include outside root
-directory" toggle to worry about), so `base = "five-star-web"` tells it
-where to run the build from.
+## Steps
 
-## Status
+1. **Get the code into a Git repo** with the structure above (see
+   `DEPLOYMENT.md` Step 1 for the exact `git init`/push commands — same
+   process regardless of which host you deploy to).
 
-**`five-star-web/` does not exist in this repo yet.** This `netlify.toml`
-and this guide are scaffolded ahead of that hand-over, per the brief. Once
-`five-star-web/` is added:
+2. **Set up the database on a managed Postgres provider.** Netlify doesn't
+   host Postgres itself, so you still need something like Neon or
+   Supabase (both free to start) — see `DEPLOYMENT.md` Step 2 for the
+   schema-init and seed-script commands. Same database works with either
+   Netlify or Vercel; it's independent of which app host you pick.
 
-- Its `package.json` needs `@netlify/plugin-nextjs` installed (`npm install
-  --save-dev @netlify/plugin-nextjs` from inside `five-star-web/`) so the
-  lockfile and `package.json` are accurate — don't hand-edit the plugin
-  version into `package.json` without running the install.
-- If `five-star-web/` depends on `quote-engine/` as a package (e.g. via a
-  packed `.tgz`), that tarball needs to be **committed**, not gitignored —
-  Netlify's plain `npm install` has no custom build command to rebuild it
-  on the fly, so the tarball must already be sitting in the repo for
-  `npm install` to resolve the dependency.
+3. **Create the Netlify site:**
+   - netlify.com → "Add new site" → "Import an existing project" → connect
+     GitHub → pick the repository.
+   - Netlify should detect `netlify.toml` automatically and pre-fill the
+     base directory, build command, and publish directory from it. If it
+     shows a manual config screen instead, set: **Base directory**
+     `five-star-web`, **Build command** `npm run build`, **Publish
+     directory** `five-star-web/.next`.
 
-## Steps once five-star-web/ is in place
+4. **Add the environment variable.** Site configuration → Environment
+   variables → add `DATABASE_URL` with your Neon/Supabase connection
+   string. This is the one step that has to happen in Netlify's dashboard,
+   not in any file — never commit a real connection string to the repo.
 
-1. Confirm `five-star-web/package.json` lists `@netlify/plugin-nextjs` as a
-   dependency (installed via npm, not hand-typed) and that its lockfile is
-   committed.
-2. Confirm the `quote-engine` dependency (if consumed as a package) points
-   at the committed `.tgz`, and that the `.tgz` is fresh — rebuild and
-   recommit it if `quote-engine/` changed since it was last packed.
-3. Push to the branch Netlify is watching, or connect the repo in the
-   Netlify UI: Add new site → Import an existing project → pick this repo.
-   Netlify will read `netlify.toml` from the root automatically.
-4. Set any required environment variables (e.g. `DATABASE_URL` for
-   server-side rendering that hits the database) in Netlify's Site
-   settings → Environment variables — never commit them to `netlify.toml`
-   or the repo.
-5. Trigger a deploy and check the build log. `base = "five-star-web"`
-   means all build commands run with that directory as the working
-   directory, so paths in `package.json` scripts should be relative to
-   `five-star-web/`, not the repo root.
+5. **Deploy.** Netlify builds and gives you a `https://<something>.netlify.app`
+   URL.
 
-## Troubleshooting
+## If the build fails
 
-- **"Module not found: quote-engine"** — the `.tgz` either isn't committed
-  or is stale relative to `package.json`'s reference to it. Rebuild the
-  tarball from `quote-engine/` and commit the new one.
-- **Build succeeds but `@netlify/plugin-nextjs` isn't applied** — check
-  that the plugin is declared both in `five-star-web/package.json`
-  (installed as a dependency) and in this root `netlify.toml`'s
-  `[[plugins]]` block; Netlify needs the package resolvable from
-  `base = "five-star-web"`.
-- **Netlify can't find `netlify.toml`** — it must be at the repo root, not
-  inside `quote-engine/` or `five-star-web/`.
+- **Can't resolve `five-star-conveyancing-quote-engine`** — almost
+  certainly means the `.tgz` file wasn't actually committed to the repo
+  (check `git status` in `quote-engine/` — build artifacts are often
+  gitignored by default, so double-check `dist/` and the `.tgz` aren't
+  being excluded).
+- **Node version errors** — `netlify.toml` pins Node 20 explicitly
+  (`NODE_VERSION = "20"`); if Netlify's using something older, check
+  nothing in the site's own dashboard settings is overriding it.
+- **Database connection errors at runtime** (build succeeds, but pages
+  error) — check the `DATABASE_URL` environment variable is actually set
+  in the Netlify dashboard and that your Postgres provider allows
+  connections from Netlify's IP ranges (Neon and Supabase both allow
+  external connections by default, but it's worth checking if this is the
+  specific failure).
 
-## Caveat
+## Same caution as before
 
-This guide documents the intended structure and Netlify's documented
-build behavior — it has not been verified against an actual live Netlify
-build from this repo, since `five-star-web/` isn't present yet to test
-against. If the real build fails on something once `five-star-web/` is
-added, paste the error and it'll get fixed from what's actually happening
-rather than guessed at again.
+Point this at a fresh demo database (via `seed-demo-database.ts`), not
+`five_star_data` — the real Ackroyd Legal data has no business being
+reachable from a public URL, and none of it is approved yet regardless of
+who can see it.

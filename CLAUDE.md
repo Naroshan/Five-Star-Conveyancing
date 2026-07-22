@@ -5,18 +5,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Repo layout
 
 This repo is a monorepo root. `netlify.toml` and `NETLIFY.md` live at the
-root as siblings to `quote-engine/` and (once it's added) `five-star-web/`
-— see `NETLIFY.md` for the full deploy setup and why the layout matters
-(Netlify's `base` build setting, the committed dependency tarball, etc.).
-`five-star-web/` (the Next.js frontend) **is not present in this repo
-yet** — it's referenced by `netlify.toml`/`NETLIFY.md` ahead of its
-hand-over.
+root as siblings to `quote-engine/` and `five-star-web/` — see `NETLIFY.md`
+for the full deploy setup and why the layout matters (Netlify's `base`
+build setting, the committed dependency tarball, etc.).
 
 ```
 /                      <- repo root: netlify.toml, NETLIFY.md, CLAUDE.md
   quote-engine/         <- Module 2 (database & repository layer), documented below
-  five-star-web/        <- Next.js frontend (NOT YET PRESENT)
+  five-star-web/        <- Next.js frontend — package.json only so far, see below
 ```
+
+**`five-star-web/` currently contains only `package.json`** — no app
+source (`app/`, `pages/`, components, etc.), no `tsconfig.json`, no
+lockfile. Its `package.json` declares a `file:` dependency on
+`../quote-engine/five-star-conveyancing-quote-engine-0.2.0.tgz`, but that
+tarball — and the `quote-engine/dist/` it would be built from — **do not
+exist in this repo**. `npm install` in `five-star-web/` will fail until
+one of them is added. `NETLIFY.md` also references a `DEPLOYMENT.md` that
+is not present in this repo. Check with the user before assuming these are
+simply "not handed over yet" vs. lost.
 
 ## What's actually in `quote-engine/` right now
 

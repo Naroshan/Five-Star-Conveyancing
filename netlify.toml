@@ -1,7 +1,28 @@
+# Five Star Conveyancing — Netlify configuration
+#
+# This file goes at the ROOT of your Git repository — the parent folder
+# containing both quote-engine/ and five-star-web/ as siblings, not inside
+# either of them.
+#
+# `base` tells Netlify to run install/build commands from inside
+# five-star-web/, but Netlify still checks out the *entire* repository
+# first, so the sibling quote-engine/ folder (and the pre-built
+# five-star-conveyancing-quote-engine-0.2.0.tgz inside it — see
+# DEPLOYMENT.md on why that's committed rather than gitignored) is present
+# and reachable via the relative "file:" path already in
+# five-star-web/package.json. No custom install command needed.
+
 [build]
   base = "five-star-web"
-  command = "npm install && npm run build"
+  command = "npm run build"
   publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# DATABASE_URL is deliberately not set here — add it in Netlify's own
+# dashboard (Site configuration → Environment variables), never commit a
+# real connection string into this file or anywhere in the repo.
