@@ -2,34 +2,54 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## What's actually in this repo right now
+## Repo layout
 
-This repo currently contains only **Module 2 (database & repository layer)** of
+This repo is a monorepo root. `netlify.toml` and `NETLIFY.md` live at the
+root as siblings to `quote-engine/` and (once it's added) `five-star-web/`
+— see `NETLIFY.md` for the full deploy setup and why the layout matters
+(Netlify's `base` build setting, the committed dependency tarball, etc.).
+`five-star-web/` (the Next.js frontend) **is not present in this repo
+yet** — it's referenced by `netlify.toml`/`NETLIFY.md` ahead of its
+hand-over.
+
+```
+/                      <- repo root: netlify.toml, NETLIFY.md, CLAUDE.md
+  quote-engine/         <- Module 2 (database & repository layer), documented below
+  five-star-web/        <- Next.js frontend (NOT YET PRESENT)
+```
+
+## What's actually in `quote-engine/` right now
+
+This directory currently contains only **Module 2 (database & repository layer)** of
 a larger "Stage 6" quote-engine project, plus the schema it's built on:
 
-- `schema.sql` — PostgreSQL 16 DDL (structural only, no real firm/fee/lender
-  data — see "Never invent real data" below).
-- `src/db/schema.ts` — Kysely table types mirroring `schema.sql` exactly
-  (snake_case, matching real DB columns 1:1).
-- `src/db/client.ts` — Kysely/`pg` connection factory (`createDb`).
-- `src/db/repository.ts` — the repository functions: `loadFirmRuleSet`,
+- `quote-engine/schema.sql` — PostgreSQL 16 DDL (structural only, no real
+  firm/fee/lender data — see "Never invent real data" below).
+- `quote-engine/src/db/schema.ts` — Kysely table types mirroring
+  `schema.sql` exactly (snake_case, matching real DB columns 1:1).
+- `quote-engine/src/db/client.ts` — Kysely/`pg` connection factory (`createDb`).
+- `quote-engine/src/db/repository.ts` — the repository functions: `loadFirmRuleSet`,
   `loadActiveFirmRuleSets`, `saveQuote`, `saveQuoteResults`,
   `getQuoteByReference`.
-- `tests/repository.integration.test.ts` — integration tests that run
+- `quote-engine/tests/repository.integration.test.ts` — integration tests that run
   against a real Postgres instance.
 
 **Module 1 (the calculation engine)** — `src/types.ts`, `src/eligibility.ts`,
-`src/sdltModule.ts`, `src/quoteEngine.ts`, `tests/quoteEngine.test.ts` — is
-described in `README.md` and is imported by both `repository.ts` (`../types.js`)
-and the integration test (`calculateQuoteForFirm` from `../src/quoteEngine.js`),
-but **those files are not present in this repo yet**. There is also no
-`package.json`, `tsconfig.json`, or lockfile checked in. Any of these missing
-pieces will need to be created/restored before `npm install`, `npm run
-typecheck`, or either test command in `README.md` will actually run. Check
-with the user before assuming these are simply "not written yet" vs. lost —
-`README.md`'s own file inventory expects them to exist.
+`src/sdltModule.ts`, `src/quoteEngine.ts`, `tests/quoteEngine.test.ts` (all
+under `quote-engine/`) — is described in `quote-engine/README.md` and is
+imported by both `repository.ts` (`../types.js`) and the integration test
+(`calculateQuoteForFirm` from `../src/quoteEngine.js`), but **those files
+are not present in this repo yet**. There is also no `package.json`,
+`tsconfig.json`, or lockfile checked in under `quote-engine/`. Any of these
+missing pieces will need to be created/restored before `npm install`, `npm
+run typecheck`, or either test command in `quote-engine/README.md` will
+actually run. Check with the user before assuming these are simply "not
+written yet" vs. lost — `README.md`'s own file inventory expects them to
+exist.
 
-## Commands (per README.md — verify they work once package.json exists)
+## Commands (per quote-engine/README.md — verify they work once package.json exists)
+
+Run from inside `quote-engine/`:
 
 ```bash
 npm install
@@ -42,7 +62,7 @@ Integration tests need a disposable Postgres database with `schema.sql` applied:
 
 ```bash
 createdb five_star_test
-psql -d five_star_test -f schema.sql
+psql -d five_star_test -f quote-engine/schema.sql
 DATABASE_URL="postgres://user:pass@localhost:5432/five_star_test" npm run test:integration
 ```
 
@@ -53,12 +73,15 @@ integration suite truncates `quote_results, quotes, disbursement_rules,
 fee_rules, fee_value_bands, firm_restrictions, firm_transaction_types, firms`
 in `beforeEach`.
 
+For the Netlify deploy of `five-star-web/` (once present), see `NETLIFY.md`.
+
 ## Architecture
 
-**Domain flow:** `schema.sql` (Postgres) → `src/db/schema.ts` (Kysely
-snake_case row types) → `src/db/repository.ts` (maps rows to camelCase
-domain types from `src/types.ts`) → quote calculation engine (Module 1,
-not yet present) → `src/db/repository.ts` again to persist `QuoteResult[]`.
+**Domain flow:** `quote-engine/schema.sql` (Postgres) →
+`quote-engine/src/db/schema.ts` (Kysely snake_case row types) →
+`quote-engine/src/db/repository.ts` (maps rows to camelCase domain types
+from `src/types.ts`) → quote calculation engine (Module 1, not yet
+present) → `repository.ts` again to persist `QuoteResult[]`.
 
 - **Two type systems, one boundary.** `src/db/schema.ts` types are
   snake_case and match the database exactly; nothing outside `src/db/`
