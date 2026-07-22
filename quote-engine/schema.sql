@@ -32,6 +32,44 @@ create table firm_restrictions (
   notes text
 );
 
+create table admin_users (
+  user_id uuid primary key default gen_random_uuid(),
+  name text not null,
+  email text not null unique,
+  role text not null check (role in
+    ('super_admin', 'content_editor', 'fee_administrator', 'compliance_reviewer',
+     'firm_user', 'lead_management_user', 'reporting_user')),
+  firm_id uuid references firms(firm_id), -- populated only for role = 'firm_user', scopes their access
+  password_hash text not null,
+  mfa_secret text, -- null until enrolled; set together with mfa_enabled=true on confirmed enrollment
+  mfa_enabled boolean not null default false,
+  account_status text not null default 'active' check (account_status in ('active', 'suspended')),
+  failed_login_attempts integer not null default 0,
+  locked_until timestamptz,
+  created_at timestamptz not null default now()
+);
+
+create table admin_sessions (
+  session_id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references admin_users(user_id),
+  created_at timestamptz not null default now(),
+  expires_at timestamptz not null,
+  last_used_at timestamptz not null default now(),
+  user_agent text
+);
+
+create table audit_log (
+  log_id uuid primary key default gen_random_uuid(),
+  actor_user_id uuid not null references admin_users(user_id),
+  entity_type text not null,
+  entity_id uuid not null,
+  action text not null check (action in ('create', 'update', 'submit_for_review', 'approve', 'reject')),
+  before_value jsonb,
+  after_value jsonb,
+  reason text,
+  created_at timestamptz not null default now()
+);
+
 create table fee_value_bands (
   band_id uuid primary key default gen_random_uuid(),
   firm_id uuid not null references firms(firm_id),
@@ -43,7 +81,10 @@ create table fee_value_bands (
   effective_date date not null,
   expiry_date date,
   approval_status text not null default 'draft'
-    check (approval_status in ('draft', 'pending_review', 'approved', 'rejected'))
+    check (approval_status in ('draft', 'pending_review', 'approved', 'rejected')),
+  created_by uuid references admin_users(user_id),
+  last_modified_by uuid references admin_users(user_id),
+  supersedes_band_id uuid references fee_value_bands(band_id)
 );
 
 create table fee_rules (
@@ -66,7 +107,10 @@ create table fee_rules (
   approval_status text not null default 'draft'
     check (approval_status in ('draft', 'pending_review', 'approved', 'rejected')),
   display_order integer not null default 0,
-  client_facing_explanation text not null
+  client_facing_explanation text not null,
+  created_by uuid references admin_users(user_id),
+  last_modified_by uuid references admin_users(user_id),
+  supersedes_fee_rule_id uuid references fee_rules(fee_rule_id)
 );
 
 create table disbursement_rules (
@@ -86,7 +130,10 @@ create table disbursement_rules (
   approval_status text not null default 'draft'
     check (approval_status in ('draft', 'pending_review', 'approved', 'rejected')),
   display_order integer not null default 0,
-  client_facing_explanation text not null
+  client_facing_explanation text not null,
+  created_by uuid references admin_users(user_id),
+  last_modified_by uuid references admin_users(user_id),
+  supersedes_disbursement_id uuid references disbursement_rules(disbursement_id)
 );
 
 create table sdlt_ltt_rate_table (
@@ -117,6 +164,7 @@ create table quote_results (
   firm_id uuid not null references firms(firm_id),
   eligibility_status text not null check (eligibility_status in ('eligible', 'excluded_with_reason')),
   exclusion_reason text,
+  line_items jsonb not null default '[]'::jsonb,
   legal_fee_subtotal numeric,
   vat_amount numeric,
   disbursements_total numeric,
@@ -129,3 +177,5 @@ create index idx_fee_value_bands_lookup on fee_value_bands (firm_id, transaction
 create index idx_fee_rules_lookup on fee_rules (firm_id, transaction_type, approval_status);
 create index idx_disbursement_rules_lookup on disbursement_rules (firm_id, transaction_type, approval_status);
 create index idx_quote_results_quote on quote_results (quote_id);
+create index idx_admin_sessions_user on admin_sessions (user_id);
+create index idx_admin_sessions_expiry on admin_sessions (expires_at);

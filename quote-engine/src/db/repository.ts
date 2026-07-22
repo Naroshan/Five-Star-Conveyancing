@@ -29,6 +29,12 @@ function toDateOnlyStringOrNull(value: Date | string | null): string | null {
   return value === null ? null : toDateOnlyString(value);
 }
 
+export async function loadFirmsByIds(db: Kysely<Database>, firmIds: string[]): Promise<Map<string, Firm>> {
+  if (firmIds.length === 0) return new Map();
+  const rows = await db.selectFrom('firms').selectAll().where('firm_id', 'in', firmIds).execute();
+  return new Map(rows.map((row) => [row.firm_id, mapFirm(row)]));
+}
+
 export async function loadFirmRuleSet(
   db: Kysely<Database>,
   firmId: string,
@@ -133,6 +139,36 @@ export async function loadActiveFirmRuleSets(
   }));
 }
 
+export async function loadSdltBands(
+  db: Kysely<Database>,
+  jurisdiction: 'england' | 'wales',
+  asOfDate: string = new Date().toISOString().slice(0, 10)
+) {
+  const rows = await db
+    .selectFrom('sdlt_ltt_rate_table')
+    .selectAll()
+    .where('jurisdiction', '=', jurisdiction)
+    .execute();
+
+  // Effective/expiry filtering done in JS rather than in SQL — Kysely's typed
+  // `where` doesn't have a clean way to compare a ColumnType<Date, ...> column
+  // against a plain ISO string, and this table is small enough that filtering
+  // in memory is fine.
+  return rows
+    .filter((r) => toDateOnlyString(r.effective_date) <= asOfDate)
+    .filter((r) => r.expiry_date === null || toDateOnlyString(r.expiry_date) > asOfDate)
+    .map((r) => ({
+      jurisdiction: r.jurisdiction,
+      bandMin: r.band_min,
+      bandMax: r.band_max,
+      ratePercentage: r.rate_percentage,
+      reliefType: r.relief_type,
+      effectiveDate: toDateOnlyString(r.effective_date),
+      expiryDate: toDateOnlyStringOrNull(r.expiry_date),
+      sourceReference: r.source_reference,
+    }));
+}
+
 export async function saveQuote(
   db: Kysely<Database>,
   params: { quoteReference: string; transactionType: TransactionType; clientAnswers: ClientAnswers; expiryAt: Date }
@@ -161,6 +197,7 @@ export async function saveQuoteResults(db: Kysely<Database>, quoteId: string, re
         firm_id: r.firmId,
         eligibility_status: r.eligibilityStatus,
         exclusion_reason: r.exclusionReason,
+        line_items: JSON.stringify(r.lineItems),
         legal_fee_subtotal: r.eligibilityStatus === 'eligible' ? r.legalFeeSubtotal : null,
         vat_amount: r.eligibilityStatus === 'eligible' ? r.vatTotal : null,
         disbursements_total: r.eligibilityStatus === 'eligible' ? r.disbursementsTotal : null,
@@ -175,7 +212,14 @@ export async function saveQuoteResults(db: Kysely<Database>, quoteId: string, re
 export async function getQuoteByReference(
   db: Kysely<Database>,
   quoteReference: string
-): Promise<{ quoteId: string; transactionType: TransactionType; clientAnswers: ClientAnswers; results: QuoteResult[] } | null> {
+): Promise<{
+  quoteId: string;
+  transactionType: TransactionType;
+  clientAnswers: ClientAnswers;
+  expiryAt: Date;
+  status: 'active' | 'expired' | 'converted';
+  results: QuoteResult[];
+} | null> {
   const quoteRow = await db
     .selectFrom('quotes')
     .selectAll()
@@ -189,11 +233,13 @@ export async function getQuoteByReference(
     quoteId: quoteRow.quote_id,
     transactionType: quoteRow.transaction_type as TransactionType,
     clientAnswers: parseJsonColumn<ClientAnswers>(quoteRow.client_answers),
+    expiryAt: quoteRow.expiry_at,
+    status: quoteRow.status,
     results: resultRows.map((r) => ({
       firmId: r.firm_id,
       eligibilityStatus: r.eligibility_status,
       exclusionReason: r.exclusion_reason,
-      lineItems: [], // line items aren't persisted individually in this schema — only totals + audit
+      lineItems: parseJsonColumn(r.line_items),
       legalFeeSubtotal: r.legal_fee_subtotal ?? 0,
       vatTotal: r.vat_amount ?? 0,
       disbursementsTotal: r.disbursements_total ?? 0,
@@ -204,16 +250,22 @@ export async function getQuoteByReference(
   };
 }
 
+export async function markQuoteExpired(db: Kysely<Database>, quoteId: string): Promise<void> {
+  await db.updateTable('quotes').set({ status: 'expired' }).where('quote_id', '=', quoteId).where('status', '=', 'active').execute();
+}
+
 function parseJsonColumn<T>(value: unknown): T {
   return typeof value === 'string' ? (JSON.parse(value) as T) : (value as T);
 }
 
 // --- row -> domain mappers ---
 
-function mapFirm(row: Selectable<Database['firms']>): Firm {
+export function mapFirm(row: Selectable<Database['firms']>): Firm {
   return {
     firmId: row.firm_id,
     legalEntityName: row.legal_entity_name,
+    tradingName: row.trading_name,
+    sraNumber: row.sra_number,
     status: row.status,
     quoteValidityDays: row.quote_validity_days,
   };
@@ -239,7 +291,7 @@ function mapFirmRestriction(row: Selectable<Database['firm_restrictions']>): Fir
   };
 }
 
-function mapFeeValueBand(row: Selectable<Database['fee_value_bands']>): FeeValueBand {
+export function mapFeeValueBand(row: Selectable<Database['fee_value_bands']>): FeeValueBand {
   return {
     bandId: row.band_id,
     firmId: row.firm_id,
@@ -251,10 +303,13 @@ function mapFeeValueBand(row: Selectable<Database['fee_value_bands']>): FeeValue
     effectiveDate: toDateOnlyString(row.effective_date),
     expiryDate: toDateOnlyStringOrNull(row.expiry_date),
     approvalStatus: row.approval_status,
+    createdBy: row.created_by,
+    lastModifiedBy: row.last_modified_by,
+    supersedesBandId: row.supersedes_band_id,
   };
 }
 
-function mapFeeRule(row: Selectable<Database['fee_rules']>): FeeRule {
+export function mapFeeRule(row: Selectable<Database['fee_rules']>): FeeRule {
   return {
     feeRuleId: row.fee_rule_id,
     firmId: row.firm_id,
@@ -275,10 +330,13 @@ function mapFeeRule(row: Selectable<Database['fee_rules']>): FeeRule {
     approvalStatus: row.approval_status,
     displayOrder: row.display_order,
     clientFacingExplanation: row.client_facing_explanation,
+    createdBy: row.created_by,
+    lastModifiedBy: row.last_modified_by,
+    supersedesFeeRuleId: row.supersedes_fee_rule_id,
   };
 }
 
-function mapDisbursementRule(row: Selectable<Database['disbursement_rules']>): DisbursementRule {
+export function mapDisbursementRule(row: Selectable<Database['disbursement_rules']>): DisbursementRule {
   return {
     disbursementId: row.disbursement_id,
     firmId: row.firm_id,
@@ -296,5 +354,8 @@ function mapDisbursementRule(row: Selectable<Database['disbursement_rules']>): D
     approvalStatus: row.approval_status,
     displayOrder: row.display_order,
     clientFacingExplanation: row.client_facing_explanation,
+    createdBy: row.created_by,
+    lastModifiedBy: row.last_modified_by,
+    supersedesDisbursementId: row.supersedes_disbursement_id,
   };
 }

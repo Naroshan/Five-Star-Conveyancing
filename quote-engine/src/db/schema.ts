@@ -47,6 +47,9 @@ export interface FeeValueBandsTable {
   effective_date: DateOnly;
   expiry_date: DateOnly | null;
   approval_status: 'draft' | 'pending_review' | 'approved' | 'rejected';
+  created_by: string | null;
+  last_modified_by: string | null;
+  supersedes_band_id: string | null;
 }
 
 export interface FeeRulesTable {
@@ -69,6 +72,9 @@ export interface FeeRulesTable {
   approval_status: 'draft' | 'pending_review' | 'approved' | 'rejected';
   display_order: number;
   client_facing_explanation: string;
+  created_by: string | null;
+  last_modified_by: string | null;
+  supersedes_fee_rule_id: string | null;
 }
 
 export interface DisbursementRulesTable {
@@ -88,6 +94,9 @@ export interface DisbursementRulesTable {
   approval_status: 'draft' | 'pending_review' | 'approved' | 'rejected';
   display_order: number;
   client_facing_explanation: string;
+  created_by: string | null;
+  last_modified_by: string | null;
+  supersedes_disbursement_id: string | null;
 }
 
 export interface SdltLttRateTable {
@@ -118,6 +127,7 @@ export interface QuoteResultsTable {
   firm_id: string;
   eligibility_status: 'eligible' | 'excluded_with_reason';
   exclusion_reason: string | null;
+  line_items: unknown; // jsonb
   legal_fee_subtotal: number | null;
   vat_amount: number | null;
   disbursements_total: number | null;
@@ -126,10 +136,56 @@ export interface QuoteResultsTable {
   calculation_audit: unknown; // jsonb
 }
 
+export interface AdminUsersTable {
+  user_id: Generated<string>;
+  name: string;
+  email: string;
+  role:
+    | 'super_admin'
+    | 'content_editor'
+    | 'fee_administrator'
+    | 'compliance_reviewer'
+    | 'firm_user'
+    | 'lead_management_user'
+    | 'reporting_user';
+  firm_id: string | null;
+  password_hash: string;
+  mfa_secret: string | null;
+  mfa_enabled: Generated<boolean>;
+  account_status: Generated<'active' | 'suspended'>;
+  failed_login_attempts: Generated<number>;
+  locked_until: Timestamp | null;
+  created_at: Generated<Timestamp>;
+}
+
+export interface AdminSessionsTable {
+  session_id: Generated<string>;
+  user_id: string;
+  created_at: Generated<Timestamp>;
+  expires_at: Timestamp;
+  last_used_at: Generated<Timestamp>;
+  user_agent: string | null;
+}
+
+export interface AuditLogTable {
+  log_id: Generated<string>;
+  actor_user_id: string;
+  entity_type: string;
+  entity_id: string;
+  action: 'create' | 'update' | 'submit_for_review' | 'approve' | 'reject';
+  before_value: unknown; // jsonb, nullable
+  after_value: unknown; // jsonb, nullable
+  reason: string | null;
+  created_at: Generated<Timestamp>;
+}
+
 export interface Database {
   firms: FirmsTable;
   firm_transaction_types: FirmTransactionTypesTable;
   firm_restrictions: FirmRestrictionsTable;
+  admin_users: AdminUsersTable;
+  admin_sessions: AdminSessionsTable;
+  audit_log: AuditLogTable;
   fee_value_bands: FeeValueBandsTable;
   fee_rules: FeeRulesTable;
   disbursement_rules: DisbursementRulesTable;

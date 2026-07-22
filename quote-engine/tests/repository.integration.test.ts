@@ -154,6 +154,8 @@ if (connectionString) {
     const ruleSet = await loadFirmRuleSet(db, '11111111-1111-1111-1111-111111111111', 'purchase');
     const answers: ClientAnswers = {
       transactionType: 'purchase',
+      postcode: 'TE1 1ST',
+      jurisdiction: 'england',
       propertyValue: 200_000,
       freeholdOrLeasehold: 'freehold',
       mortgageInvolved: true,
@@ -169,6 +171,8 @@ if (connectionString) {
     const ruleSet = await loadFirmRuleSet(db, '11111111-1111-1111-1111-111111111111', 'purchase');
     const answers: ClientAnswers = {
       transactionType: 'purchase',
+      postcode: 'TE1 1ST',
+      jurisdiction: 'england',
       propertyValue: 200_000,
       freeholdOrLeasehold: 'freehold',
       mortgageInvolved: true,
@@ -211,6 +215,8 @@ if (connectionString) {
       transactionType: 'purchase',
       clientAnswers: {
         transactionType: 'purchase',
+        postcode: 'TE1 1ST',
+        jurisdiction: 'england',
         propertyValue: 600_000,
         freeholdOrLeasehold: 'freehold',
         mortgageInvolved: false,
