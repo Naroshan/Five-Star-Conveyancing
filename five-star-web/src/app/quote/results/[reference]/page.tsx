@@ -5,6 +5,12 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { ResultsInteractive } from "@/components/ResultsInteractive";
 import { db } from "@/lib/db";
 
+// This page reads a quote by reference from the database on every request, so
+// it must never be statically prerendered at build time (when no database
+// connection is available). Force dynamic rendering to keep DB access at
+// request time.
+export const dynamic = "force-dynamic";
+
 // Server Component: calls the same tested handler used by GET /api/quotes/:reference
 // directly (a function call, not a self-fetch over HTTP — this app already runs
 // server-side, so there's no reason to round-trip through its own API route).
