@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo } from "./Logo";
 
 export function SiteHeader() {
   return (
@@ -13,8 +14,8 @@ export function SiteHeader() {
         gap: 10,
       }}
     >
-      <Link href="/" style={{ color: "var(--text-on-navy-heading)", fontWeight: 500, fontSize: 15, textDecoration: "none" }}>
-        Five Star Conveyancing
+      <Link href="/" style={{ textDecoration: "none", display: "flex" }}>
+        <Logo variant="onDark" size={17} />
       </Link>
       <nav style={{ display: "flex", gap: 18, fontSize: 13, color: "var(--text-on-navy-body)" }}>
         <span>Compare</span>

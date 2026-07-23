@@ -1,3 +1,5 @@
+import { Logo } from "./Logo";
+
 export function SiteFooter() {
   return (
     <footer
@@ -10,9 +12,12 @@ export function SiteFooter() {
         textAlign: "center",
       }}
     >
+      <div style={{ display: "flex", justifyContent: "center", marginBottom: 10 }}>
+        <Logo variant="onDark" size={15} />
+      </div>
       <p style={{ margin: 0 }}>
-        Five Star Conveyancing — comparison service. Regulatory disclosures, complaints procedure, and firm ownership
-        information: pending final review before publication.
+        Comparison service. Regulatory disclosures, complaints procedure, and firm ownership information: pending
+        final review before publication.
       </p>
     </footer>
   );
