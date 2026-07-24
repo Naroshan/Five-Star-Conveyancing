@@ -155,7 +155,11 @@ create table quotes (
   client_answers jsonb not null,
   created_at timestamptz not null default now(),
   expiry_at timestamptz not null,
-  status text not null default 'active' check (status in ('active', 'expired', 'converted'))
+  status text not null default 'active' check (status in ('active', 'expired', 'converted')),
+  -- Set together with status = 'converted' when the client picks a firm off
+  -- their results ("Select this firm"). Null until then.
+  selected_firm_id uuid references firms(firm_id),
+  selected_at timestamptz
 );
 
 create table quote_results (

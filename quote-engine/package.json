@@ -17,6 +17,7 @@
     "./api/rateLimiter": "./dist/api/rateLimiter.js",
     "./api/createQuote": "./dist/api/createQuote.js",
     "./api/getQuote": "./dist/api/getQuote.js",
+    "./api/selectFirm": "./dist/api/selectFirm.js",
     "./api/publicResult": "./dist/api/publicResult.js",
     "./admin/roles": "./dist/admin/roles.js",
     "./admin/auditLog": "./dist/admin/auditLog.js",

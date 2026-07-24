@@ -104,6 +104,8 @@ export interface QuotesTable {
     created_at: Generated<Timestamp>;
     expiry_at: Timestamp;
     status: 'active' | 'expired' | 'converted';
+    selected_firm_id: string | null;
+    selected_at: Timestamp | null;
 }
 export interface QuoteResultsTable {
     result_id: Generated<string>;

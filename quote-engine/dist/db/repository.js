@@ -199,6 +199,22 @@ export async function getQuoteByReference(db, quoteReference) {
 export async function markQuoteExpired(db, quoteId) {
     await db.updateTable('quotes').set({ status: 'expired' }).where('quote_id', '=', quoteId).where('status', '=', 'active').execute();
 }
+/**
+ * Records the client's "Select this firm" choice. Only transitions a quote
+ * that's currently 'active' — already-converted or expired quotes are left
+ * untouched. Returns whether the update actually applied so the caller (the
+ * API handler, which already knows the eligibility/expiry rules) can tell
+ * "already converted" apart from "not found" apart from "succeeded".
+ */
+export async function selectQuoteFirm(db, quoteId, firmId) {
+    const result = await db
+        .updateTable('quotes')
+        .set({ selected_firm_id: firmId, selected_at: new Date(), status: 'converted' })
+        .where('quote_id', '=', quoteId)
+        .where('status', '=', 'active')
+        .executeTakeFirst();
+    return { updated: Number(result.numUpdatedRows) > 0 };
+}
 function parseJsonColumn(value) {
     return typeof value === 'string' ? JSON.parse(value) : value;
 }

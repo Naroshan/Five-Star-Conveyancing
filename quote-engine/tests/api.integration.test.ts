@@ -8,6 +8,7 @@ import { sql } from 'kysely';
 import { createDb } from '../src/db/client.js';
 import { createQuoteHandler } from '../src/api/createQuote.js';
 import { getQuoteHandler } from '../src/api/getQuote.js';
+import { selectFirmHandler } from '../src/api/selectFirm.js';
 import { RateLimiter } from '../src/api/rateLimiter.js';
 
 const connectionString = process.env.DATABASE_URL;
@@ -187,6 +188,81 @@ if (connectionString) {
 
       const row = await db.selectFrom('quotes').select('status').where('quote_reference', '=', created.quoteReference).executeTakeFirstOrThrow();
       expect(row.status).toBe('expired'); // lazy transition persisted
+    });
+
+    function selectRequest(body: unknown): Request {
+      return new Request('https://example.invalid/api/quotes/x/select', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+    }
+
+    describe('selectFirmHandler ("Select this firm" lead handoff)', () => {
+      it('records the selection and flips the quote to converted', async () => {
+        const created = await (await createQuoteHandler(postRequest(validBody), { db })).json();
+        const firmId = created.results[0].firm.firmId;
+
+        const response = await selectFirmHandler(created.quoteReference, selectRequest({ firmId }), db);
+        expect(response.status).toBe(200);
+        const body = await response.json();
+        expect(body).toEqual({ quoteReference: created.quoteReference, selectedFirmId: firmId, status: 'converted' });
+
+        const row = await db
+          .selectFrom('quotes')
+          .select(['status', 'selected_firm_id'])
+          .where('quote_reference', '=', created.quoteReference)
+          .executeTakeFirstOrThrow();
+        expect(row.status).toBe('converted');
+        expect(row.selected_firm_id).toBe(firmId);
+      });
+
+      it('returns 404 for an unknown reference', async () => {
+        const response = await selectFirmHandler('FSC-DOES-NOT-EXIST', selectRequest({ firmId: '11111111-1111-1111-1111-111111111111' }), db);
+        expect(response.status).toBe(404);
+      });
+
+      it('rejects a firmId that is not an eligible result on this quote', async () => {
+        const created = await (await createQuoteHandler(postRequest(validBody), { db })).json();
+        const response = await selectFirmHandler(created.quoteReference, selectRequest({ firmId: '99999999-9999-9999-9999-999999999999' }), db);
+        expect(response.status).toBe(400);
+      });
+
+      it('rejects a missing or non-string firmId', async () => {
+        const created = await (await createQuoteHandler(postRequest(validBody), { db })).json();
+        expect((await selectFirmHandler(created.quoteReference, selectRequest({}), db)).status).toBe(400);
+        expect((await selectFirmHandler(created.quoteReference, selectRequest({ firmId: 42 }), db)).status).toBe(400);
+      });
+
+      it('rejects malformed JSON with 400', async () => {
+        const request = new Request('https://example.invalid/api/quotes/x/select', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: '{not valid json',
+        });
+        const response = await selectFirmHandler('FSC-ANYTHING', request, db);
+        expect(response.status).toBe(400);
+      });
+
+      it('refuses to select a firm on an already-converted quote', async () => {
+        const created = await (await createQuoteHandler(postRequest(validBody), { db })).json();
+        const firmId = created.results[0].firm.firmId;
+
+        const first = await selectFirmHandler(created.quoteReference, selectRequest({ firmId }), db);
+        expect(first.status).toBe(200);
+
+        const second = await selectFirmHandler(created.quoteReference, selectRequest({ firmId }), db);
+        expect(second.status).toBe(409);
+      });
+
+      it('refuses to select a firm on an expired quote', async () => {
+        const created = await (await createQuoteHandler(postRequest(validBody), { db })).json();
+        const firmId = created.results[0].firm.firmId;
+        await sql`update quotes set expiry_at = now() - interval '1 day' where quote_reference = ${created.quoteReference}`.execute(db);
+
+        const response = await selectFirmHandler(created.quoteReference, selectRequest({ firmId }), db);
+        expect(response.status).toBe(409);
+      });
     });
   });
 } else {

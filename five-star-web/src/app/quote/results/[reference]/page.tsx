@@ -43,7 +43,7 @@ export default async function QuoteResultsPage({ params }: { params: Promise<{ r
           </div>
         )}
 
-        {response.ok && data.status !== "expired" && <ResultsInteractive results={data.results} />}
+        {response.ok && data.status !== "expired" && <ResultsInteractive quoteReference={data.quoteReference} results={data.results} />}
 
         {!response.ok && (
           <p style={{ fontSize: 14, color: "var(--error)" }}>{data.error?.message ?? "Something went wrong loading this quote."}</p>

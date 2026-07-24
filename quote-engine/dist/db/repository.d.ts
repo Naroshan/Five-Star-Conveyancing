@@ -34,6 +34,16 @@ export declare function getQuoteByReference(db: Kysely<Database>, quoteReference
     results: QuoteResult[];
 } | null>;
 export declare function markQuoteExpired(db: Kysely<Database>, quoteId: string): Promise<void>;
+/**
+ * Records the client's "Select this firm" choice. Only transitions a quote
+ * that's currently 'active' — already-converted or expired quotes are left
+ * untouched. Returns whether the update actually applied so the caller (the
+ * API handler, which already knows the eligibility/expiry rules) can tell
+ * "already converted" apart from "not found" apart from "succeeded".
+ */
+export declare function selectQuoteFirm(db: Kysely<Database>, quoteId: string, firmId: string): Promise<{
+    updated: boolean;
+}>;
 export declare function mapFirm(row: Selectable<Database['firms']>): Firm;
 export declare function mapFeeValueBand(row: Selectable<Database['fee_value_bands']>): FeeValueBand;
 export declare function mapFeeRule(row: Selectable<Database['fee_rules']>): FeeRule;
