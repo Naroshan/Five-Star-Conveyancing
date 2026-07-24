@@ -19,7 +19,7 @@ export function SiteHeader() {
       </Link>
       <nav style={{ display: "flex", gap: 18, fontSize: 13, color: "var(--text-on-navy-body)" }}>
         <Link href="/how-it-works" style={{ color: "inherit", textDecoration: "none" }}>
-          Compare
+          How it works
         </Link>
         <Link href="/services" style={{ color: "inherit", textDecoration: "none" }}>
           Services
@@ -30,8 +30,6 @@ export function SiteHeader() {
         <Link href="/faq" style={{ color: "inherit", textDecoration: "none" }}>
           FAQ
         </Link>
-        {/* Not linked yet — needs real authored, reviewed content (see launch checklist). */}
-        <span>Knowledge hub</span>
       </nav>
       <Link
         href="/get-a-quote"

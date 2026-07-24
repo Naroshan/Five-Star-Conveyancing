@@ -12,7 +12,6 @@ const TEXT_HEADING = "oklch(0.22 0.03 240)";
 const TEXT_BODY = "oklch(0.4 0.02 240)";
 const TEXT_MUTED = "oklch(0.5 0.02 240)";
 const TEXT_ON_NAVY_MUTED = "oklch(0.75 0.02 240)";
-const TEXT_ON_NAVY_BODY = "oklch(0.35 0.02 240)";
 
 const fraunces = { fontFamily: "var(--font-fraunces), 'Fraunces', serif" };
 
@@ -72,10 +71,9 @@ export default function HomePage() {
           <span style={{ fontWeight: 600, color: TEXT_MUTED }}>CONVEYANCING</span>
         </Link>
         <nav style={{ display: "flex", alignItems: "center", gap: 34, flexWrap: "wrap" }}>
-          <NavLink href="/get-a-quote">Compare</NavLink>
+          <NavLink href="/how-it-works">How it works</NavLink>
+          <NavLink href="/services">Services</NavLink>
           <NavLink href="/fees-explained">Fees</NavLink>
-          {/* No real authored guide content yet — not linked, same treatment as "Knowledge hub" elsewhere on the site. */}
-          <span style={{ fontWeight: 700, fontSize: 14, color: TEXT_MUTED }}>Guides</span>
           <NavLink href="/faq">FAQ</NavLink>
           <Link
             href="/get-a-quote"
@@ -234,13 +232,15 @@ export default function HomePage() {
             <span style={{ fontWeight: 800, color: GOLD }}>STAR</span>
           </div>
           <div style={{ display: "flex", gap: 24, fontSize: 13, fontWeight: 600, flexWrap: "wrap" }}>
-            <Link href="/get-a-quote" style={{ color: TEXT_ON_NAVY_MUTED, textDecoration: "none" }}>
-              Compare
+            <Link href="/how-it-works" style={{ color: TEXT_ON_NAVY_MUTED, textDecoration: "none" }}>
+              How it works
+            </Link>
+            <Link href="/services" style={{ color: TEXT_ON_NAVY_MUTED, textDecoration: "none" }}>
+              Services
             </Link>
             <Link href="/fees-explained" style={{ color: TEXT_ON_NAVY_MUTED, textDecoration: "none" }}>
               Fees
             </Link>
-            <span style={{ color: TEXT_ON_NAVY_BODY }}>Guides</span>
             <Link href="/faq" style={{ color: TEXT_ON_NAVY_MUTED, textDecoration: "none" }}>
               FAQ
             </Link>
