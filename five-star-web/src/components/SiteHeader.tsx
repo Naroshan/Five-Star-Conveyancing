@@ -18,9 +18,19 @@ export function SiteHeader() {
         <Logo variant="onDark" size={17} />
       </Link>
       <nav style={{ display: "flex", gap: 18, fontSize: 13, color: "var(--text-on-navy-body)" }}>
-        <span>Compare</span>
-        <span>Services</span>
-        <span>Fees</span>
+        <Link href="/how-it-works" style={{ color: "inherit", textDecoration: "none" }}>
+          Compare
+        </Link>
+        <Link href="/services" style={{ color: "inherit", textDecoration: "none" }}>
+          Services
+        </Link>
+        <Link href="/fees-explained" style={{ color: "inherit", textDecoration: "none" }}>
+          Fees
+        </Link>
+        <Link href="/faq" style={{ color: "inherit", textDecoration: "none" }}>
+          FAQ
+        </Link>
+        {/* Not linked yet — needs real authored, reviewed content (see launch checklist). */}
         <span>Knowledge hub</span>
       </nav>
       <Link
