@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
+import { Manrope, Fraunces } from "next/font/google";
 import "./globals.css";
 
 const manrope = Manrope({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
   variable: "--font-manrope",
+});
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["600"],
+  variable: "--font-fraunces",
 });
 
 export const metadata: Metadata = {
@@ -19,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={manrope.variable}>
+    <html lang="en" className={`${manrope.variable} ${fraunces.variable}`}>
       <body>{children}</body>
     </html>
   );
