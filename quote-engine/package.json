@@ -1,6 +1,6 @@
 {
   "name": "five-star-conveyancing-quote-engine",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Database-driven conveyancing quote calculation engine, repository, API, admin workflow, and results UI (Stage 6, Modules 1-7)",
   "type": "module",
   "main": "./dist/types.js",

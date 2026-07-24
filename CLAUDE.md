@@ -18,7 +18,7 @@ deploy config:
 
 `five-star-web/package.json` depends on `quote-engine` via a `file:` path
 to a **committed, pre-built tarball**:
-`quote-engine/five-star-conveyancing-quote-engine-0.2.0.tgz` (built from
+`quote-engine/five-star-conveyancing-quote-engine-0.2.1.tgz` (built from
 `quote-engine/dist/`, also committed). This is deliberate, not an oversight
 — see "Why the tarball is committed" below.
 
@@ -38,7 +38,7 @@ npm run verify:draft-safety    # asserts no non-draft real quotes exist yet
 **`five-star-web/`** (run from inside that directory):
 ```bash
 npm install
-npm install ../quote-engine/five-star-conveyancing-quote-engine-0.2.0.tgz  # re-run after rebuilding the tarball
+npm install ../quote-engine/five-star-conveyancing-quote-engine-0.2.1.tgz  # re-run after rebuilding the tarball
 npm run dev / build / start
 npm run lint
 npm test                       # vitest
@@ -119,7 +119,7 @@ trail) → `quote-engine/src/api/*` (Zod-validated handlers, wired into
 ## Why the tarball is committed
 
 `five-star-web/package.json` depends on `quote-engine` via
-`file:../quote-engine/five-star-conveyancing-quote-engine-0.2.0.tgz`.
+`file:../quote-engine/five-star-conveyancing-quote-engine-0.2.1.tgz`.
 Both `quote-engine/dist/` (the build output) and that `.tgz` (its packed
 form) are **committed, not gitignored** — this is intentional so that a
 plain `npm install` in `five-star-web/` resolves the dependency with zero
@@ -129,7 +129,7 @@ custom build orchestration, which matters for Netlify's build (see
 see the change:
 ```bash
 cd quote-engine && npm run build && npm pack
-cd ../five-star-web && npm install ../quote-engine/five-star-conveyancing-quote-engine-0.2.0.tgz
+cd ../five-star-web && npm install ../quote-engine/five-star-conveyancing-quote-engine-0.2.1.tgz
 ```
 Don't add `quote-engine/dist/` or the `.tgz` to `.gitignore` — that would
 silently break the web app's install.

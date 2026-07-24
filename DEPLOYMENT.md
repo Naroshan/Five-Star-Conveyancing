@@ -30,7 +30,7 @@ npm pack
 # 2. Install it into the web app
 cd ../five-star-web
 npm install
-npm install ../quote-engine/five-star-conveyancing-quote-engine-0.2.0.tgz
+npm install ../quote-engine/five-star-conveyancing-quote-engine-0.2.1.tgz
 
 # 3. Set up a database with demo data (never point this at anything you'd call "real")
 createdb five_star_demo
@@ -78,7 +78,7 @@ then `git remote add origin <url> && git push -u origin main`).
 
 **One deliberate exception to normal practice:** commit the built
 `quote-engine/dist/` folder and the packed
-`quote-engine/five-star-conveyancing-quote-engine-0.2.0.tgz` file, even
+`quote-engine/five-star-conveyancing-quote-engine-0.2.1.tgz` file, even
 though build output is usually gitignored. This means Vercel's default
 `npm install` step just finds the tarball already there and extracts it —
 no custom build command needed. The tradeoff: if you change
