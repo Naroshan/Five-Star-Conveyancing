@@ -6,9 +6,11 @@ import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 import { sql } from 'kysely';
 import { TOTP, Secret } from 'otpauth';
 import { createDb } from '../src/db/client.js';
-import { provisionAdminUser, beginMfaEnrollment, confirmMfaEnrollment } from '../src/auth/provisioning.js';
+import { provisionAdminUser, beginMfaEnrollment, confirmMfaEnrollment, forceMfaReset } from '../src/auth/provisioning.js';
 import { login, InvalidCredentialsError, AccountLockedError, MfaRequiredError } from '../src/auth/login.js';
 import { validateSession, destroySession, destroyAllSessionsForUser, createSession } from '../src/auth/session.js';
+import { ForbiddenError } from '../src/admin/roles.js';
+import { listAuditLogForEntity } from '../src/admin/auditLog.js';
 
 const connectionString = process.env.DATABASE_URL;
 
@@ -120,6 +122,59 @@ if (connectionString) {
       await db.updateTable('admin_users').set({ account_status: 'suspended' }).where('user_id', '=', user.userId).execute();
 
       await expect(login(db, 'alex@fixture.test', 'a-real-password-123')).rejects.toThrow(InvalidCredentialsError);
+    });
+
+    describe('forceMfaReset', () => {
+      it('lets a super_admin clear another account\'s MFA, and the target can log back in with just their password', async () => {
+        const admin = await provisionAdminUser(db, { name: 'Sam', email: 'sam@fixture.test', role: 'super_admin', password: 'a-real-password-123' });
+        const rae = await provisionAdminUser(db, { name: 'Rae', email: 'rae@fixture.test', role: 'compliance_reviewer', password: 'a-real-password-123' });
+        const enrollment = await beginMfaEnrollment(db, rae.userId);
+        const totp = new TOTP({ secret: Secret.fromBase32(enrollment.secret), algorithm: 'SHA1', digits: 6, period: 30 });
+        await confirmMfaEnrollment(db, rae.userId, totp.generate());
+        await expect(login(db, 'rae@fixture.test', 'a-real-password-123')).rejects.toThrow(MfaRequiredError);
+
+        await forceMfaReset(db, admin, rae.userId, 'Suspected compromised authenticator device.');
+
+        const result = await login(db, 'rae@fixture.test', 'a-real-password-123');
+        expect(result.user.email).toBe('rae@fixture.test');
+
+        const row = await db.selectFrom('admin_users').select(['mfa_enabled', 'mfa_secret']).where('user_id', '=', rae.userId).executeTakeFirstOrThrow();
+        expect(row.mfa_enabled).toBe(false);
+        expect(row.mfa_secret).toBeNull();
+      });
+
+      it('records an audit_log entry with the given reason', async () => {
+        const admin = await provisionAdminUser(db, { name: 'Sam', email: 'sam@fixture.test', role: 'super_admin', password: 'a-real-password-123' });
+        const rae = await provisionAdminUser(db, { name: 'Rae', email: 'rae@fixture.test', role: 'compliance_reviewer', password: 'a-real-password-123' });
+
+        await forceMfaReset(db, admin, rae.userId, 'Lost authenticator device.');
+
+        const entries = await listAuditLogForEntity(db, 'admin_user', rae.userId);
+        expect(entries).toHaveLength(1);
+        expect(entries[0].actorUserId).toBe(admin.userId);
+        expect(entries[0].reason).toBe('Lost authenticator device.');
+      });
+
+      it('refuses a non-super_admin actor', async () => {
+        const feeAdmin = await provisionAdminUser(db, { name: 'Alex', email: 'alex@fixture.test', role: 'fee_administrator', password: 'a-real-password-123' });
+        const rae = await provisionAdminUser(db, { name: 'Rae', email: 'rae@fixture.test', role: 'compliance_reviewer', password: 'a-real-password-123' });
+
+        await expect(forceMfaReset(db, feeAdmin, rae.userId, 'Trying anyway.')).rejects.toThrow(ForbiddenError);
+      });
+
+      it('refuses to let a super_admin target their own account', async () => {
+        const admin = await provisionAdminUser(db, { name: 'Sam', email: 'sam@fixture.test', role: 'super_admin', password: 'a-real-password-123' });
+
+        await expect(forceMfaReset(db, admin, admin.userId, 'Testing self-target.')).rejects.toThrow();
+      });
+
+      it('requires a non-empty reason', async () => {
+        const admin = await provisionAdminUser(db, { name: 'Sam', email: 'sam@fixture.test', role: 'super_admin', password: 'a-real-password-123' });
+        const rae = await provisionAdminUser(db, { name: 'Rae', email: 'rae@fixture.test', role: 'compliance_reviewer', password: 'a-real-password-123' });
+
+        await expect(forceMfaReset(db, admin, rae.userId, '')).rejects.toThrow();
+        await expect(forceMfaReset(db, admin, rae.userId, '   ')).rejects.toThrow();
+      });
     });
   });
 } else {
