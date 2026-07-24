@@ -5,3 +5,10 @@ export declare class ForbiddenError extends Error {
     constructor(message: string);
 }
 export declare function assertPermission(user: AdminUser, permission: Permission): void;
+/**
+ * Enforces firm-scoped access: a firm_user may only act on records belonging
+ * to their own firm. Every other role is firm-agnostic (their access is
+ * already limited purely by assertPermission), so this is a no-op for them.
+ * Call this in addition to, never instead of, assertPermission.
+ */
+export declare function assertOwnFirm(user: AdminUser, recordFirmId: string): void;

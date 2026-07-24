@@ -5,7 +5,7 @@
 // the promised second implementation of the pattern, not just documentation
 // of it.
 import { mapFeeValueBand } from '../db/repository.js';
-import { assertPermission } from './roles.js';
+import { assertOwnFirm, assertPermission } from './roles.js';
 import { recordAuditEntry } from './auditLog.js';
 import { InvalidStateError } from './feeRuleAdmin.js';
 async function fetchBandOrThrow(db, bandId) {
@@ -16,6 +16,7 @@ async function fetchBandOrThrow(db, bandId) {
 }
 export async function createFeeValueBandDraft(db, user, input) {
     assertPermission(user, 'fee_bands:create');
+    assertOwnFirm(user, input.firmId);
     const row = await db
         .insertInto('fee_value_bands')
         .values({
@@ -41,6 +42,7 @@ export async function createFeeValueBandDraft(db, user, input) {
 export async function updateFeeValueBandDraft(db, user, bandId, updates) {
     assertPermission(user, 'fee_bands:edit');
     const before = await fetchBandOrThrow(db, bandId);
+    assertOwnFirm(user, before.firmId);
     if (before.approvalStatus !== 'draft' && before.approvalStatus !== 'rejected') {
         throw new InvalidStateError(`Fee value band ${bandId} is '${before.approvalStatus}' and cannot be edited directly. Create a new draft that supersedes it instead.`);
     }
@@ -66,6 +68,7 @@ export async function updateFeeValueBandDraft(db, user, bandId, updates) {
 export async function submitFeeValueBandForReview(db, user, bandId) {
     assertPermission(user, 'fee_bands:submit_for_review');
     const before = await fetchBandOrThrow(db, bandId);
+    assertOwnFirm(user, before.firmId);
     if (before.approvalStatus !== 'draft') {
         throw new InvalidStateError(`Fee value band ${bandId} is '${before.approvalStatus}' and cannot be submitted for review from that state.`);
     }
@@ -132,7 +135,9 @@ export async function rejectFeeValueBand(db, user, bandId, reason) {
 }
 export async function getFeeValueBandById(db, user, bandId) {
     assertPermission(user, 'fee_bands:view');
-    return fetchBandOrThrow(db, bandId);
+    const band = await fetchBandOrThrow(db, bandId);
+    assertOwnFirm(user, band.firmId);
+    return band;
 }
 export async function listPendingFeeValueBandApprovals(db, user) {
     assertPermission(user, 'fee_bands:approve');

@@ -9,7 +9,7 @@
 // disbursement_rules follow an identical shape (same approval_status,
 // created_by, last_modified_by columns) — see README for how to extend it.
 import { mapFeeRule } from '../db/repository.js';
-import { assertPermission } from './roles.js';
+import { assertOwnFirm, assertPermission } from './roles.js';
 import { recordAuditEntry } from './auditLog.js';
 export class InvalidStateError extends Error {
     constructor(message) {
@@ -25,6 +25,7 @@ async function fetchFeeRuleOrThrow(db, feeRuleId) {
 }
 export async function createFeeRuleDraft(db, user, input) {
     assertPermission(user, 'fee_rules:create');
+    assertOwnFirm(user, input.firmId);
     const row = await db
         .insertInto('fee_rules')
         .values({
@@ -65,6 +66,7 @@ export async function createFeeRuleDraft(db, user, input) {
 export async function updateFeeRuleDraft(db, user, feeRuleId, updates) {
     assertPermission(user, 'fee_rules:edit');
     const before = await fetchFeeRuleOrThrow(db, feeRuleId);
+    assertOwnFirm(user, before.firmId);
     if (before.approvalStatus !== 'draft' && before.approvalStatus !== 'rejected') {
         throw new InvalidStateError(`Fee rule ${feeRuleId} is '${before.approvalStatus}' and cannot be edited directly. Create a new draft that supersedes it instead.`);
     }
@@ -107,6 +109,7 @@ export async function updateFeeRuleDraft(db, user, feeRuleId, updates) {
 export async function submitFeeRuleForReview(db, user, feeRuleId) {
     assertPermission(user, 'fee_rules:submit_for_review');
     const before = await fetchFeeRuleOrThrow(db, feeRuleId);
+    assertOwnFirm(user, before.firmId);
     if (before.approvalStatus !== 'draft') {
         throw new InvalidStateError(`Fee rule ${feeRuleId} is '${before.approvalStatus}' and cannot be submitted for review from that state.`);
     }
@@ -196,7 +199,9 @@ export async function rejectFeeRule(db, user, feeRuleId, reason) {
 }
 export async function getFeeRuleById(db, user, feeRuleId) {
     assertPermission(user, 'fee_rules:view');
-    return fetchFeeRuleOrThrow(db, feeRuleId);
+    const feeRule = await fetchFeeRuleOrThrow(db, feeRuleId);
+    assertOwnFirm(user, feeRule.firmId);
+    return feeRule;
 }
 export async function listPendingFeeRuleApprovals(db, user) {
     assertPermission(user, 'fee_rules:approve');

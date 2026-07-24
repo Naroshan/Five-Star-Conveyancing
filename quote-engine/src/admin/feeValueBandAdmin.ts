@@ -9,7 +9,7 @@ import type { Kysely } from 'kysely';
 import type { Database } from '../db/schema.js';
 import type { AdminUser, BoundaryRule, FeeValueBand, TransactionType } from '../types.js';
 import { mapFeeValueBand } from '../db/repository.js';
-import { assertPermission } from './roles.js';
+import { assertOwnFirm, assertPermission } from './roles.js';
 import { recordAuditEntry } from './auditLog.js';
 import { InvalidStateError } from './feeRuleAdmin.js';
 
@@ -37,6 +37,7 @@ async function fetchBandOrThrow(db: Kysely<Database>, bandId: string): Promise<F
 
 export async function createFeeValueBandDraft(db: Kysely<Database>, user: AdminUser, input: CreateFeeValueBandInput): Promise<FeeValueBand> {
   assertPermission(user, 'fee_bands:create');
+  assertOwnFirm(user, input.firmId);
 
   const row = await db
     .insertInto('fee_value_bands')
@@ -71,6 +72,7 @@ export async function updateFeeValueBandDraft(
   assertPermission(user, 'fee_bands:edit');
 
   const before = await fetchBandOrThrow(db, bandId);
+  assertOwnFirm(user, before.firmId);
   if (before.approvalStatus !== 'draft' && before.approvalStatus !== 'rejected') {
     throw new InvalidStateError(`Fee value band ${bandId} is '${before.approvalStatus}' and cannot be edited directly. Create a new draft that supersedes it instead.`);
   }
@@ -100,6 +102,7 @@ export async function submitFeeValueBandForReview(db: Kysely<Database>, user: Ad
   assertPermission(user, 'fee_bands:submit_for_review');
 
   const before = await fetchBandOrThrow(db, bandId);
+  assertOwnFirm(user, before.firmId);
   if (before.approvalStatus !== 'draft') {
     throw new InvalidStateError(`Fee value band ${bandId} is '${before.approvalStatus}' and cannot be submitted for review from that state.`);
   }
@@ -178,7 +181,9 @@ export async function rejectFeeValueBand(db: Kysely<Database>, user: AdminUser, 
 
 export async function getFeeValueBandById(db: Kysely<Database>, user: AdminUser, bandId: string): Promise<FeeValueBand> {
   assertPermission(user, 'fee_bands:view');
-  return fetchBandOrThrow(db, bandId);
+  const band = await fetchBandOrThrow(db, bandId);
+  assertOwnFirm(user, band.firmId);
+  return band;
 }
 
 export async function listPendingFeeValueBandApprovals(db: Kysely<Database>, user: AdminUser): Promise<FeeValueBand[]> {

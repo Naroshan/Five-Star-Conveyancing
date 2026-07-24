@@ -3,7 +3,7 @@
 // feeRuleAdmin.ts, applied to disbursement_rules — the third and final
 // implementation of the pattern.
 import { mapDisbursementRule } from '../db/repository.js';
-import { assertPermission } from './roles.js';
+import { assertOwnFirm, assertPermission } from './roles.js';
 import { recordAuditEntry } from './auditLog.js';
 import { InvalidStateError } from './feeRuleAdmin.js';
 async function fetchDisbursementOrThrow(db, disbursementId) {
@@ -14,6 +14,7 @@ async function fetchDisbursementOrThrow(db, disbursementId) {
 }
 export async function createDisbursementRuleDraft(db, user, input) {
     assertPermission(user, 'disbursements:create');
+    assertOwnFirm(user, input.firmId);
     const row = await db
         .insertInto('disbursement_rules')
         .values({
@@ -45,6 +46,7 @@ export async function createDisbursementRuleDraft(db, user, input) {
 export async function updateDisbursementRuleDraft(db, user, disbursementId, updates) {
     assertPermission(user, 'disbursements:edit');
     const before = await fetchDisbursementOrThrow(db, disbursementId);
+    assertOwnFirm(user, before.firmId);
     if (before.approvalStatus !== 'draft' && before.approvalStatus !== 'rejected') {
         throw new InvalidStateError(`Disbursement rule ${disbursementId} is '${before.approvalStatus}' and cannot be edited directly. Create a new draft that supersedes it instead.`);
     }
@@ -76,6 +78,7 @@ export async function updateDisbursementRuleDraft(db, user, disbursementId, upda
 export async function submitDisbursementRuleForReview(db, user, disbursementId) {
     assertPermission(user, 'disbursements:submit_for_review');
     const before = await fetchDisbursementOrThrow(db, disbursementId);
+    assertOwnFirm(user, before.firmId);
     if (before.approvalStatus !== 'draft') {
         throw new InvalidStateError(`Disbursement rule ${disbursementId} is '${before.approvalStatus}' and cannot be submitted for review from that state.`);
     }
@@ -142,7 +145,9 @@ export async function rejectDisbursementRule(db, user, disbursementId, reason) {
 }
 export async function getDisbursementRuleById(db, user, disbursementId) {
     assertPermission(user, 'disbursements:view');
-    return fetchDisbursementOrThrow(db, disbursementId);
+    const rule = await fetchDisbursementOrThrow(db, disbursementId);
+    assertOwnFirm(user, rule.firmId);
+    return rule;
 }
 export async function listPendingDisbursementRuleApprovals(db, user) {
     assertPermission(user, 'disbursements:approve');

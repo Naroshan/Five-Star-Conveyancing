@@ -7,7 +7,7 @@ import type { Kysely } from 'kysely';
 import type { Database } from '../db/schema.js';
 import type { AdminUser, DisbursementRule, TransactionType, VatTreatment } from '../types.js';
 import { mapDisbursementRule } from '../db/repository.js';
-import { assertPermission } from './roles.js';
+import { assertOwnFirm, assertPermission } from './roles.js';
 import { recordAuditEntry } from './auditLog.js';
 import { InvalidStateError } from './feeRuleAdmin.js';
 
@@ -59,6 +59,7 @@ export async function createDisbursementRuleDraft(
   input: CreateDisbursementRuleInput
 ): Promise<DisbursementRule> {
   assertPermission(user, 'disbursements:create');
+  assertOwnFirm(user, input.firmId);
 
   const row = await db
     .insertInto('disbursement_rules')
@@ -99,6 +100,7 @@ export async function updateDisbursementRuleDraft(
   assertPermission(user, 'disbursements:edit');
 
   const before = await fetchDisbursementOrThrow(db, disbursementId);
+  assertOwnFirm(user, before.firmId);
   if (before.approvalStatus !== 'draft' && before.approvalStatus !== 'rejected') {
     throw new InvalidStateError(`Disbursement rule ${disbursementId} is '${before.approvalStatus}' and cannot be edited directly. Create a new draft that supersedes it instead.`);
   }
@@ -134,6 +136,7 @@ export async function submitDisbursementRuleForReview(db: Kysely<Database>, user
   assertPermission(user, 'disbursements:submit_for_review');
 
   const before = await fetchDisbursementOrThrow(db, disbursementId);
+  assertOwnFirm(user, before.firmId);
   if (before.approvalStatus !== 'draft') {
     throw new InvalidStateError(`Disbursement rule ${disbursementId} is '${before.approvalStatus}' and cannot be submitted for review from that state.`);
   }
@@ -212,7 +215,9 @@ export async function rejectDisbursementRule(db: Kysely<Database>, user: AdminUs
 
 export async function getDisbursementRuleById(db: Kysely<Database>, user: AdminUser, disbursementId: string): Promise<DisbursementRule> {
   assertPermission(user, 'disbursements:view');
-  return fetchDisbursementOrThrow(db, disbursementId);
+  const rule = await fetchDisbursementOrThrow(db, disbursementId);
+  assertOwnFirm(user, rule.firmId);
+  return rule;
 }
 
 export async function listPendingDisbursementRuleApprovals(db: Kysely<Database>, user: AdminUser): Promise<DisbursementRule[]> {

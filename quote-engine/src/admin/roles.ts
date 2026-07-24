@@ -34,7 +34,12 @@ const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
   fee_administrator: RESOURCES.flatMap((r) => permissionsFor(r, [...EDITOR_ACTIONS, 'view'])),
   compliance_reviewer: RESOURCES.flatMap((r) => permissionsFor(r, ['approve', 'view'])),
   content_editor: [],
-  firm_user: RESOURCES.flatMap((r) => permissionsFor(r, ['view'])),
+  // A firm's own representative can author and submit their own fee data —
+  // the same editor actions as fee_administrator — but never 'approve': that
+  // stays with compliance_reviewer regardless of firm, so a firm can never
+  // approve its own change. Which *firm's* data a firm_user may touch is
+  // enforced separately by assertOwnFirm, not by this permission table.
+  firm_user: RESOURCES.flatMap((r) => permissionsFor(r, [...EDITOR_ACTIONS, 'view'])),
   lead_management_user: [],
   reporting_user: RESOURCES.flatMap((r) => permissionsFor(r, ['view'])),
 };
@@ -53,5 +58,17 @@ export class ForbiddenError extends Error {
 export function assertPermission(user: AdminUser, permission: Permission): void {
   if (!hasPermission(user, permission)) {
     throw new ForbiddenError(`Role '${user.role}' does not have permission '${permission}'.`);
+  }
+}
+
+/**
+ * Enforces firm-scoped access: a firm_user may only act on records belonging
+ * to their own firm. Every other role is firm-agnostic (their access is
+ * already limited purely by assertPermission), so this is a no-op for them.
+ * Call this in addition to, never instead of, assertPermission.
+ */
+export function assertOwnFirm(user: AdminUser, recordFirmId: string): void {
+  if (user.role === 'firm_user' && user.firmId !== recordFirmId) {
+    throw new ForbiddenError('You can only manage data belonging to your own firm.');
   }
 }
