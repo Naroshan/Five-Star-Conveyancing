@@ -192,7 +192,7 @@ npm pack
 # 2. Install it into the web app
 cd ../five-star-web
 npm install
-npm install ../quote-engine/five-star-conveyancing-quote-engine-0.2.0.tgz
+npm install ../quote-engine/five-star-conveyancing-quote-engine-0.2.1.tgz
 
 # 3. Configure and seed a database
 cp .env.local.example .env.local   # edit DATABASE_URL

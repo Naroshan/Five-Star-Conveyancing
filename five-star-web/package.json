@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "five-star-conveyancing-quote-engine": "file:../quote-engine/five-star-conveyancing-quote-engine-0.2.0.tgz",
+    "five-star-conveyancing-quote-engine": "file:../quote-engine/five-star-conveyancing-quote-engine-0.2.1.tgz",
     "kysely": "^0.29.4",
     "next": "16.2.11",
     "pg": "^8.22.0",
