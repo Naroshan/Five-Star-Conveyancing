@@ -6,6 +6,7 @@ import { AdminUserBar } from "@/components/AdminUserBar";
 import { AdminNav } from "@/components/AdminNav";
 import { db } from "@/lib/db";
 import { approveFeeValueBand, getFeeValueBandById, rejectFeeValueBand } from "five-star-conveyancing-quote-engine/admin/feeValueBandAdmin";
+import { TEXT_HEADING, TEXT_MUTED, BORDER, ACCENT_BOLD } from "@/lib/theme";
 import { InvalidStateError } from "five-star-conveyancing-quote-engine/admin/feeRuleAdmin";
 import { ForbiddenError } from "five-star-conveyancing-quote-engine/admin/roles";
 import { listAuditLogForEntity } from "five-star-conveyancing-quote-engine/admin/auditLog";
@@ -81,10 +82,10 @@ export default async function FeeBandDetailPage({
           ← Back to pending review
         </Link>
 
-        <h1 style={{ fontSize: 20, fontWeight: 500, color: "var(--text-heading)", margin: "8px 0 4px" }}>
+        <h1 style={{ fontSize: 20, fontWeight: 500, color: TEXT_HEADING, margin: "8px 0 4px" }}>
           £{band.valueMin.toLocaleString()}–{band.valueMax !== null ? `£${band.valueMax.toLocaleString()}` : "no limit"}
         </h1>
-        <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 12 }}>
+        <p style={{ fontSize: 13, color: TEXT_MUTED, marginBottom: 12 }}>
           {band.transactionType} · status: {band.approvalStatus}
         </p>
         <AdminUserBar name={user.name} role={user.role} />
@@ -95,7 +96,7 @@ export default async function FeeBandDetailPage({
           </p>
         )}
 
-        <div style={{ background: "white", border: "0.5px solid var(--border)", borderRadius: 8, padding: 16, marginBottom: 20 }}>
+        <div style={{ background: "white", border: `0.5px solid ${BORDER}`, borderRadius: 8, padding: 16, marginBottom: 20 }}>
           <Row label="Base fee">£{band.baseFee}</Row>
           <Row label="Boundary rule">{band.boundaryRule}</Row>
           <Row label="Effective date">{band.effectiveDate}</Row>
@@ -106,7 +107,7 @@ export default async function FeeBandDetailPage({
         {canApprove ? (
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <form action={boundApprove}>
-              <button type="submit" style={{ background: "var(--accent)", color: "#EAF3EE", border: "none", borderRadius: 6, padding: "10px 18px", fontSize: 14 }}>
+              <button type="submit" style={{ background: ACCENT_BOLD, color: "white", border: "none", borderRadius: 6, padding: "10px 18px", fontSize: 14 }}>
                 Approve
               </button>
             </form>
@@ -115,21 +116,21 @@ export default async function FeeBandDetailPage({
                 Reject with a reason
                 <textarea name="reason" required rows={3} style={{ display: "block", width: "100%", marginTop: 4 }} />
               </label>
-              <button type="submit" style={{ alignSelf: "flex-start", background: "transparent", border: "0.5px solid var(--border)", borderRadius: 6, padding: "10px 18px", fontSize: 14 }}>
+              <button type="submit" style={{ alignSelf: "flex-start", background: "transparent", border: `0.5px solid ${BORDER}`, borderRadius: 6, padding: "10px 18px", fontSize: 14 }}>
                 Reject
               </button>
             </form>
           </div>
         ) : (
-          <p style={{ fontSize: 13, color: "var(--text-secondary)" }}>
+          <p style={{ fontSize: 13, color: TEXT_MUTED }}>
             This band is &quot;{band.approvalStatus}&quot; and isn&apos;t awaiting review right now.
           </p>
         )}
 
-        <h2 style={{ fontSize: 15, fontWeight: 500, color: "var(--text-heading)", marginTop: 28, marginBottom: 10 }}>History</h2>
+        <h2 style={{ fontSize: 15, fontWeight: 500, color: TEXT_HEADING, marginTop: 28, marginBottom: 10 }}>History</h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {auditEntries.map((entry) => (
-            <div key={entry.logId} style={{ fontSize: 12, color: "var(--text-secondary)" }}>
+            <div key={entry.logId} style={{ fontSize: 12, color: TEXT_MUTED }}>
               {entry.action} · {new Date(entry.createdAt).toLocaleString("en-GB")}
               {entry.reason ? ` · "${entry.reason}"` : ""}
             </div>
@@ -142,8 +143,8 @@ export default async function FeeBandDetailPage({
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", gap: 12, padding: "6px 0", borderBottom: "0.5px solid var(--border)", fontSize: 13 }}>
-      <span style={{ color: "var(--text-secondary)" }}>{label}</span>
+    <div style={{ display: "flex", justifyContent: "space-between", gap: 12, padding: "6px 0", borderBottom: `0.5px solid ${BORDER}`, fontSize: 13 }}>
+      <span style={{ color: TEXT_MUTED }}>{label}</span>
       <span style={{ textAlign: "right" }}>{children}</span>
     </div>
   );

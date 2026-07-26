@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { NAVY, CREAM, BORDER, TEXT_HEADING, TEXT_MUTED, ACCENT_BOLD, ERROR, RADIUS, fraunces } from "@/lib/theme";
 
 const FLAG_OPTIONS: { key: string; label: string }[] = [
   { key: "buyToLet", label: "Buy-to-let purchase" },
@@ -66,9 +67,9 @@ export default function GetAQuotePage() {
   return (
     <>
       <SiteHeader />
-      <main style={{ maxWidth: 560, margin: "0 auto", padding: "32px 24px" }}>
-        <h1 style={{ fontSize: 22, fontWeight: 500, color: "var(--text-heading)", marginBottom: 4 }}>Get a purchase quote</h1>
-        <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 24 }}>
+      <main style={{ maxWidth: 560, margin: "0 auto", padding: "48px 24px 64px", background: CREAM, borderLeft: `1px solid ${BORDER}`, borderRight: `1px solid ${BORDER}` }}>
+        <h1 style={{ ...fraunces, fontSize: 30, fontWeight: 600, color: NAVY, marginBottom: 8, letterSpacing: "-0.01em" }}>Get a purchase quote</h1>
+        <p style={{ fontSize: 14, color: TEXT_MUTED, marginBottom: 32 }}>
           A few questions about the property, then we&apos;ll show you a real comparison.
         </p>
 
@@ -137,7 +138,7 @@ export default function GetAQuotePage() {
           </Field>
 
           {error && (
-            <p style={{ fontSize: 13, color: "var(--error)", background: "#FCEBEB", padding: "10px 12px", borderRadius: 6 }}>
+            <p style={{ fontSize: 13, color: ERROR, background: "oklch(0.95 0.03 25)", padding: "10px 12px", borderRadius: RADIUS.sm }}>
               {error}
             </p>
           )}
@@ -146,12 +147,13 @@ export default function GetAQuotePage() {
             type="submit"
             disabled={submitting}
             style={{
-              background: "var(--accent)",
-              color: "#EAF3EE",
+              background: ACCENT_BOLD,
+              color: "white",
+              fontWeight: 800,
               border: "none",
-              borderRadius: 6,
-              padding: "12px 20px",
-              fontSize: 14,
+              borderRadius: RADIUS.pill,
+              padding: "14px 20px",
+              fontSize: 15,
               opacity: submitting ? 0.7 : 1,
             }}
           >
@@ -167,7 +169,7 @@ export default function GetAQuotePage() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--text-heading)", marginBottom: 6 }}>
+      <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: TEXT_HEADING, marginBottom: 8 }}>
         {label}
       </label>
       {children}

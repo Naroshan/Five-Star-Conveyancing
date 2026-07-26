@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { CREAM, BORDER, TEXT_BODY, TEXT_MUTED, ACCENT_BOLD, ERROR } from "@/lib/theme";
 
 export function MfaSetupClient() {
   const router = useRouter();
@@ -38,14 +39,14 @@ export function MfaSetupClient() {
   }
 
   if (done) {
-    return <p style={{ fontSize: 14, color: "var(--text-body)" }}>MFA is now enabled on your account. Redirecting…</p>;
+    return <p style={{ fontSize: 14, color: TEXT_BODY }}>MFA is now enabled on your account. Redirecting…</p>;
   }
 
   if (!enrollment) {
     return (
       <button
         onClick={begin}
-        style={{ background: "var(--accent)", color: "#EAF3EE", border: "none", borderRadius: 6, padding: "11px 18px", fontSize: 14 }}
+        style={{ background: ACCENT_BOLD, color: "white", border: "none", borderRadius: 6, padding: "11px 18px", fontSize: 14 }}
       >
         Start MFA setup
       </button>
@@ -56,10 +57,10 @@ export function MfaSetupClient() {
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div>
         <p style={{ fontSize: 13, fontWeight: 500, marginBottom: 4 }}>1. Add this account to your authenticator app</p>
-        <p style={{ fontSize: 12, color: "var(--text-secondary)", marginBottom: 8 }}>
+        <p style={{ fontSize: 12, color: TEXT_MUTED, marginBottom: 8 }}>
           No QR scanner here — paste this secret into your app&apos;s &quot;enter a setup key manually&quot; option, or use the full URI:
         </p>
-        <code style={{ display: "block", background: "var(--off-white)", border: "0.5px solid var(--border)", borderRadius: 6, padding: 10, fontSize: 12, wordBreak: "break-all" }}>
+        <code style={{ display: "block", background: CREAM, border: `1px solid ${BORDER}`, borderRadius: 6, padding: 10, fontSize: 12, wordBreak: "break-all" }}>
           {enrollment.secret}
         </code>
       </div>
@@ -76,11 +77,11 @@ export function MfaSetupClient() {
         />
       </label>
 
-      {error && <p style={{ fontSize: 13, color: "var(--error)", background: "#FCEBEB", padding: "10px 12px", borderRadius: 6 }}>{error}</p>}
+      {error && <p style={{ fontSize: 13, color: ERROR, background: "oklch(0.95 0.03 25)", padding: "10px 12px", borderRadius: 6 }}>{error}</p>}
 
       <button
         onClick={confirm}
-        style={{ background: "var(--accent)", color: "#EAF3EE", border: "none", borderRadius: 6, padding: "11px 18px", fontSize: 14 }}
+        style={{ background: ACCENT_BOLD, color: "white", border: "none", borderRadius: 6, padding: "11px 18px", fontSize: 14 }}
       >
         Confirm and enable MFA
       </button>

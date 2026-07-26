@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TEXT_HEADING, TEXT_MUTED } from "@/lib/theme";
 
 export function AdminNav({ current }: { current: "fee-rules" | "fee-bands" | "disbursements" }) {
   const items = [
@@ -14,7 +15,7 @@ export function AdminNav({ current }: { current: "fee-rules" | "fee-bands" | "di
           key={item.key}
           href={item.href}
           style={{
-            color: item.key === current ? "var(--text-heading)" : "var(--text-secondary)",
+            color: item.key === current ? TEXT_HEADING : TEXT_MUTED,
             fontWeight: item.key === current ? 500 : 400,
             textDecoration: item.key === current ? "underline" : "none",
           }}

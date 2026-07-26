@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ResultsInteractive } from "@/components/ResultsInteractive";
 import { db } from "@/lib/db";
+import { NAVY, CREAM, BORDER, TEXT_BODY, ERROR, RADIUS, fraunces } from "@/lib/theme";
 
 // This page reads a quote by reference from the database on every request, so
 // it must never be statically prerendered at build time (when no database
@@ -34,19 +35,19 @@ export default async function QuoteResultsPage({ params }: { params: Promise<{ r
   return (
     <>
       <SiteHeader />
-      <main style={{ maxWidth: 680, margin: "0 auto", padding: "32px 24px" }}>
-        <h1 style={{ fontSize: 20, fontWeight: 500, color: "var(--text-heading)", marginBottom: 16 }}>Your comparison</h1>
+      <main style={{ maxWidth: 680, margin: "0 auto", padding: "48px 24px 64px", background: CREAM, borderLeft: `1px solid ${BORDER}`, borderRight: `1px solid ${BORDER}` }}>
+        <h1 style={{ ...fraunces, fontSize: 28, fontWeight: 600, color: NAVY, marginBottom: 20, letterSpacing: "-0.01em" }}>Your comparison</h1>
 
         {data.status === "expired" && (
-          <div style={{ background: "var(--off-white)", border: "0.5px solid var(--border)", borderRadius: 12, padding: 20, textAlign: "center" }}>
-            <p style={{ fontSize: 14, color: "var(--text-body)" }}>{data.message}</p>
+          <div style={{ background: CREAM, border: `1px solid ${BORDER}`, borderRadius: RADIUS.md, padding: 20, textAlign: "center" }}>
+            <p style={{ fontSize: 14, color: TEXT_BODY }}>{data.message}</p>
           </div>
         )}
 
         {response.ok && data.status !== "expired" && <ResultsInteractive quoteReference={data.quoteReference} results={data.results} />}
 
         {!response.ok && (
-          <p style={{ fontSize: 14, color: "var(--error)" }}>{data.error?.message ?? "Something went wrong loading this quote."}</p>
+          <p style={{ fontSize: 14, color: ERROR }}>{data.error?.message ?? "Something went wrong loading this quote."}</p>
         )}
       </main>
       <SiteFooter />

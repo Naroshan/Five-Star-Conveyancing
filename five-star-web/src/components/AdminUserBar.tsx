@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { TEAL, TEXT_MUTED } from "@/lib/theme";
 
 export function AdminUserBar({ name, role }: { name: string; role: string }) {
   const router = useRouter();
@@ -13,12 +14,12 @@ export function AdminUserBar({ name, role }: { name: string; role: string }) {
 
   return (
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 20 }}>
-      <p style={{ fontSize: 13, color: "var(--text-secondary)", margin: 0 }}>
+      <p style={{ fontSize: 13, color: TEXT_MUTED, margin: 0 }}>
         Signed in as {name} ({role})
       </p>
       <button
         onClick={signOut}
-        style={{ background: "transparent", border: "none", color: "var(--accent)", fontSize: 12, padding: 0, textDecoration: "underline" }}
+        style={{ background: "transparent", border: "none", color: TEAL, fontSize: 12, padding: 0, textDecoration: "underline" }}
       >
         Sign out
       </button>

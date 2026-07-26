@@ -6,6 +6,7 @@ import { AdminNav } from "@/components/AdminNav";
 import { getCurrentAdminUser, isMfaEnabledFor } from "@/lib/adminSession";
 import { db } from "@/lib/db";
 import { listPendingFeeRuleApprovals } from "five-star-conveyancing-quote-engine/admin/feeRuleAdmin";
+import { TEXT_HEADING, TEXT_MUTED, BORDER } from "@/lib/theme";
 import { ForbiddenError } from "five-star-conveyancing-quote-engine/admin/roles";
 
 export default async function PendingFeeRulesPage() {
@@ -30,7 +31,7 @@ export default async function PendingFeeRulesPage() {
       <SiteHeader />
       <main style={{ maxWidth: 680, margin: "0 auto", padding: "32px 24px" }}>
         <AdminNav current="fee-rules" />
-        <h1 style={{ fontSize: 20, fontWeight: 500, color: "var(--text-heading)", margin: "8px 0 4px" }}>Fee rules awaiting review</h1>
+        <h1 style={{ fontSize: 20, fontWeight: 500, color: TEXT_HEADING, margin: "8px 0 4px" }}>Fee rules awaiting review</h1>
         <AdminUserBar name={user.name} role={user.role} />
 
         {permissionError && (
@@ -40,7 +41,7 @@ export default async function PendingFeeRulesPage() {
         )}
 
         {!permissionError && pending.length === 0 && (
-          <p style={{ fontSize: 14, color: "var(--text-secondary)" }}>Nothing is currently pending review.</p>
+          <p style={{ fontSize: 14, color: TEXT_MUTED }}>Nothing is currently pending review.</p>
         )}
 
         {!permissionError && pending.length > 0 && (
@@ -52,15 +53,15 @@ export default async function PendingFeeRulesPage() {
                 style={{
                   display: "block",
                   background: "white",
-                  border: "0.5px solid var(--border)",
+                  border: `0.5px solid ${BORDER}`,
                   borderRadius: 8,
                   padding: "12px 16px",
                   textDecoration: "none",
                   color: "inherit",
                 }}
               >
-                <span style={{ fontWeight: 500, fontSize: 14, display: "block", color: "var(--text-heading)" }}>{rule.chargeName}</span>
-                <span style={{ fontSize: 12, color: "var(--text-secondary)" }}>
+                <span style={{ fontWeight: 500, fontSize: 14, display: "block", color: TEXT_HEADING }}>{rule.chargeName}</span>
+                <span style={{ fontSize: 12, color: TEXT_MUTED }}>
                   {rule.transactionType} · {rule.chargeType} {rule.amount !== null ? `· £${rule.amount}` : ""}
                 </span>
               </Link>

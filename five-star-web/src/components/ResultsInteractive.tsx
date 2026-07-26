@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { QuoteResultsList } from "five-star-conveyancing-quote-engine/components/QuoteResults";
 import type { PublicQuoteResult } from "five-star-conveyancing-quote-engine/api/publicResult";
+import { CREAM, BORDER, RADIUS } from "@/lib/theme";
 
 export function ResultsInteractive({ quoteReference, results }: { quoteReference: string; results: PublicQuoteResult[] }) {
   const [actionMessage, setActionMessage] = useState<string | null>(null);
@@ -48,9 +49,9 @@ export function ResultsInteractive({ quoteReference, results }: { quoteReference
         <p
           style={{
             fontSize: 13,
-            background: "var(--off-white)",
-            border: "0.5px solid var(--border)",
-            borderRadius: 6,
+            background: CREAM,
+            border: `1px solid ${BORDER}`,
+            borderRadius: RADIUS.sm,
             padding: "10px 12px",
             marginBottom: 16,
           }}

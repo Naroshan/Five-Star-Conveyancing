@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
+import { TEXT_HEADING, ACCENT_BOLD, ERROR } from "@/lib/theme";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -48,7 +49,7 @@ export default function AdminLoginPage() {
     <>
       <SiteHeader />
       <main style={{ maxWidth: 400, margin: "0 auto", padding: "48px 24px" }}>
-        <h1 style={{ fontSize: 20, fontWeight: 500, color: "var(--text-heading)", marginBottom: 20 }}>Admin sign in</h1>
+        <h1 style={{ fontSize: 20, fontWeight: 500, color: TEXT_HEADING, marginBottom: 20 }}>Admin sign in</h1>
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <label style={{ fontSize: 13, fontWeight: 500 }}>
@@ -93,13 +94,13 @@ export default function AdminLoginPage() {
           )}
 
           {error && (
-            <p style={{ fontSize: 13, color: "var(--error)", background: "#FCEBEB", padding: "10px 12px", borderRadius: 6 }}>{error}</p>
+            <p style={{ fontSize: 13, color: ERROR, background: "#FCEBEB", padding: "10px 12px", borderRadius: 6 }}>{error}</p>
           )}
 
           <button
             type="submit"
             disabled={submitting}
-            style={{ background: "var(--accent)", color: "#EAF3EE", border: "none", borderRadius: 6, padding: "11px 18px", fontSize: 14, opacity: submitting ? 0.7 : 1 }}
+            style={{ background: ACCENT_BOLD, color: "white", border: "none", borderRadius: 6, padding: "11px 18px", fontSize: 14, opacity: submitting ? 0.7 : 1 }}
           >
             {submitting ? "Signing in…" : mfaRequired ? "Verify and sign in" : "Sign in"}
           </button>
