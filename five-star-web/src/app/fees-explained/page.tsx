@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { NAVY, TEAL, CREAM, BORDER, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, fraunces } from "@/lib/theme";
+import contentStyles from "@/styles/contentPage.module.css";
 
 export const metadata: Metadata = {
   title: "Fees explained — Five Star Conveyancing",
@@ -33,11 +34,11 @@ export default function FeesExplainedPage() {
     <>
       <SiteHeader />
       <div style={{ maxWidth: 1320, margin: "0 auto", background: CREAM, borderLeft: `1px solid ${BORDER}`, borderRight: `1px solid ${BORDER}` }}>
-        <section style={{ padding: "72px 48px", borderBottom: `2px solid ${NAVY}` }}>
+        <section className={contentStyles.hero} style={{ borderBottom: `2px solid ${NAVY}` }}>
           <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 18 }}>
             No hidden totals
           </div>
-          <h1 style={{ ...fraunces, fontWeight: 600, fontSize: 44, lineHeight: 1.1, color: NAVY, margin: "0 0 16px", letterSpacing: "-0.02em" }}>
+          <h1 className={contentStyles.heroHeading} style={{ ...fraunces, fontWeight: 600, lineHeight: 1.1, color: NAVY, margin: "0 0 16px", letterSpacing: "-0.02em" }}>
             Fees explained
           </h1>
           <p style={{ fontSize: 16, lineHeight: 1.6, color: TEXT_BODY, maxWidth: 520, margin: 0 }}>
@@ -50,8 +51,8 @@ export default function FeesExplainedPage() {
           {TERMS.map((t, i) => (
             <div
               key={t.title}
+              className={contentStyles.itemPad}
               style={{
-                padding: "44px 48px",
                 borderBottom: i < TERMS.length - 1 ? `1px solid ${BORDER}` : undefined,
               }}
             >
@@ -61,7 +62,7 @@ export default function FeesExplainedPage() {
           ))}
         </section>
 
-        <section style={{ padding: "56px 48px", textAlign: "center" }}>
+        <section className={contentStyles.ctaSection} style={{ textAlign: "center" }}>
           <Link
             href="/get-a-quote"
             style={{ display: "inline-block", background: TEAL, color: "white", fontWeight: 800, fontSize: 15.5, padding: "17px 34px", textDecoration: "none" }}

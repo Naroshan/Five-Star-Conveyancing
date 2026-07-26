@@ -1,0 +1,48 @@
+/* Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts) */
+
+.header {
+  position: relative;
+}
+
+.hamburger {
+  display: none;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  flex-wrap: wrap;
+}
+
+/* Colors below are literal copies of NAVY / CREAM from src/lib/theme.ts —
+   CSS Modules can't import JS constants, keep these in sync by hand. */
+@media (max-width: 640px) {
+  .hamburger {
+    display: inline-flex;
+  }
+
+  .nav {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: oklch(0.97 0.012 80);
+    border-bottom: 2px solid oklch(0.2 0.02 240);
+    padding: 16px 24px 24px;
+    z-index: 20;
+  }
+
+  .nav[data-open="true"] {
+    display: flex;
+  }
+
+  .nav a {
+    padding: 10px 0;
+    width: 100%;
+  }
+}

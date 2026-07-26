@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { NAVY, TEAL, GOLD, CREAM, CREAM_ALT, BORDER, BORDER_ALT, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEXT_ON_NAVY_MUTED, fraunces } from "@/lib/theme";
+import styles from "./page.module.css";
 
 const HOW_IT_WORKS = [
   { n: "01", title: "Tell us your move", body: "Price, postcode, buying or selling — 60 seconds." },
@@ -34,16 +35,16 @@ export default function HomePage() {
       <SiteHeader />
       <div style={{ maxWidth: 1320, margin: "0 auto", background: CREAM, borderLeft: `1px solid ${BORDER}`, borderRight: `1px solid ${BORDER}` }}>
         {/* HERO */}
-        <section style={{ display: "grid", gridTemplateColumns: "1.15fr 0.85fr", borderBottom: `2px solid ${NAVY}` }}>
-          <div style={{ padding: "80px 48px", borderRight: `1px solid ${BORDER}` }}>
+        <section className={styles.hero} style={{ display: "grid", borderBottom: `2px solid ${NAVY}` }}>
+          <div className={styles.heroCol} style={{ borderRight: `1px solid ${BORDER}` }}>
             <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 22 }}>
               Conveyancing, compared honestly
             </div>
             <h1
+              className={styles.heroHeading}
               style={{
                 ...fraunces,
                 fontWeight: 600,
-                fontSize: 56,
                 lineHeight: 1.05,
                 color: NAVY,
                 margin: "0 0 24px",
@@ -79,7 +80,7 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
-          <div style={{ padding: "80px 48px", background: NAVY, display: "flex", flexDirection: "column", justifyContent: "center", gap: 28 }}>
+          <div className={styles.heroCol} style={{ background: NAVY, display: "flex", flexDirection: "column", justifyContent: "center", gap: 28 }}>
             <Stat value="4.8/5" label="Trustpilot · 6,200+ reviews" />
             <Divider />
             <Stat value="£0" label="to compare, always free" />
@@ -89,10 +90,10 @@ export default function HomePage() {
         </section>
 
         {/* COMPARE TEASER */}
-        <section style={{ padding: "64px 48px", borderBottom: `2px solid ${NAVY}` }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 48 }}>
+        <section className={styles.sectionPad} style={{ borderBottom: `2px solid ${NAVY}` }}>
+          <div className={styles.compareGrid} style={{ display: "grid" }}>
             <div>
-              <h2 style={{ ...fraunces, fontWeight: 600, fontSize: 28, color: NAVY, margin: "0 0 12px" }}>Real quotes, side by side</h2>
+              <h2 className={styles.compareHeading} style={{ ...fraunces, fontWeight: 600, color: NAVY, margin: "0 0 12px" }}>Real quotes, side by side</h2>
               <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.6, margin: "0 0 20px" }}>Example results for a £250,000 freehold purchase.</p>
               <Link
                 href="/get-a-quote"
@@ -125,17 +126,17 @@ export default function HomePage() {
         </section>
 
         {/* FOCAL STAT */}
-        <section style={{ padding: "56px 48px", textAlign: "center", background: GOLD, borderBottom: `2px solid ${NAVY}` }}>
-          <div style={{ ...fraunces, fontSize: 46, fontWeight: 600, color: NAVY, marginBottom: 10 }}>£480</div>
+        <section className={styles.sectionPad} style={{ textAlign: "center", background: GOLD, borderBottom: `2px solid ${NAVY}` }}>
+          <div className={styles.focalValue} style={{ ...fraunces, fontWeight: 600, color: NAVY, marginBottom: 10 }}>£480</div>
           <p style={{ fontSize: 15.5, color: "oklch(0.3 0.05 80)", maxWidth: 420, margin: "0 auto", fontWeight: 600 }}>
             the typical gap between the cheapest and priciest quote on a £250,000 purchase. We show you both.
           </p>
         </section>
 
         {/* THREE PILLARS */}
-        <section style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderBottom: `2px solid ${NAVY}` }}>
+        <section className={styles.pillarsGrid} style={{ display: "grid", borderBottom: `2px solid ${NAVY}` }}>
           {PILLARS.map((p, i) => (
-            <div key={p.n} style={{ padding: "48px 40px", borderRight: i < PILLARS.length - 1 ? `1px solid ${BORDER}` : undefined }}>
+            <div key={p.n} className={styles.pillarItem} style={{ borderRight: i < PILLARS.length - 1 ? `1px solid ${BORDER}` : undefined }}>
               <div style={{ ...fraunces, fontSize: 22, color: TEAL, marginBottom: 14 }}>{p.n}</div>
               <h3 style={{ fontSize: 16.5, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 8px" }}>{p.title}</h3>
               <p style={{ fontSize: 13.5, color: TEXT_MUTED, lineHeight: 1.6, margin: 0 }}>{p.body}</p>
@@ -144,9 +145,9 @@ export default function HomePage() {
         </section>
 
         {/* HOW IT WORKS */}
-        <section style={{ padding: "64px 48px", borderBottom: `2px solid ${NAVY}` }}>
-          <h2 style={{ ...fraunces, fontWeight: 600, fontSize: 30, color: NAVY, margin: "0 0 36px" }}>How it works</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", borderTop: `1px solid ${BORDER}`, borderLeft: `1px solid ${BORDER}` }}>
+        <section className={styles.sectionPad} style={{ borderBottom: `2px solid ${NAVY}` }}>
+          <h2 className={styles.sectionHeading} style={{ ...fraunces, fontWeight: 600, color: NAVY, margin: "0 0 36px" }}>How it works</h2>
+          <div className={styles.howGrid} style={{ display: "grid", borderTop: `1px solid ${BORDER}`, borderLeft: `1px solid ${BORDER}` }}>
             {HOW_IT_WORKS.map((s) => (
               <div key={s.n} style={{ padding: 26, borderRight: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
                 <div style={{ ...fraunces, fontSize: 20, fontWeight: 600, color: TEAL, marginBottom: 10 }}>{s.n}</div>
@@ -158,9 +159,9 @@ export default function HomePage() {
         </section>
 
         {/* TESTIMONIALS */}
-        <section style={{ padding: "64px 48px", borderBottom: `2px solid ${NAVY}`, background: CREAM_ALT }}>
-          <h2 style={{ ...fraunces, fontWeight: 600, fontSize: 30, color: NAVY, margin: "0 0 36px" }}>What movers say</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: `1px solid ${BORDER_ALT}`, borderLeft: `1px solid ${BORDER_ALT}` }}>
+        <section className={styles.sectionPad} style={{ borderBottom: `2px solid ${NAVY}`, background: CREAM_ALT }}>
+          <h2 className={styles.sectionHeading} style={{ ...fraunces, fontWeight: 600, color: NAVY, margin: "0 0 36px" }}>What movers say</h2>
+          <div className={styles.testimonialsGrid} style={{ display: "grid", borderTop: `1px solid ${BORDER_ALT}`, borderLeft: `1px solid ${BORDER_ALT}` }}>
             {TESTIMONIALS.map((t) => (
               <div key={t.author} style={{ padding: 26, borderRight: `1px solid ${BORDER_ALT}`, borderBottom: `1px solid ${BORDER_ALT}`, background: CREAM }}>
                 <div style={{ color: TEAL, fontSize: 13, marginBottom: 12 }}>★★★★★</div>
@@ -172,8 +173,8 @@ export default function HomePage() {
         </section>
 
         {/* CTA BAND */}
-        <section style={{ padding: "64px 48px", textAlign: "center", background: NAVY }}>
-          <h2 style={{ ...fraunces, fontWeight: 600, fontSize: 32, color: "white", margin: "0 0 24px" }}>Ready to compare?</h2>
+        <section className={styles.sectionPad} style={{ textAlign: "center", background: NAVY }}>
+          <h2 className={styles.ctaHeading} style={{ ...fraunces, fontWeight: 600, color: "white", margin: "0 0 24px" }}>Ready to compare?</h2>
           <Link
             href="/get-a-quote"
             style={{ display: "inline-block", background: GOLD, color: NAVY, fontWeight: 800, fontSize: 16, padding: "18px 40px", textDecoration: "none" }}

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { NAVY, TEAL, CREAM, BORDER, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, fraunces } from "@/lib/theme";
+import contentStyles from "@/styles/contentPage.module.css";
 
 export const metadata: Metadata = {
   title: "FAQ — Five Star Conveyancing",
@@ -37,11 +38,11 @@ export default function FaqPage() {
     <>
       <SiteHeader />
       <div style={{ maxWidth: 1320, margin: "0 auto", background: CREAM, borderLeft: `1px solid ${BORDER}`, borderRight: `1px solid ${BORDER}` }}>
-        <section style={{ padding: "72px 48px", borderBottom: `2px solid ${NAVY}` }}>
+        <section className={contentStyles.hero} style={{ borderBottom: `2px solid ${NAVY}` }}>
           <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 18 }}>
             Questions, answered
           </div>
-          <h1 style={{ ...fraunces, fontWeight: 600, fontSize: 44, lineHeight: 1.1, color: NAVY, margin: 0, letterSpacing: "-0.02em" }}>
+          <h1 className={contentStyles.heroHeading} style={{ ...fraunces, fontWeight: 600, lineHeight: 1.1, color: NAVY, margin: 0, letterSpacing: "-0.02em" }}>
             Frequently asked questions
           </h1>
         </section>
@@ -50,8 +51,8 @@ export default function FaqPage() {
           {FAQS.map((item, i) => (
             <div
               key={item.q}
+              className={contentStyles.itemPad}
               style={{
-                padding: "40px 48px",
                 borderBottom: i < FAQS.length - 1 ? `1px solid ${BORDER}` : undefined,
               }}
             >
@@ -61,7 +62,7 @@ export default function FaqPage() {
           ))}
         </section>
 
-        <section style={{ padding: "56px 48px", textAlign: "center" }}>
+        <section className={contentStyles.ctaSection} style={{ textAlign: "center" }}>
           <p style={{ fontSize: 13.5, color: TEXT_BODY, marginBottom: 28 }}>
             See also:{" "}
             <Link href="/how-it-works" style={{ color: TEAL, fontWeight: 700, textDecoration: "none" }}>

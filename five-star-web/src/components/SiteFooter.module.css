@@ -1,0 +1,21 @@
+/* Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts) */
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+}

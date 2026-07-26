@@ -3,6 +3,8 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { NAVY, TEAL, CREAM, BORDER, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, fraunces } from "@/lib/theme";
+import contentStyles from "@/styles/contentPage.module.css";
+import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "Services — Five Star Conveyancing",
@@ -23,11 +25,11 @@ export default function ServicesPage() {
     <>
       <SiteHeader />
       <div style={{ maxWidth: 1320, margin: "0 auto", background: CREAM, borderLeft: `1px solid ${BORDER}`, borderRight: `1px solid ${BORDER}` }}>
-        <section style={{ padding: "72px 48px", borderBottom: `2px solid ${NAVY}` }}>
+        <section className={contentStyles.hero} style={{ borderBottom: `2px solid ${NAVY}` }}>
           <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 18 }}>
             What we compare
           </div>
-          <h1 style={{ ...fraunces, fontWeight: 600, fontSize: 44, lineHeight: 1.1, color: NAVY, margin: "0 0 16px", letterSpacing: "-0.02em" }}>
+          <h1 className={contentStyles.heroHeading} style={{ ...fraunces, fontWeight: 600, lineHeight: 1.1, color: NAVY, margin: "0 0 16px", letterSpacing: "-0.02em" }}>
             Services
           </h1>
           <p style={{ fontSize: 16, lineHeight: 1.6, color: TEXT_BODY, maxWidth: 480, margin: 0 }}>
@@ -35,16 +37,9 @@ export default function ServicesPage() {
           </p>
         </section>
 
-        <section style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", borderBottom: `2px solid ${NAVY}`, borderTop: `1px solid ${BORDER}` }}>
-          {TRANSACTION_TYPES.map((t, i) => (
-            <div
-              key={t.title}
-              style={{
-                padding: "40px 48px",
-                borderRight: i % 2 === 0 ? `1px solid ${BORDER}` : undefined,
-                borderBottom: i < TRANSACTION_TYPES.length - 2 ? `1px solid ${BORDER}` : undefined,
-              }}
-            >
+        <section className={styles.grid} style={{ display: "grid", borderBottom: `2px solid ${NAVY}`, borderTop: `1px solid ${BORDER}` }}>
+          {TRANSACTION_TYPES.map((t) => (
+            <div key={t.title} className={styles.item}>
               <div style={{ ...fraunces, fontSize: 22, color: TEAL, marginBottom: 14 }}>{t.n}</div>
               <h2 style={{ fontSize: 17, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 8px" }}>{t.title}</h2>
               <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.6, margin: 0 }}>{t.body}</p>
@@ -52,7 +47,7 @@ export default function ServicesPage() {
           ))}
         </section>
 
-        <section style={{ padding: "56px 48px", textAlign: "center" }}>
+        <section className={contentStyles.ctaSection} style={{ textAlign: "center" }}>
           <Link
             href="/get-a-quote"
             style={{ display: "inline-block", background: TEAL, color: "white", fontWeight: 800, fontSize: 15.5, padding: "17px 34px", textDecoration: "none" }}

@@ -1,0 +1,22 @@
+/* Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts) */
+
+.step {
+  grid-template-columns: 120px 1fr;
+  padding: 48px;
+}
+
+.stepNumber {
+  font-size: 32px;
+}
+
+@media (max-width: 640px) {
+  .step {
+    grid-template-columns: 48px 1fr;
+    padding: 32px 20px;
+    column-gap: 16px;
+  }
+
+  .stepNumber {
+    font-size: 20px;
+  }
+}

@@ -1,0 +1,37 @@
+/* Shared responsive classes for the content pages (how-it-works, services,
+   fees-explained, faq). Breakpoints: mobile <=640px, tablet <=1024px
+   (see src/lib/theme.ts). */
+
+.hero {
+  padding: 72px 48px;
+}
+
+.heroHeading {
+  font-size: 44px;
+}
+
+.ctaSection {
+  padding: 56px 48px;
+}
+
+.itemPad {
+  padding: 44px 48px;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 40px 20px;
+  }
+
+  .heroHeading {
+    font-size: 30px;
+  }
+
+  .ctaSection {
+    padding: 40px 20px;
+  }
+
+  .itemPad {
+    padding: 32px 20px;
+  }
+}
