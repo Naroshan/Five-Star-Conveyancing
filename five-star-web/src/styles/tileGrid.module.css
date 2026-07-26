@@ -1,4 +1,5 @@
-/* Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts) */
+/* Shared hub-page tile grid (services, guides, locations).
+   Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts). */
 
 .gridSection {
   padding: 0 48px 56px;

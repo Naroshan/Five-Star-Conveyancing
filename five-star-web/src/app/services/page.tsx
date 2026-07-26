@@ -2,24 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, GRADIENT_CTA, TEAL, RADIUS, SHADOW, ICON_BADGE_BG, ICON_BADGE_BG_ACCENT, ICON_BADGE_BG_GOLD, fraunces } from "@/lib/theme";
-import { HomeIcon, SwapIcon, RefreshIcon, UsersIcon, DocumentExtendIcon } from "@/components/icons";
+import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, GRADIENT_CTA, TEAL, RADIUS, SHADOW, fraunces } from "@/lib/theme";
+import { SERVICE_TYPES } from "@/lib/serviceTypes";
 import contentStyles from "@/styles/contentPage.module.css";
-import styles from "./page.module.css";
+import styles from "@/styles/tileGrid.module.css";
 
 export const metadata: Metadata = {
   title: "Services — Five Star Conveyancing",
   description: "Conveyancing transaction types we compare quotes for: sale, purchase, remortgage, transfer of equity, and lease extension.",
 };
-
-const TRANSACTION_TYPES = [
-  { icon: HomeIcon, bg: ICON_BADGE_BG, iconColor: TEAL, title: "Purchase", body: "Buying a property, freehold or leasehold, with or without a mortgage." },
-  { icon: HomeIcon, bg: ICON_BADGE_BG_ACCENT, iconColor: "oklch(0.5 0.22 350)", title: "Sale", body: "Selling a property you own." },
-  { icon: SwapIcon, bg: ICON_BADGE_BG_GOLD, iconColor: "oklch(0.6 0.14 80)", title: "Sale and purchase", body: "Selling your current property and buying your next one at the same time." },
-  { icon: RefreshIcon, bg: ICON_BADGE_BG, iconColor: TEAL, title: "Remortgage", body: "Switching mortgage lender or deal on a property you already own." },
-  { icon: UsersIcon, bg: ICON_BADGE_BG_ACCENT, iconColor: "oklch(0.5 0.22 350)", title: "Transfer of equity", body: "Adding or removing a name from the title of a property — for example after marriage, divorce, or a change in ownership share." },
-  { icon: DocumentExtendIcon, bg: ICON_BADGE_BG_GOLD, iconColor: "oklch(0.6 0.14 80)", title: "Lease extension", body: "Extending the remaining term of a leasehold property." },
-];
 
 export default function ServicesPage() {
   return (
@@ -40,14 +31,19 @@ export default function ServicesPage() {
 
         <section className={styles.gridSection}>
           <div className={styles.grid} style={{ display: "grid" }}>
-            {TRANSACTION_TYPES.map((t) => (
-              <div key={t.title} className={styles.item} style={{ background: "white", borderRadius: RADIUS.lg, boxShadow: SHADOW.md }}>
+            {SERVICE_TYPES.map((t) => (
+              <Link
+                key={t.slug}
+                href={`/services/${t.slug}`}
+                className={styles.item}
+                style={{ display: "block", background: "white", borderRadius: RADIUS.lg, boxShadow: SHADOW.md, textDecoration: "none" }}
+              >
                 <div
                   style={{
                     width: 52,
                     height: 52,
                     borderRadius: "50%",
-                    background: t.bg,
+                    background: t.iconBg,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -57,8 +53,8 @@ export default function ServicesPage() {
                   <t.icon size={24} color={t.iconColor} />
                 </div>
                 <h2 style={{ fontSize: 17, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 8px" }}>{t.title}</h2>
-                <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.6, margin: 0 }}>{t.body}</p>
-              </div>
+                <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.6, margin: 0 }}>{t.short}</p>
+              </Link>
             ))}
           </div>
         </section>
