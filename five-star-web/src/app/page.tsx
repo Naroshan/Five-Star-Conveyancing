@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { NAVY, TEAL, GOLD, CREAM, CREAM_ALT, BORDER, BORDER_ALT, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEXT_ON_NAVY_MUTED, fraunces } from "@/lib/theme";
+import { NAVY, TEAL, GOLD, CREAM, CREAM_ALT, BORDER, BORDER_ALT, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEXT_ON_NAVY_MUTED, ACCENT_BOLD, RADIUS, fraunces } from "@/lib/theme";
 import styles from "./page.module.css";
 
 const HOW_IT_WORKS = [
@@ -62,11 +62,12 @@ export default function HomePage() {
                 href="/get-a-quote"
                 style={{
                   display: "inline-block",
-                  background: TEAL,
+                  background: ACCENT_BOLD,
                   color: "white",
                   fontWeight: 800,
                   fontSize: 15.5,
                   padding: "17px 34px",
+                  borderRadius: RADIUS.pill,
                   textDecoration: "none",
                 }}
               >
@@ -177,7 +178,16 @@ export default function HomePage() {
           <h2 className={styles.ctaHeading} style={{ ...fraunces, fontWeight: 600, color: "white", margin: "0 0 24px" }}>Ready to compare?</h2>
           <Link
             href="/get-a-quote"
-            style={{ display: "inline-block", background: GOLD, color: NAVY, fontWeight: 800, fontSize: 16, padding: "18px 40px", textDecoration: "none" }}
+            style={{
+              display: "inline-block",
+              background: ACCENT_BOLD,
+              color: "white",
+              fontWeight: 800,
+              fontSize: 16,
+              padding: "18px 40px",
+              borderRadius: RADIUS.pill,
+              textDecoration: "none",
+            }}
           >
             Get my quotes →
           </Link>

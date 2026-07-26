@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Logo } from "./Logo";
-import { NAVY, CREAM, TEXT_HEADING } from "@/lib/theme";
+import { NAVY, CREAM, TEXT_HEADING, ACCENT_BOLD, RADIUS } from "@/lib/theme";
 import styles from "./SiteHeader.module.css";
 
 const NAV_LINKS = [
@@ -79,7 +79,15 @@ export function SiteHeader() {
         ))}
         <Link
           href="/get-a-quote"
-          style={{ fontWeight: 800, color: CREAM, background: NAVY, padding: "12px 26px", whiteSpace: "nowrap", textDecoration: "none" }}
+          style={{
+            fontWeight: 800,
+            color: "white",
+            background: ACCENT_BOLD,
+            padding: "12px 26px",
+            borderRadius: RADIUS.pill,
+            whiteSpace: "nowrap",
+            textDecoration: "none",
+          }}
           onClick={() => setOpen(false)}
         >
           Get a quote

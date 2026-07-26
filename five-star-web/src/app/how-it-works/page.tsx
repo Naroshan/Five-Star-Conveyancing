@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { NAVY, TEAL, CREAM, BORDER, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, fraunces } from "@/lib/theme";
+import { NAVY, TEAL, CREAM, BORDER, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, ACCENT_BOLD, RADIUS, fraunces } from "@/lib/theme";
 import contentStyles from "@/styles/contentPage.module.css";
 import styles from "./page.module.css";
 
@@ -68,7 +68,7 @@ export default function HowItWorksPage() {
         <section className={contentStyles.ctaSection} style={{ textAlign: "center" }}>
           <Link
             href="/get-a-quote"
-            style={{ display: "inline-block", background: TEAL, color: "white", fontWeight: 800, fontSize: 15.5, padding: "17px 34px", textDecoration: "none" }}
+            style={{ display: "inline-block", background: ACCENT_BOLD, color: "white", fontWeight: 800, fontSize: 15.5, padding: "17px 34px", borderRadius: RADIUS.pill, textDecoration: "none" }}
           >
             Get my quote →
           </Link>

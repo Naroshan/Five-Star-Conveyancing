@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { NAVY, TEAL, CREAM, BORDER, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, fraunces } from "@/lib/theme";
+import { NAVY, TEAL, GOLD, CREAM, BORDER, TEXT_BODY, ACCENT_BOLD, RADIUS, fraunces } from "@/lib/theme";
 import contentStyles from "@/styles/contentPage.module.css";
 import styles from "./page.module.css";
 
@@ -18,6 +18,14 @@ const TRANSACTION_TYPES = [
   { n: "04", title: "Remortgage", body: "Switching mortgage lender or deal on a property you already own." },
   { n: "05", title: "Transfer of equity", body: "Adding or removing a name from the title of a property — for example after marriage, divorce, or a change in ownership share." },
   { n: "06", title: "Lease extension", body: "Extending the remaining term of a leasehold property." },
+];
+
+// Bold color-blocked tile treatment, cycling through the accent palette —
+// GOLD needs navy text for contrast, the other two take white.
+const TILE_STYLES = [
+  { bg: TEAL, text: "white", muted: "oklch(0.9 0.03 190)" },
+  { bg: ACCENT_BOLD, text: "white", muted: "oklch(0.88 0.05 350)" },
+  { bg: GOLD, text: NAVY, muted: "oklch(0.32 0.06 80)" },
 ];
 
 export default function ServicesPage() {
@@ -37,20 +45,23 @@ export default function ServicesPage() {
           </p>
         </section>
 
-        <section className={styles.grid} style={{ display: "grid", borderBottom: `2px solid ${NAVY}`, borderTop: `1px solid ${BORDER}` }}>
-          {TRANSACTION_TYPES.map((t) => (
-            <div key={t.title} className={styles.item}>
-              <div style={{ ...fraunces, fontSize: 22, color: TEAL, marginBottom: 14 }}>{t.n}</div>
-              <h2 style={{ fontSize: 17, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 8px" }}>{t.title}</h2>
-              <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.6, margin: 0 }}>{t.body}</p>
-            </div>
-          ))}
+        <section className={styles.grid} style={{ display: "grid", borderBottom: `2px solid ${NAVY}`, borderTop: `1px solid ${BORDER}`, background: NAVY }}>
+          {TRANSACTION_TYPES.map((t, i) => {
+            const tile = TILE_STYLES[i % TILE_STYLES.length];
+            return (
+              <div key={t.title} className={styles.item} style={{ background: tile.bg }}>
+                <div style={{ ...fraunces, fontSize: 26, color: tile.text, opacity: 0.6, marginBottom: 14 }}>{t.n}</div>
+                <h2 style={{ fontSize: 17, fontWeight: 700, color: tile.text, margin: "0 0 8px" }}>{t.title}</h2>
+                <p style={{ fontSize: 14, color: tile.muted, lineHeight: 1.6, margin: 0 }}>{t.body}</p>
+              </div>
+            );
+          })}
         </section>
 
         <section className={contentStyles.ctaSection} style={{ textAlign: "center" }}>
           <Link
             href="/get-a-quote"
-            style={{ display: "inline-block", background: TEAL, color: "white", fontWeight: 800, fontSize: 15.5, padding: "17px 34px", textDecoration: "none" }}
+            style={{ display: "inline-block", background: ACCENT_BOLD, color: "white", fontWeight: 800, fontSize: 15.5, padding: "17px 34px", borderRadius: RADIUS.pill, textDecoration: "none" }}
           >
             Get my quote →
           </Link>
