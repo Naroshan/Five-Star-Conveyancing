@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { NAVY, TEAL, GOLD, CREAM, BORDER, TEXT_BODY, ACCENT_BOLD, RADIUS, fraunces } from "@/lib/theme";
+import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, GRADIENT_CTA, TEAL, RADIUS, SHADOW, ICON_BADGE_BG, ICON_BADGE_BG_ACCENT, ICON_BADGE_BG_GOLD, fraunces } from "@/lib/theme";
+import { HomeIcon, SwapIcon, RefreshIcon, UsersIcon, DocumentExtendIcon } from "@/components/icons";
 import contentStyles from "@/styles/contentPage.module.css";
 import styles from "./page.module.css";
 
@@ -12,28 +13,20 @@ export const metadata: Metadata = {
 };
 
 const TRANSACTION_TYPES = [
-  { n: "01", title: "Purchase", body: "Buying a property, freehold or leasehold, with or without a mortgage." },
-  { n: "02", title: "Sale", body: "Selling a property you own." },
-  { n: "03", title: "Sale and purchase", body: "Selling your current property and buying your next one at the same time." },
-  { n: "04", title: "Remortgage", body: "Switching mortgage lender or deal on a property you already own." },
-  { n: "05", title: "Transfer of equity", body: "Adding or removing a name from the title of a property — for example after marriage, divorce, or a change in ownership share." },
-  { n: "06", title: "Lease extension", body: "Extending the remaining term of a leasehold property." },
-];
-
-// Bold color-blocked tile treatment, cycling through the accent palette —
-// GOLD needs navy text for contrast, the other two take white.
-const TILE_STYLES = [
-  { bg: TEAL, text: "white", muted: "oklch(0.9 0.03 190)" },
-  { bg: ACCENT_BOLD, text: "white", muted: "oklch(0.88 0.05 350)" },
-  { bg: GOLD, text: NAVY, muted: "oklch(0.32 0.06 80)" },
+  { icon: HomeIcon, bg: ICON_BADGE_BG, iconColor: TEAL, title: "Purchase", body: "Buying a property, freehold or leasehold, with or without a mortgage." },
+  { icon: HomeIcon, bg: ICON_BADGE_BG_ACCENT, iconColor: "oklch(0.5 0.22 350)", title: "Sale", body: "Selling a property you own." },
+  { icon: SwapIcon, bg: ICON_BADGE_BG_GOLD, iconColor: "oklch(0.6 0.14 80)", title: "Sale and purchase", body: "Selling your current property and buying your next one at the same time." },
+  { icon: RefreshIcon, bg: ICON_BADGE_BG, iconColor: TEAL, title: "Remortgage", body: "Switching mortgage lender or deal on a property you already own." },
+  { icon: UsersIcon, bg: ICON_BADGE_BG_ACCENT, iconColor: "oklch(0.5 0.22 350)", title: "Transfer of equity", body: "Adding or removing a name from the title of a property — for example after marriage, divorce, or a change in ownership share." },
+  { icon: DocumentExtendIcon, bg: ICON_BADGE_BG_GOLD, iconColor: "oklch(0.6 0.14 80)", title: "Lease extension", body: "Extending the remaining term of a leasehold property." },
 ];
 
 export default function ServicesPage() {
   return (
     <>
       <SiteHeader />
-      <div style={{ maxWidth: 1320, margin: "0 auto", background: CREAM, borderLeft: `1px solid ${BORDER}`, borderRight: `1px solid ${BORDER}` }}>
-        <section className={contentStyles.hero} style={{ borderBottom: `2px solid ${NAVY}` }}>
+      <div style={{ background: CREAM }}>
+        <section className={contentStyles.hero}>
           <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 18 }}>
             What we compare
           </div>
@@ -45,23 +38,35 @@ export default function ServicesPage() {
           </p>
         </section>
 
-        <section className={styles.grid} style={{ display: "grid", borderBottom: `2px solid ${NAVY}`, borderTop: `1px solid ${BORDER}`, background: NAVY }}>
-          {TRANSACTION_TYPES.map((t, i) => {
-            const tile = TILE_STYLES[i % TILE_STYLES.length];
-            return (
-              <div key={t.title} className={styles.item} style={{ background: tile.bg }}>
-                <div style={{ ...fraunces, fontSize: 26, color: tile.text, opacity: 0.6, marginBottom: 14 }}>{t.n}</div>
-                <h2 style={{ fontSize: 17, fontWeight: 700, color: tile.text, margin: "0 0 8px" }}>{t.title}</h2>
-                <p style={{ fontSize: 14, color: tile.muted, lineHeight: 1.6, margin: 0 }}>{t.body}</p>
+        <section className={styles.gridSection}>
+          <div className={styles.grid} style={{ display: "grid" }}>
+            {TRANSACTION_TYPES.map((t) => (
+              <div key={t.title} className={styles.item} style={{ background: "white", borderRadius: RADIUS.lg, boxShadow: SHADOW.md }}>
+                <div
+                  style={{
+                    width: 52,
+                    height: 52,
+                    borderRadius: "50%",
+                    background: t.bg,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 16,
+                  }}
+                >
+                  <t.icon size={24} color={t.iconColor} />
+                </div>
+                <h2 style={{ fontSize: 17, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 8px" }}>{t.title}</h2>
+                <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.6, margin: 0 }}>{t.body}</p>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </section>
 
-        <section className={contentStyles.ctaSection} style={{ textAlign: "center" }}>
+        <section className={contentStyles.ctaSection} style={{ textAlign: "center", paddingTop: 0 }}>
           <Link
             href="/get-a-quote"
-            style={{ display: "inline-block", background: ACCENT_BOLD, color: "white", fontWeight: 800, fontSize: 15.5, padding: "17px 34px", borderRadius: RADIUS.pill, textDecoration: "none" }}
+            style={{ display: "inline-block", background: GRADIENT_CTA, boxShadow: SHADOW.md, color: "white", fontWeight: 800, fontSize: 15.5, padding: "17px 34px", borderRadius: RADIUS.pill, textDecoration: "none" }}
           >
             Get my quote →
           </Link>

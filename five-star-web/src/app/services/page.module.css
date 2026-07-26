@@ -1,12 +1,22 @@
 /* Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts) */
 
+.gridSection {
+  padding: 0 48px 56px;
+}
+
 .grid {
   grid-template-columns: repeat(2, 1fr);
-  gap: 3px;
+  gap: 20px;
 }
 
 .item {
-  padding: 40px 48px;
+  padding: 32px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px oklch(0.2 0.02 240 / 0.14), 0 2px 6px oklch(0.2 0.02 240 / 0.08);
 }
 
 @media (max-width: 1024px) {
@@ -16,11 +26,19 @@
 }
 
 @media (max-width: 640px) {
+  .gridSection {
+    padding: 0 20px 40px;
+  }
+
   .grid {
     grid-template-columns: 1fr;
   }
 
   .item {
-    padding: 32px 20px;
+    padding: 24px;
+  }
+
+  .item:hover {
+    transform: none;
   }
 }

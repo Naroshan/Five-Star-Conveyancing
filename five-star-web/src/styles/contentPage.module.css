@@ -15,7 +15,14 @@
 }
 
 .itemPad {
-  padding: 44px 48px;
+  padding: 28px 32px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 48px 56px;
 }
 
 @media (max-width: 640px) {
@@ -32,6 +39,10 @@
   }
 
   .itemPad {
-    padding: 32px 20px;
+    padding: 22px 20px;
+  }
+
+  .list {
+    padding: 0 20px 40px;
   }
 }

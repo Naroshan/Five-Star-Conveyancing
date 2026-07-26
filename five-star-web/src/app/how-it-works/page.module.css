@@ -1,22 +1,25 @@
 /* Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts) */
 
-.step {
-  grid-template-columns: 120px 1fr;
-  padding: 48px;
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0 48px 56px;
 }
 
-.stepNumber {
-  font-size: 32px;
+.step {
+  grid-template-columns: 72px 1fr;
+  padding: 32px;
 }
 
 @media (max-width: 640px) {
-  .step {
-    grid-template-columns: 48px 1fr;
-    padding: 32px 20px;
-    column-gap: 16px;
+  .steps {
+    padding: 0 20px 40px;
   }
 
-  .stepNumber {
-    font-size: 20px;
+  .step {
+    grid-template-columns: 56px 1fr;
+    padding: 24px;
+    column-gap: 16px;
   }
 }
