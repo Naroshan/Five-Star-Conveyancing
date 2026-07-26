@@ -1,0 +1,27 @@
+/* Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts) */
+
+.principlesGrid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.sectionLabel {
+  padding: 0 48px 8px;
+}
+
+@media (max-width: 1024px) {
+  .principlesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .principlesGrid {
+    grid-template-columns: 1fr;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  .sectionLabel {
+    padding: 0 20px 8px;
+  }
+}

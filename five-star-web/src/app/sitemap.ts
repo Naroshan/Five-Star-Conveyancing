@@ -1,4 +1,7 @@
 import type { MetadataRoute } from "next";
+import { SERVICE_TYPES } from "@/lib/serviceTypes";
+import { GUIDES } from "@/lib/guides";
+import { LOCATIONS } from "@/lib/locations";
 
 // Only genuinely public, indexable, canonical pages belong here. Admin
 // pages are excluded (see robots.ts) and per-quote results pages are
@@ -28,15 +31,50 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.6,
     },
+    ...SERVICE_TYPES.map((s) => ({
+      url: `${SITE_URL}/services/${s.slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    })),
     {
       url: `${SITE_URL}/fees-explained`,
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
+      url: `${SITE_URL}/guides`,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    ...GUIDES.map((g) => ({
+      url: `${SITE_URL}/guides/${g.slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    })),
+    {
+      url: `${SITE_URL}/locations`,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    ...LOCATIONS.map((l) => ({
+      url: `${SITE_URL}/locations/${l.slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.4,
+    })),
+    {
       url: `${SITE_URL}/faq`,
       changeFrequency: "monthly",
       priority: 0.6,
+    },
+    {
+      url: `${SITE_URL}/about`,
+      changeFrequency: "monthly",
+      priority: 0.4,
+    },
+    {
+      url: `${SITE_URL}/contact`,
+      changeFrequency: "monthly",
+      priority: 0.3,
     },
   ];
 }

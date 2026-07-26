@@ -10,6 +10,17 @@ const TRUST_BADGES = [
   { icon: PoundCoinIcon, label: "Free to compare, always", color: "oklch(0.6 0.2 350)" },
 ];
 
+const FOOTER_LINKS = [
+  { href: "/how-it-works", label: "How it works" },
+  { href: "/services", label: "Services" },
+  { href: "/fees-explained", label: "Fees" },
+  { href: "/guides", label: "Guides" },
+  { href: "/locations", label: "Locations" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+];
+
 export function SiteFooter() {
   return (
     <footer style={{ padding: "40px 48px", background: "oklch(0.15 0.02 240)", marginTop: 40 }}>
@@ -23,19 +34,12 @@ export function SiteFooter() {
       </div>
       <div className={styles.row}>
         <Logo variant="onDark" size={16} />
-        <nav className={styles.nav} style={{ display: "flex", gap: 24, fontSize: 13, fontWeight: 600, flexWrap: "wrap" }}>
-          <Link href="/how-it-works" style={{ color: TEXT_ON_NAVY_MUTED, textDecoration: "none" }}>
-            How it works
-          </Link>
-          <Link href="/services" style={{ color: TEXT_ON_NAVY_MUTED, textDecoration: "none" }}>
-            Services
-          </Link>
-          <Link href="/fees-explained" style={{ color: TEXT_ON_NAVY_MUTED, textDecoration: "none" }}>
-            Fees
-          </Link>
-          <Link href="/faq" style={{ color: TEXT_ON_NAVY_MUTED, textDecoration: "none" }}>
-            FAQ
-          </Link>
+        <nav className={styles.nav} style={{ display: "flex", gap: 20, fontSize: 13, fontWeight: 600, flexWrap: "wrap" }}>
+          {FOOTER_LINKS.map((link) => (
+            <Link key={link.href} href={link.href} style={{ color: TEXT_ON_NAVY_MUTED, textDecoration: "none" }}>
+              {link.label}
+            </Link>
+          ))}
         </nav>
       </div>
       <p style={{ fontSize: 11.5, color: "oklch(0.55 0.02 240)", maxWidth: 600, margin: "20px 0 0" }}>
