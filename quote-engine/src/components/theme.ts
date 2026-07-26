@@ -25,5 +25,13 @@ export const theme = {
     excludedBg: 'oklch(0.94 0.015 80)',
     excludedText: 'oklch(0.4 0.02 240)',
   },
-  radius: { card: '12px', control: '999px' },
+  radius: { card: '18px', control: '999px' },
+  gradient: {
+    cta: 'linear-gradient(120deg, oklch(0.5 0.22 350) 0%, oklch(0.4 0.2 350) 100%)',
+  },
+  shadow: {
+    sm: '0 1px 2px oklch(0.2 0.02 240 / 0.06), 0 1px 1px oklch(0.2 0.02 240 / 0.04)',
+    md: '0 4px 16px oklch(0.2 0.02 240 / 0.10), 0 1px 3px oklch(0.2 0.02 240 / 0.08)',
+    lg: '0 12px 32px oklch(0.2 0.02 240 / 0.14), 0 2px 6px oklch(0.2 0.02 240 / 0.08)',
+  },
 } as const;

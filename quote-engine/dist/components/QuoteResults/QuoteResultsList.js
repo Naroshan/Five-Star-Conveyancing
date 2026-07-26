@@ -30,21 +30,31 @@ export function QuoteResultsList({ results, onSelect, onEmailQuote, onSaveQuote,
         });
         return sorted;
     }, [eligible, sortBy, fixedFeeOnly]);
+    // Computed from real totalEstimate values, not asserted — stays stable
+    // regardless of which sort/filter the visitor has picked.
+    const cheapestFirmId = useMemo(() => {
+        const withPrice = eligible.filter((r) => r.totalEstimate !== null);
+        if (withPrice.length === 0)
+            return null;
+        return withPrice.reduce((min, r) => (r.totalEstimate < min.totalEstimate ? r : min)).firm.firmId;
+    }, [eligible]);
     if (results.length === 0) {
         return (_jsxs("div", { style: emptyStateStyle, children: [_jsx("p", { style: { fontWeight: 500, fontSize: 16, margin: '0 0 4px', color: theme.color.textHeading }, children: "We couldn't find a quote for this" }), _jsx("p", { style: { fontSize: 13, color: theme.color.textSecondary, margin: '0 0 16px' }, children: "None of our participating firms currently cover this type of transaction. An adviser can help you find the right option." }), _jsx("button", { type: "button", onClick: () => onSpeakToAdviser(''), style: adviserButtonStyle, children: "Speak to an adviser" })] }));
     }
-    return (_jsxs("div", { style: { display: 'flex', flexDirection: 'column', gap: 16 }, children: [eligible.length > 0 && (_jsxs("div", { style: { display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap', fontSize: 13 }, children: [_jsxs("label", { style: { display: 'flex', alignItems: 'center', gap: 6 }, children: ["Sort by", _jsx("select", { value: sortBy, onChange: (e) => setSortBy(e.target.value), style: selectStyle, children: SORT_OPTIONS.map((opt) => (_jsx("option", { value: opt.value, children: opt.label }, opt.value))) })] }), _jsxs("label", { style: { display: 'flex', alignItems: 'center', gap: 6 }, children: [_jsx("input", { type: "checkbox", checked: fixedFeeOnly, onChange: (e) => setFixedFeeOnly(e.target.checked) }), "Fixed fee only"] })] })), eligible.length === 0 && (_jsxs("div", { style: emptyStateStyle, children: [_jsx("p", { style: { fontWeight: 500, fontSize: 16, margin: '0 0 4px', color: theme.color.textHeading }, children: "No firms matched every answer this time" }), _jsx("p", { style: { fontSize: 13, color: theme.color.textSecondary, margin: 0 }, children: "The firms below couldn't be included, with the reason shown for each. An adviser can help with alternatives." })] })), visibleEligible.map((result) => (_jsx(QuoteResultCard, { result: result, onSelect: onSelect, onEmailQuote: onEmailQuote, onSaveQuote: onSaveQuote, onSpeakToAdviser: onSpeakToAdviser }, result.firm.firmId))), excluded.map((result) => (_jsx(QuoteResultCard, { result: result, onSelect: onSelect, onEmailQuote: onEmailQuote, onSaveQuote: onSaveQuote, onSpeakToAdviser: onSpeakToAdviser }, result.firm.firmId)))] }));
+    return (_jsxs("div", { style: { display: 'flex', flexDirection: 'column', gap: 16 }, children: [eligible.length > 0 && (_jsxs("div", { style: { display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap', fontSize: 13 }, children: [_jsxs("label", { style: { display: 'flex', alignItems: 'center', gap: 6 }, children: ["Sort by", _jsx("select", { value: sortBy, onChange: (e) => setSortBy(e.target.value), style: selectStyle, children: SORT_OPTIONS.map((opt) => (_jsx("option", { value: opt.value, children: opt.label }, opt.value))) })] }), _jsxs("label", { style: { display: 'flex', alignItems: 'center', gap: 6 }, children: [_jsx("input", { type: "checkbox", checked: fixedFeeOnly, onChange: (e) => setFixedFeeOnly(e.target.checked) }), "Fixed fee only"] })] })), eligible.length === 0 && (_jsxs("div", { style: emptyStateStyle, children: [_jsx("p", { style: { fontWeight: 500, fontSize: 16, margin: '0 0 4px', color: theme.color.textHeading }, children: "No firms matched every answer this time" }), _jsx("p", { style: { fontSize: 13, color: theme.color.textSecondary, margin: 0 }, children: "The firms below couldn't be included, with the reason shown for each. An adviser can help with alternatives." })] })), visibleEligible.map((result) => (_jsx(QuoteResultCard, { result: result, onSelect: onSelect, onEmailQuote: onEmailQuote, onSaveQuote: onSaveQuote, onSpeakToAdviser: onSpeakToAdviser, isCheapest: result.firm.firmId === cheapestFirmId }, result.firm.firmId))), excluded.map((result) => (_jsx(QuoteResultCard, { result: result, onSelect: onSelect, onEmailQuote: onEmailQuote, onSaveQuote: onSaveQuote, onSpeakToAdviser: onSpeakToAdviser }, result.firm.firmId)))] }));
 }
 const emptyStateStyle = {
     background: theme.color.offWhite,
-    border: `0.5px solid ${theme.color.border}`,
+    border: `1px solid ${theme.color.border}`,
     borderRadius: theme.radius.card,
-    padding: 20,
+    padding: 24,
     textAlign: 'center',
 };
 const adviserButtonStyle = {
-    background: theme.color.accent,
+    background: theme.gradient.cta,
+    boxShadow: theme.shadow.sm,
     color: 'white',
+    fontWeight: 700,
     border: 'none',
     borderRadius: theme.radius.control,
     padding: '9px 16px',
@@ -52,7 +62,7 @@ const adviserButtonStyle = {
     cursor: 'pointer',
 };
 const selectStyle = {
-    border: `0.5px solid ${theme.color.border}`,
+    border: `1px solid ${theme.color.border}`,
     borderRadius: theme.radius.control,
     padding: '4px 8px',
     fontSize: 13,

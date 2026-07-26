@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import type { PublicQuoteResult } from '../../api/publicResult.js';
 import { theme } from '../theme.js';
+import { ShieldCheckIcon, MailIcon, BookmarkIcon, PhoneIcon, RibbonBadgeIcon } from '../icons.js';
 import { FeeBreakdown } from './FeeBreakdown.js';
 
 export interface QuoteResultCardProps {
@@ -9,6 +10,8 @@ export interface QuoteResultCardProps {
   onEmailQuote: (firmId: string) => void;
   onSaveQuote: (firmId: string) => void;
   onSpeakToAdviser: (firmId: string) => void;
+  /** True for the lowest-totalEstimate eligible result — a computed fact, not a fabricated claim. */
+  isCheapest?: boolean;
 }
 
 function formatCurrency(amount: number): string {
@@ -20,7 +23,7 @@ function isFullyFixedFee(result: PublicQuoteResult): boolean {
   return result.lineItems.length > 0 && result.lineItems.every((l) => l.isGuaranteed && !l.isEstimated);
 }
 
-export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, onSpeakToAdviser }: QuoteResultCardProps) {
+export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, onSpeakToAdviser, isCheapest }: QuoteResultCardProps) {
   const displayName = result.firm.tradingName ?? result.firm.legalEntityName;
 
   if (result.eligibilityStatus === 'excluded_with_reason') {
@@ -30,9 +33,9 @@ export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, o
         aria-label={`${displayName} — not available for this quote`}
         style={{
           background: theme.color.excludedBg,
-          border: `0.5px solid ${theme.color.border}`,
+          border: `1px solid ${theme.color.border}`,
           borderRadius: theme.radius.card,
-          padding: 16,
+          padding: 18,
           opacity: 0.85,
         }}
       >
@@ -51,13 +54,13 @@ export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, o
             color: theme.color.textBody,
             margin: '12px 0 0',
             paddingTop: 12,
-            borderTop: `0.5px solid ${theme.color.border}`,
+            borderTop: `1px solid ${theme.color.border}`,
           }}
         >
           {result.exclusionReason}
         </p>
         <button type="button" onClick={() => onSpeakToAdviser(result.firm.firmId)} style={secondaryButtonStyle}>
-          Speak to an adviser
+          <PhoneIcon size={14} /> Speak to an adviser
         </button>
       </div>
     );
@@ -69,14 +72,46 @@ export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, o
     <div
       role="group"
       aria-label={`${displayName} quote`}
-      style={{ background: theme.color.surfaceWhite, border: `0.5px solid ${theme.color.border}`, borderRadius: theme.radius.card, padding: 16 }}
+      style={{
+        position: 'relative',
+        background: theme.color.surfaceWhite,
+        borderRadius: theme.radius.card,
+        boxShadow: isCheapest ? theme.shadow.lg : theme.shadow.md,
+        padding: 20,
+      }}
     >
+      {isCheapest && (
+        <span
+          style={{
+            position: 'absolute',
+            top: -12,
+            left: 18,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 4,
+            background: theme.gradient.cta,
+            color: 'white',
+            fontSize: 11,
+            fontWeight: 800,
+            padding: '4px 10px',
+            borderRadius: theme.radius.control,
+            boxShadow: theme.shadow.sm,
+          }}
+        >
+          <RibbonBadgeIcon size={12} color="white" /> Cheapest
+        </span>
+      )}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
         <div>
           <p style={{ fontWeight: 500, fontSize: 15, margin: 0, color: theme.color.textHeading }}>{displayName}</p>
-          <p style={{ fontSize: 12, color: theme.color.textSecondary, margin: '4px 0 0' }}>
-            {result.firm.sraNumber && <span>SRA {result.firm.sraNumber}</span>}
-            {result.firm.sraNumber && ' · '}
+          <p style={{ fontSize: 12, color: theme.color.textSecondary, margin: '4px 0 0', display: 'flex', alignItems: 'center', gap: 4 }}>
+            {result.firm.sraNumber && (
+              <>
+                <ShieldCheckIcon size={13} color={theme.color.teal} />
+                <span>SRA {result.firm.sraNumber}</span>
+                <span>·</span>
+              </>
+            )}
             <span>{fixedFee ? 'Fixed fee' : 'Estimate — some figures may vary'}</span>
           </p>
         </div>
@@ -88,7 +123,7 @@ export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, o
         </div>
       </div>
 
-      <div style={{ margin: '14px 0', paddingTop: 12, borderTop: `0.5px solid ${theme.color.border}` }}>
+      <div style={{ margin: '14px 0', paddingTop: 12, borderTop: `1px solid ${theme.color.border}` }}>
         <FeeBreakdown
           lineItems={result.lineItems}
           legalFeeSubtotal={result.legalFeeSubtotal}
@@ -103,10 +138,10 @@ export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, o
           Select this firm
         </button>
         <button type="button" onClick={() => onEmailQuote(result.firm.firmId)} style={secondaryButtonStyle}>
-          Email quote
+          <MailIcon size={14} /> Email quote
         </button>
         <button type="button" onClick={() => onSaveQuote(result.firm.firmId)} style={secondaryButtonStyle}>
-          Save quote
+          <BookmarkIcon size={14} /> Save quote
         </button>
       </div>
     </div>
@@ -114,7 +149,8 @@ export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, o
 }
 
 const primaryButtonStyle: CSSProperties = {
-  background: theme.color.accent,
+  background: theme.gradient.cta,
+  boxShadow: theme.shadow.sm,
   color: 'white',
   fontWeight: 700,
   border: 'none',
@@ -125,9 +161,12 @@ const primaryButtonStyle: CSSProperties = {
 };
 
 const secondaryButtonStyle: CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 6,
   background: 'transparent',
   color: theme.color.textHeading,
-  border: `0.5px solid ${theme.color.border}`,
+  border: `1px solid ${theme.color.border}`,
   borderRadius: theme.radius.control,
   padding: '9px 16px',
   fontSize: 13,

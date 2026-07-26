@@ -16,7 +16,15 @@ export declare const theme: {
         readonly excludedText: "oklch(0.4 0.02 240)";
     };
     readonly radius: {
-        readonly card: "12px";
+        readonly card: "18px";
         readonly control: "999px";
+    };
+    readonly gradient: {
+        readonly cta: "linear-gradient(120deg, oklch(0.5 0.22 350) 0%, oklch(0.4 0.2 350) 100%)";
+    };
+    readonly shadow: {
+        readonly sm: "0 1px 2px oklch(0.2 0.02 240 / 0.06), 0 1px 1px oklch(0.2 0.02 240 / 0.04)";
+        readonly md: "0 4px 16px oklch(0.2 0.02 240 / 0.10), 0 1px 3px oklch(0.2 0.02 240 / 0.08)";
+        readonly lg: "0 12px 32px oklch(0.2 0.02 240 / 0.14), 0 2px 6px oklch(0.2 0.02 240 / 0.08)";
     };
 };

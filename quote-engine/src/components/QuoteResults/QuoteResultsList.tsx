@@ -45,6 +45,14 @@ export function QuoteResultsList({ results, onSelect, onEmailQuote, onSaveQuote,
     return sorted;
   }, [eligible, sortBy, fixedFeeOnly]);
 
+  // Computed from real totalEstimate values, not asserted — stays stable
+  // regardless of which sort/filter the visitor has picked.
+  const cheapestFirmId = useMemo(() => {
+    const withPrice = eligible.filter((r) => r.totalEstimate !== null);
+    if (withPrice.length === 0) return null;
+    return withPrice.reduce((min, r) => (r.totalEstimate! < min.totalEstimate! ? r : min)).firm.firmId;
+  }, [eligible]);
+
   if (results.length === 0) {
     return (
       <div style={emptyStateStyle}>
@@ -102,6 +110,7 @@ export function QuoteResultsList({ results, onSelect, onEmailQuote, onSaveQuote,
           onEmailQuote={onEmailQuote}
           onSaveQuote={onSaveQuote}
           onSpeakToAdviser={onSpeakToAdviser}
+          isCheapest={result.firm.firmId === cheapestFirmId}
         />
       ))}
 
@@ -122,15 +131,17 @@ export function QuoteResultsList({ results, onSelect, onEmailQuote, onSaveQuote,
 
 const emptyStateStyle = {
   background: theme.color.offWhite,
-  border: `0.5px solid ${theme.color.border}`,
+  border: `1px solid ${theme.color.border}`,
   borderRadius: theme.radius.card,
-  padding: 20,
+  padding: 24,
   textAlign: 'center' as const,
 };
 
 const adviserButtonStyle = {
-  background: theme.color.accent,
+  background: theme.gradient.cta,
+  boxShadow: theme.shadow.sm,
   color: 'white',
+  fontWeight: 700,
   border: 'none',
   borderRadius: theme.radius.control,
   padding: '9px 16px',
@@ -139,7 +150,7 @@ const adviserButtonStyle = {
 };
 
 const selectStyle = {
-  border: `0.5px solid ${theme.color.border}`,
+  border: `1px solid ${theme.color.border}`,
   borderRadius: theme.radius.control,
   padding: '4px 8px',
   fontSize: 13,
