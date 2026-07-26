@@ -1,38 +1,30 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
+import { TEXT_ON_NAVY_MUTED } from "@/lib/theme";
 
 export function SiteFooter() {
   return (
-    <footer
-      style={{
-        background: "var(--navy-dark)",
-        color: "var(--text-on-navy-body)",
-        fontSize: 12,
-        padding: "24px",
-        marginTop: 40,
-        textAlign: "center",
-      }}
-    >
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: 10 }}>
-        <Logo variant="onDark" size={15} />
+    <footer style={{ padding: "40px 48px", background: "oklch(0.15 0.02 240)", marginTop: 40 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
+        <Logo variant="onDark" size={16} />
+        <nav style={{ display: "flex", gap: 24, fontSize: 13, fontWeight: 600, flexWrap: "wrap" }}>
+          <Link href="/how-it-works" style={{ color: TEXT_ON_NAVY_MUTED, textDecoration: "none" }}>
+            How it works
+          </Link>
+          <Link href="/services" style={{ color: TEXT_ON_NAVY_MUTED, textDecoration: "none" }}>
+            Services
+          </Link>
+          <Link href="/fees-explained" style={{ color: TEXT_ON_NAVY_MUTED, textDecoration: "none" }}>
+            Fees
+          </Link>
+          <Link href="/faq" style={{ color: TEXT_ON_NAVY_MUTED, textDecoration: "none" }}>
+            FAQ
+          </Link>
+        </nav>
       </div>
-      <nav style={{ display: "flex", justifyContent: "center", gap: 16, marginBottom: 12, flexWrap: "wrap" }}>
-        <Link href="/how-it-works" style={{ color: "var(--text-on-navy-body)", textDecoration: "none" }}>
-          How it works
-        </Link>
-        <Link href="/services" style={{ color: "var(--text-on-navy-body)", textDecoration: "none" }}>
-          Services
-        </Link>
-        <Link href="/fees-explained" style={{ color: "var(--text-on-navy-body)", textDecoration: "none" }}>
-          Fees
-        </Link>
-        <Link href="/faq" style={{ color: "var(--text-on-navy-body)", textDecoration: "none" }}>
-          FAQ
-        </Link>
-      </nav>
-      <p style={{ margin: 0 }}>
-        Comparison service. Regulatory disclosures, complaints procedure, and firm ownership information: pending
-        final review before publication.
+      <p style={{ fontSize: 11.5, color: "oklch(0.55 0.02 240)", maxWidth: 600, margin: "20px 0 0" }}>
+        Five Star Conveyancing is a comparison service. Regulatory disclosures, complaints procedure, and firm
+        ownership information: pending final review before publication.
       </p>
     </footer>
   );

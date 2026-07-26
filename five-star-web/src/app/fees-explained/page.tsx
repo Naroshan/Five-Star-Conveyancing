@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { NAVY, TEAL, CREAM, BORDER, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, fraunces } from "@/lib/theme";
 
 export const metadata: Metadata = {
   title: "Fees explained — Five Star Conveyancing",
@@ -31,38 +32,44 @@ export default function FeesExplainedPage() {
   return (
     <>
       <SiteHeader />
-      <main style={{ maxWidth: 680, margin: "0 auto", padding: "32px 24px" }}>
-        <h1 style={{ fontSize: 22, fontWeight: 500, color: "var(--text-heading)", marginBottom: 8 }}>Fees explained</h1>
-        <p style={{ fontSize: 14, color: "var(--text-secondary)", marginBottom: 32 }}>
-          What the terms on your comparison actually mean, and why we show them separately rather than as one bundled number.
-        </p>
+      <div style={{ maxWidth: 1320, margin: "0 auto", background: CREAM, borderLeft: `1px solid ${BORDER}`, borderRight: `1px solid ${BORDER}` }}>
+        <section style={{ padding: "72px 48px", borderBottom: `2px solid ${NAVY}` }}>
+          <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 18 }}>
+            No hidden totals
+          </div>
+          <h1 style={{ ...fraunces, fontWeight: 600, fontSize: 44, lineHeight: 1.1, color: NAVY, margin: "0 0 16px", letterSpacing: "-0.02em" }}>
+            Fees explained
+          </h1>
+          <p style={{ fontSize: 16, lineHeight: 1.6, color: TEXT_BODY, maxWidth: 520, margin: 0 }}>
+            What the terms on your comparison actually mean, and why we show them separately rather than as one
+            bundled number.
+          </p>
+        </section>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          {TERMS.map((t) => (
-            <div key={t.title}>
-              <h2 style={{ fontSize: 15, fontWeight: 500, color: "var(--text-heading)", margin: "0 0 4px" }}>{t.title}</h2>
-              <p style={{ fontSize: 14, color: "var(--text-body)", margin: 0 }}>{t.body}</p>
+        <section style={{ borderBottom: `2px solid ${NAVY}` }}>
+          {TERMS.map((t, i) => (
+            <div
+              key={t.title}
+              style={{
+                padding: "44px 48px",
+                borderBottom: i < TERMS.length - 1 ? `1px solid ${BORDER}` : undefined,
+              }}
+            >
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>{t.title}</h2>
+              <p style={{ fontSize: 14.5, color: TEXT_MUTED, lineHeight: 1.65, maxWidth: 640, margin: 0 }}>{t.body}</p>
             </div>
           ))}
-        </div>
+        </section>
 
-        <div style={{ marginTop: 40, textAlign: "center" }}>
+        <section style={{ padding: "56px 48px", textAlign: "center" }}>
           <Link
             href="/get-a-quote"
-            style={{
-              display: "inline-block",
-              background: "var(--accent)",
-              color: "#EAF3EE",
-              fontSize: 14,
-              padding: "12px 24px",
-              borderRadius: 6,
-              textDecoration: "none",
-            }}
+            style={{ display: "inline-block", background: TEAL, color: "white", fontWeight: 800, fontSize: 15.5, padding: "17px 34px", textDecoration: "none" }}
           >
-            Get my quote
+            Get my quote →
           </Link>
-        </div>
-      </main>
+        </section>
+      </div>
       <SiteFooter />
     </>
   );

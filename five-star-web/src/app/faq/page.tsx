@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { NAVY, TEAL, CREAM, BORDER, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, fraunces } from "@/lib/theme";
 
 export const metadata: Metadata = {
   title: "FAQ — Five Star Conveyancing",
@@ -35,40 +36,51 @@ export default function FaqPage() {
   return (
     <>
       <SiteHeader />
-      <main style={{ maxWidth: 680, margin: "0 auto", padding: "32px 24px" }}>
-        <h1 style={{ fontSize: 22, fontWeight: 500, color: "var(--text-heading)", marginBottom: 8 }}>Frequently asked questions</h1>
+      <div style={{ maxWidth: 1320, margin: "0 auto", background: CREAM, borderLeft: `1px solid ${BORDER}`, borderRight: `1px solid ${BORDER}` }}>
+        <section style={{ padding: "72px 48px", borderBottom: `2px solid ${NAVY}` }}>
+          <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 18 }}>
+            Questions, answered
+          </div>
+          <h1 style={{ ...fraunces, fontWeight: 600, fontSize: 44, lineHeight: 1.1, color: NAVY, margin: 0, letterSpacing: "-0.02em" }}>
+            Frequently asked questions
+          </h1>
+        </section>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 20, marginTop: 24 }}>
-          {FAQS.map((item) => (
-            <div key={item.q}>
-              <h2 style={{ fontSize: 15, fontWeight: 500, color: "var(--text-heading)", margin: "0 0 4px" }}>{item.q}</h2>
-              <p style={{ fontSize: 14, color: "var(--text-body)", margin: 0 }}>{item.a}</p>
+        <section style={{ borderBottom: `2px solid ${NAVY}` }}>
+          {FAQS.map((item, i) => (
+            <div
+              key={item.q}
+              style={{
+                padding: "40px 48px",
+                borderBottom: i < FAQS.length - 1 ? `1px solid ${BORDER}` : undefined,
+              }}
+            >
+              <h2 style={{ fontSize: 16.5, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>{item.q}</h2>
+              <p style={{ fontSize: 14.5, color: TEXT_MUTED, lineHeight: 1.65, maxWidth: 640, margin: 0 }}>{item.a}</p>
             </div>
           ))}
-        </div>
+        </section>
 
-        <p style={{ fontSize: 13, color: "var(--text-secondary)", marginTop: 32 }}>
-          See also: <Link href="/how-it-works" style={{ color: "var(--accent)" }}>how it works</Link> and{" "}
-          <Link href="/fees-explained" style={{ color: "var(--accent)" }}>fees explained</Link>.
-        </p>
-
-        <div style={{ marginTop: 24, textAlign: "center" }}>
+        <section style={{ padding: "56px 48px", textAlign: "center" }}>
+          <p style={{ fontSize: 13.5, color: TEXT_BODY, marginBottom: 28 }}>
+            See also:{" "}
+            <Link href="/how-it-works" style={{ color: TEAL, fontWeight: 700, textDecoration: "none" }}>
+              how it works
+            </Link>{" "}
+            and{" "}
+            <Link href="/fees-explained" style={{ color: TEAL, fontWeight: 700, textDecoration: "none" }}>
+              fees explained
+            </Link>
+            .
+          </p>
           <Link
             href="/get-a-quote"
-            style={{
-              display: "inline-block",
-              background: "var(--accent)",
-              color: "#EAF3EE",
-              fontSize: 14,
-              padding: "12px 24px",
-              borderRadius: 6,
-              textDecoration: "none",
-            }}
+            style={{ display: "inline-block", background: TEAL, color: "white", fontWeight: 800, fontSize: 15.5, padding: "17px 34px", textDecoration: "none" }}
           >
-            Get my quote
+            Get my quote →
           </Link>
-        </div>
-      </main>
+        </section>
+      </div>
       <SiteFooter />
     </>
   );

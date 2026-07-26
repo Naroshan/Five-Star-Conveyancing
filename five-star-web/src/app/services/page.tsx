@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { NAVY, TEAL, CREAM, BORDER, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, fraunces } from "@/lib/theme";
 
 export const metadata: Metadata = {
   title: "Services — Five Star Conveyancing",
@@ -9,50 +10,57 @@ export const metadata: Metadata = {
 };
 
 const TRANSACTION_TYPES = [
-  { title: "Purchase", body: "Buying a property, freehold or leasehold, with or without a mortgage." },
-  { title: "Sale", body: "Selling a property you own." },
-  { title: "Sale and purchase", body: "Selling your current property and buying your next one at the same time." },
-  { title: "Remortgage", body: "Switching mortgage lender or deal on a property you already own." },
-  { title: "Transfer of equity", body: "Adding or removing a name from the title of a property — for example after marriage, divorce, or a change in ownership share." },
-  { title: "Lease extension", body: "Extending the remaining term of a leasehold property." },
+  { n: "01", title: "Purchase", body: "Buying a property, freehold or leasehold, with or without a mortgage." },
+  { n: "02", title: "Sale", body: "Selling a property you own." },
+  { n: "03", title: "Sale and purchase", body: "Selling your current property and buying your next one at the same time." },
+  { n: "04", title: "Remortgage", body: "Switching mortgage lender or deal on a property you already own." },
+  { n: "05", title: "Transfer of equity", body: "Adding or removing a name from the title of a property — for example after marriage, divorce, or a change in ownership share." },
+  { n: "06", title: "Lease extension", body: "Extending the remaining term of a leasehold property." },
 ];
 
 export default function ServicesPage() {
   return (
     <>
       <SiteHeader />
-      <main style={{ maxWidth: 680, margin: "0 auto", padding: "32px 24px" }}>
-        <h1 style={{ fontSize: 22, fontWeight: 500, color: "var(--text-heading)", marginBottom: 8 }}>Services</h1>
-        <p style={{ fontSize: 14, color: "var(--text-secondary)", marginBottom: 32 }}>
-          We compare conveyancing quotes across these transaction types.
-        </p>
+      <div style={{ maxWidth: 1320, margin: "0 auto", background: CREAM, borderLeft: `1px solid ${BORDER}`, borderRight: `1px solid ${BORDER}` }}>
+        <section style={{ padding: "72px 48px", borderBottom: `2px solid ${NAVY}` }}>
+          <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 18 }}>
+            What we compare
+          </div>
+          <h1 style={{ ...fraunces, fontWeight: 600, fontSize: 44, lineHeight: 1.1, color: NAVY, margin: "0 0 16px", letterSpacing: "-0.02em" }}>
+            Services
+          </h1>
+          <p style={{ fontSize: 16, lineHeight: 1.6, color: TEXT_BODY, maxWidth: 480, margin: 0 }}>
+            We compare conveyancing quotes across these transaction types.
+          </p>
+        </section>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {TRANSACTION_TYPES.map((t) => (
-            <div key={t.title} style={{ border: "0.5px solid var(--border)", borderRadius: 8, padding: 16 }}>
-              <h2 style={{ fontSize: 15, fontWeight: 500, color: "var(--text-heading)", margin: "0 0 4px" }}>{t.title}</h2>
-              <p style={{ fontSize: 14, color: "var(--text-body)", margin: 0 }}>{t.body}</p>
+        <section style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", borderBottom: `2px solid ${NAVY}`, borderTop: `1px solid ${BORDER}` }}>
+          {TRANSACTION_TYPES.map((t, i) => (
+            <div
+              key={t.title}
+              style={{
+                padding: "40px 48px",
+                borderRight: i % 2 === 0 ? `1px solid ${BORDER}` : undefined,
+                borderBottom: i < TRANSACTION_TYPES.length - 2 ? `1px solid ${BORDER}` : undefined,
+              }}
+            >
+              <div style={{ ...fraunces, fontSize: 22, color: TEAL, marginBottom: 14 }}>{t.n}</div>
+              <h2 style={{ fontSize: 17, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 8px" }}>{t.title}</h2>
+              <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.6, margin: 0 }}>{t.body}</p>
             </div>
           ))}
-        </div>
+        </section>
 
-        <div style={{ marginTop: 40, textAlign: "center" }}>
+        <section style={{ padding: "56px 48px", textAlign: "center" }}>
           <Link
             href="/get-a-quote"
-            style={{
-              display: "inline-block",
-              background: "var(--accent)",
-              color: "#EAF3EE",
-              fontSize: 14,
-              padding: "12px 24px",
-              borderRadius: 6,
-              textDecoration: "none",
-            }}
+            style={{ display: "inline-block", background: TEAL, color: "white", fontWeight: 800, fontSize: 15.5, padding: "17px 34px", textDecoration: "none" }}
           >
-            Get my quote
+            Get my quote →
           </Link>
-        </div>
-      </main>
+        </section>
+      </div>
       <SiteFooter />
     </>
   );

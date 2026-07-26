@@ -1,13 +1,13 @@
 const COLORS = {
   onLight: {
-    five: "oklch(0.3 0.06 255)",
-    star: "oklch(0.72 0.16 75)",
-    conveyancing: "oklch(0.5 0.02 260)",
+    five: "oklch(0.2 0.02 240)",
+    star: "oklch(0.45 0.1 190)",
+    conveyancing: "oklch(0.5 0.02 240)",
   },
   onDark: {
     five: "#FFFFFF",
-    star: "oklch(0.75 0.15 75)",
-    conveyancing: "oklch(0.85 0.02 260)",
+    star: "oklch(0.75 0.15 80)",
+    conveyancing: "oklch(0.75 0.02 240)",
   },
 } as const;
 
@@ -17,8 +17,10 @@ interface LogoProps {
   className?: string;
 }
 
-// Wordmark-only lockup ("1E" from the logo exploration): merged condensed caps,
-// three-color split (FIVE / STAR / CONVEYANCING) rather than an icon mark.
+// Wordmark-only lockup: merged condensed caps, three-color split
+// (FIVE / STAR / CONVEYANCING) rather than an icon mark. Colors match the
+// editorial redesign (see src/lib/theme.ts) — navy/teal on light
+// backgrounds, white/gold on dark ones.
 export function Logo({ variant = "onLight", size = 26, className }: LogoProps) {
   const c = COLORS[variant];
   return (
