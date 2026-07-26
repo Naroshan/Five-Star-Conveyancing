@@ -1,0 +1,11 @@
+/* Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts) */
+
+.row {
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}

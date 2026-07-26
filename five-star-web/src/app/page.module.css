@@ -21,8 +21,14 @@
 }
 
 .compareGrid {
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 1.3fr;
   gap: 48px;
+}
+
+.quoteCards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .focalValue {
@@ -31,10 +37,7 @@
 
 .pillarsGrid {
   grid-template-columns: repeat(3, 1fr);
-}
-
-.pillarItem {
-  padding: 48px 40px;
+  gap: 24px;
 }
 
 .sectionHeading {
@@ -43,10 +46,24 @@
 
 .howGrid {
   grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  position: relative;
+}
+
+.howConnector {
+  position: absolute;
+  top: 26px;
+  left: 8%;
+  right: 8%;
+  height: 2px;
+  background: linear-gradient(90deg, oklch(0.48 0.1 190), oklch(0.5 0.22 350));
+  opacity: 0.3;
+  z-index: 0;
 }
 
 .testimonialsGrid {
   grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
 }
 
 .ctaHeading {
@@ -59,6 +76,10 @@
   .testimonialsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .howConnector {
+    display: none;
+  }
 }
 
 @media (max-width: 640px) {
@@ -67,7 +88,7 @@
   }
 
   .heroCol {
-    padding: 40px 20px;
+    padding: 48px 20px;
   }
 
   .heroHeading {
@@ -97,8 +118,8 @@
     grid-template-columns: 1fr;
   }
 
-  .pillarItem {
-    padding: 32px 24px;
+  .howConnector {
+    display: none;
   }
 
   .sectionHeading {
