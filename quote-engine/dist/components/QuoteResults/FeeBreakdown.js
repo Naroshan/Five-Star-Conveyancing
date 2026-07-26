@@ -22,7 +22,7 @@ export function FeeBreakdown({ lineItems, legalFeeSubtotal, vatTotal, disburseme
                     background: 'none',
                     border: 'none',
                     padding: '6px 0 0',
-                    color: theme.color.accent,
+                    color: theme.color.teal,
                     fontSize: 12,
                     cursor: 'pointer',
                     textDecoration: 'underline',

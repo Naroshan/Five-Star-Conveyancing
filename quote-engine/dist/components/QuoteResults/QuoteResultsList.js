@@ -44,7 +44,7 @@ const emptyStateStyle = {
 };
 const adviserButtonStyle = {
     background: theme.color.accent,
-    color: '#EAF3EE',
+    color: 'white',
     border: 'none',
     borderRadius: theme.radius.control,
     padding: '9px 16px',

@@ -30,10 +30,11 @@ export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, o
 }
 const primaryButtonStyle = {
     background: theme.color.accent,
-    color: '#EAF3EE',
+    color: 'white',
+    fontWeight: 700,
     border: 'none',
     borderRadius: theme.radius.control,
-    padding: '9px 16px',
+    padding: '9px 18px',
     fontSize: 13,
     cursor: 'pointer',
 };
