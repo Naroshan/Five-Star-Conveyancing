@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Logo } from "./Logo";
-import { NAVY, CREAM, TEXT_HEADING, ACCENT_BOLD, RADIUS } from "@/lib/theme";
+import { CREAM, TEXT_HEADING, GRADIENT_CTA, RADIUS, SHADOW } from "@/lib/theme";
 import styles from "./SiteHeader.module.css";
 
 const NAV_LINKS = [
@@ -33,8 +33,10 @@ export function SiteHeader() {
         alignItems: "center",
         justifyContent: "space-between",
         padding: "22px 44px",
-        borderBottom: `2px solid ${NAVY}`,
         background: CREAM,
+        boxShadow: SHADOW.sm,
+        position: "relative",
+        zIndex: 10,
         gap: 16,
       }}
     >
@@ -82,7 +84,8 @@ export function SiteHeader() {
           style={{
             fontWeight: 800,
             color: "white",
-            background: ACCENT_BOLD,
+            background: GRADIENT_CTA,
+            boxShadow: SHADOW.sm,
             padding: "12px 26px",
             borderRadius: RADIUS.pill,
             whiteSpace: "nowrap",

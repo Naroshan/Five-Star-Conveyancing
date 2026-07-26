@@ -18,4 +18,9 @@
     flex-direction: column !important;
     gap: 12px !important;
   }
+
+  .trustRow {
+    flex-direction: column !important;
+    gap: 14px !important;
+  }
 }
