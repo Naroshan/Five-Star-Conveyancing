@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { HeroQuoteWidget } from "@/components/HeroQuoteWidget";
 import { BlobBackground } from "@/components/BlobBackground";
+import { HeroChainMotif } from "@/components/HeroChainMotif";
 import {
   NAVY,
   TEAL,
@@ -64,7 +65,7 @@ export default function HomePage() {
       <div style={{ background: CREAM }}>
         {/* HERO */}
         <section className={styles.hero} style={{ background: GRADIENT_HERO, position: "relative", overflow: "hidden", textAlign: "center" }}>
-          <BlobBackground />
+          <HeroChainMotif />
           <div className={styles.heroInner} style={{ position: "relative", zIndex: 1, margin: "0 auto" }}>
             <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: "oklch(0.85 0.15 80)", marginBottom: 22 }}>
               Conveyancing, compared honestly
