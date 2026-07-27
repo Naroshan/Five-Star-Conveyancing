@@ -11,7 +11,10 @@ const NAV_LINKS = [
   { href: "/services", label: "Services" },
   { href: "/fees-explained", label: "Fees" },
   { href: "/guides", label: "Guides" },
+  { href: "/locations", label: "Locations" },
   { href: "/faq", label: "FAQ" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export function SiteHeader() {
