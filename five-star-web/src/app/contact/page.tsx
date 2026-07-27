@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { ContactForm } from "@/components/ContactForm";
 import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, GRADIENT_CTA, RADIUS, SHADOW, display } from "@/lib/theme";
 import contentStyles from "@/styles/contentPage.module.css";
 
@@ -23,12 +24,16 @@ export default function ContactPage() {
             Contact
           </h1>
           <p style={{ fontSize: 16, lineHeight: 1.6, color: TEXT_BODY, maxWidth: 520, margin: 0 }}>
-            A general support channel for this site isn&apos;t published yet — here&apos;s how things actually work in
-            the meantime.
+            Got a general question about the site? Send us a message below. For questions about a specific
+            transaction, see who to contact instead further down this page.
           </p>
         </section>
 
         <div className={contentStyles.list}>
+          <div className={contentStyles.itemPad} style={{ background: "white", borderRadius: RADIUS.md, boxShadow: SHADOW.sm, maxWidth: 560 }}>
+            <h2 style={{ fontSize: 17, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 18px" }}>Send us a message</h2>
+            <ContactForm />
+          </div>
           <div className={contentStyles.itemPad} style={{ background: "white", borderRadius: RADIUS.md, boxShadow: SHADOW.sm }}>
             <h2 style={{ fontSize: 17, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>Already got a quote?</h2>
             <p style={{ fontSize: 14.5, color: TEXT_MUTED, lineHeight: 1.65, maxWidth: 680, margin: 0 }}>

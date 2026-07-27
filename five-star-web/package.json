@@ -10,6 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@formspree/react": "^3.0.0",
     "five-star-conveyancing-quote-engine": "file:../quote-engine/five-star-conveyancing-quote-engine-0.3.0.tgz",
     "kysely": "^0.29.4",
     "next": "16.2.11",
