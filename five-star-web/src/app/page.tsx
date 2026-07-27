@@ -2,7 +2,6 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { HeroQuoteWidget } from "@/components/HeroQuoteWidget";
-import { BlobBackground } from "@/components/BlobBackground";
 import { HeroChainMotif } from "@/components/HeroChainMotif";
 import {
   NAVY,
@@ -182,27 +181,42 @@ export default function HomePage() {
           </p>
         </section>
 
-        {/* THREE PILLARS */}
+        {/* THREE PILLARS — styled as an itemised ledger, echoing the "always
+            itemised, never bundled" promise structurally rather than as
+            three matching icon-badge cards */}
         <section className={styles.sectionPad}>
-          <div className={styles.pillarsGrid} style={{ display: "grid" }}>
-            {PILLARS.map((p) => (
-              <div key={p.title} style={{ background: "white", borderRadius: RADIUS.lg, boxShadow: SHADOW.md, padding: 32 }}>
+          <div style={{ maxWidth: 720, margin: "0 auto", background: "white", borderRadius: RADIUS.lg, boxShadow: SHADOW.md, padding: "8px 32px" }}>
+            {PILLARS.map((p, i) => (
+              <div
+                key={p.title}
+                className={styles.ledgerRow}
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: 18,
+                  padding: "24px 0",
+                  borderBottom: i < PILLARS.length - 1 ? "1px dashed oklch(0.85 0.01 80)" : "none",
+                }}
+              >
                 <div
                   style={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: "50%",
+                    width: 38,
+                    height: 38,
+                    borderRadius: RADIUS.sm,
                     background: p.bg,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    marginBottom: 18,
+                    flexShrink: 0,
                   }}
                 >
-                  <p.icon size={26} color={p.iconColor} />
+                  <p.icon size={19} color={p.iconColor} />
                 </div>
-                <h3 style={{ fontSize: 16.5, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 8px" }}>{p.title}</h3>
-                <p style={{ fontSize: 13.5, color: TEXT_MUTED, lineHeight: 1.6, margin: 0 }}>{p.body}</p>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <h3 style={{ fontSize: 15.5, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 4px" }}>{p.title}</h3>
+                  <p style={{ fontSize: 13.5, color: TEXT_MUTED, lineHeight: 1.6, margin: 0 }}>{p.body}</p>
+                </div>
+                <CheckCircleIcon size={20} color={TEAL} className={styles.ledgerCheck} />
               </div>
             ))}
           </div>
@@ -245,7 +259,8 @@ export default function HomePage() {
           <h2 className={styles.sectionHeading} style={{ ...display, fontWeight: 600, color: NAVY, margin: "0 0 36px" }}>What movers say</h2>
           <div className={styles.testimonialsGrid} style={{ display: "grid" }}>
             {TESTIMONIALS.map((t) => (
-              <div key={t.author} style={{ background: "white", borderRadius: RADIUS.lg, boxShadow: SHADOW.md, padding: 26 }}>
+              <div key={t.author} style={{ position: "relative", background: "white", borderRadius: RADIUS.lg, boxShadow: SHADOW.md, padding: "26px 26px 26px 30px", overflow: "hidden" }}>
+                <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 4, background: t.avatarBg }} />
                 <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 14 }}>
                   {Array.from({ length: 5 }).map((_, i) => (
                     <StarIcon key={i} size={14} color={GOLD} />
@@ -255,16 +270,18 @@ export default function HomePage() {
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <div
                     style={{
-                      width: 36,
-                      height: 36,
-                      borderRadius: "50%",
-                      background: t.avatarBg,
-                      color: "white",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      fontSize: 13,
-                      fontWeight: 700,
+                      minWidth: 34,
+                      height: 26,
+                      padding: "0 8px",
+                      borderRadius: RADIUS.sm,
+                      background: `color-mix(in oklch, ${t.avatarBg} 14%, white)`,
+                      color: t.avatarBg,
+                      fontSize: 12,
+                      fontWeight: 800,
+                      letterSpacing: "0.02em",
                     }}
                   >
                     {initials(t.author)}
@@ -281,7 +298,7 @@ export default function HomePage() {
 
         {/* CTA BAND */}
         <section className={styles.sectionPad} style={{ textAlign: "center", background: GRADIENT_HERO, position: "relative", overflow: "hidden" }}>
-          <BlobBackground />
+          <HeroChainMotif />
           <h2 className={styles.ctaHeading} style={{ ...display, fontWeight: 600, color: "white", margin: "0 0 24px", position: "relative", zIndex: 1 }}>Ready to compare?</h2>
           <Link
             href="/get-a-quote"

@@ -40,9 +40,9 @@
   font-size: 46px;
 }
 
-.pillarsGrid {
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+.ledgerCheck {
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .sectionHeading {
@@ -80,7 +80,6 @@
     font-size: 44px;
   }
 
-  .pillarsGrid,
   .howGrid,
   .testimonialsGrid {
     grid-template-columns: repeat(2, 1fr);
