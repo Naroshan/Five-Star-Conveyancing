@@ -63,9 +63,9 @@ export default function HomePage() {
       <SiteHeader />
       <div style={{ background: CREAM }}>
         {/* HERO */}
-        <section className={styles.hero} style={{ display: "grid", background: GRADIENT_HERO, position: "relative", overflow: "hidden" }}>
+        <section className={styles.hero} style={{ background: GRADIENT_HERO, position: "relative", overflow: "hidden", textAlign: "center" }}>
           <BlobBackground />
-          <div className={styles.heroCol} style={{ position: "relative", zIndex: 1 }}>
+          <div className={styles.heroInner} style={{ position: "relative", zIndex: 1, margin: "0 auto" }}>
             <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: "oklch(0.85 0.15 80)", marginBottom: 22 }}>
               Conveyancing, compared honestly
             </div>
@@ -76,48 +76,33 @@ export default function HomePage() {
                 fontWeight: 600,
                 lineHeight: 1.05,
                 color: "white",
-                margin: "0 0 24px",
+                margin: "0 0 20px",
                 letterSpacing: "-0.02em",
                 textWrap: "balance",
               }}
             >
               Know exactly <span style={{ color: "oklch(0.82 0.15 85)" }}>what you&apos;ll pay</span>, before you choose.
             </h1>
-            <p style={{ fontSize: 17, lineHeight: 1.65, color: "oklch(0.85 0.03 240)", maxWidth: 440, margin: "0 0 36px" }}>
+            <p style={{ fontSize: 17, lineHeight: 1.65, color: "oklch(0.85 0.03 240)", maxWidth: 520, margin: "0 auto 40px" }}>
               Legal fee, VAT and disbursements — itemised, side by side, from SRA-regulated firms only.
             </p>
-            <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
-              <Link
-                href="/get-a-quote"
-                style={{
-                  display: "inline-block",
-                  background: "white",
-                  color: "oklch(0.5 0.22 350)",
-                  fontWeight: 800,
-                  fontSize: 15.5,
-                  padding: "17px 34px",
-                  borderRadius: RADIUS.pill,
-                  boxShadow: SHADOW.lg,
-                  textDecoration: "none",
-                }}
-              >
-                Compare quotes →
-              </Link>
-              <Link
-                href="/fees-explained"
-                style={{ fontWeight: 700, fontSize: 15, color: "white", borderBottom: "2px solid white", paddingBottom: 2, textDecoration: "none" }}
-              >
-                See sample fees
-              </Link>
+
+            <div className={styles.heroBarWrap}>
+              <HeroQuoteWidget />
             </div>
-          </div>
-          <div className={styles.heroCol} style={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: 24, position: "relative", zIndex: 1 }}>
-            <HeroQuoteWidget />
-            <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+
+            <div style={{ display: "flex", gap: 28, flexWrap: "wrap", justifyContent: "center", marginTop: 36 }}>
               <StatChip icon={StarIcon} value="4.8/5" label="Trustpilot · 6,200+ reviews" />
               <StatChip icon={PoundCoinIcon} value="£0" label="to compare, always free" />
               <StatChip icon={ShieldCheckIcon} value="100%" label="SRA-regulated firms only" />
             </div>
+
+            <Link
+              href="/fees-explained"
+              style={{ display: "inline-block", marginTop: 30, fontWeight: 700, fontSize: 14, color: "white", borderBottom: "2px solid oklch(1 0 0 / 0.5)", paddingBottom: 2, textDecoration: "none" }}
+            >
+              See sample fees →
+            </Link>
           </div>
         </section>
 

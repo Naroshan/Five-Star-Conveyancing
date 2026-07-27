@@ -1,15 +1,20 @@
 /* Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts) */
 
 .hero {
-  grid-template-columns: 1.15fr 0.85fr;
+  padding: 100px 48px 84px;
 }
 
-.heroCol {
-  padding: 80px 48px;
+.heroInner {
+  max-width: 880px;
+}
+
+.heroBarWrap {
+  max-width: 720px;
+  margin: 0 auto;
 }
 
 .heroHeading {
-  font-size: 56px;
+  font-size: 60px;
 }
 
 .sectionPad {
@@ -71,6 +76,10 @@
 }
 
 @media (max-width: 1024px) {
+  .heroHeading {
+    font-size: 44px;
+  }
+
   .pillarsGrid,
   .howGrid,
   .testimonialsGrid {
@@ -84,11 +93,7 @@
 
 @media (max-width: 640px) {
   .hero {
-    grid-template-columns: 1fr;
-  }
-
-  .heroCol {
-    padding: 48px 20px;
+    padding: 56px 20px 48px;
   }
 
   .heroHeading {

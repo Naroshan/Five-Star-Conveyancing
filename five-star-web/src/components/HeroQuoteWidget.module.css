@@ -1,11 +1,70 @@
 /* Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts) */
 
-.row {
-  grid-template-columns: 1fr 1fr;
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: oklch(1 0 0 / 0.14);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid oklch(1 0 0 / 0.3);
+}
+
+.field {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 18px;
+  border-right: 1px solid oklch(1 0 0 / 0.22);
+}
+
+.divider {
+  display: none;
+}
+
+.submit {
+  flex-shrink: 0;
+}
+
+.input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 4px 0;
+}
+
+.input::placeholder {
+  color: oklch(1 0 0 / 0.45);
+  font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+  .bar {
+    flex-wrap: wrap;
+    border-radius: 22px;
+    padding: 6px;
+  }
+
+  .field {
+    flex: 1 1 45%;
+    border-right: none;
+    border-bottom: 1px solid oklch(1 0 0 / 0.22);
+    border-radius: 14px;
+  }
+
+  .submit {
+    flex: 1 1 100%;
+  }
 }
 
 @media (max-width: 640px) {
-  .row {
-    grid-template-columns: 1fr;
+  .field {
+    flex: 1 1 100%;
   }
 }
