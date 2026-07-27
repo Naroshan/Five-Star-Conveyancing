@@ -7,7 +7,7 @@
 # `base` tells Netlify to run install/build commands from inside
 # five-star-web/, but Netlify still checks out the *entire* repository
 # first, so the sibling quote-engine/ folder (and the pre-built
-# five-star-conveyancing-quote-engine-0.2.0.tgz inside it — see
+# five-star-conveyancing-quote-engine-0.3.0.tgz inside it — see
 # DEPLOYMENT.md on why that's committed rather than gitignored) is present
 # and reachable via the relative "file:" path already in
 # five-star-web/package.json. No custom install command needed.
