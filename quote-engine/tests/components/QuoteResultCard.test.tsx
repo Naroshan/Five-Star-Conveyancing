@@ -7,7 +7,7 @@ import { QuoteResultCard } from '../../src/components/QuoteResults/QuoteResultCa
 import type { PublicQuoteResult } from '../../src/api/publicResult.js';
 
 const eligibleResult: PublicQuoteResult = {
-  firm: { firmId: 'firm-a', legalEntityName: 'Test Firm A (fixture)', tradingName: null, sraNumber: '123456' },
+  firm: { firmId: 'firm-a', legalEntityName: 'Test Firm A (fixture)', tradingName: null, sraNumber: '123456', logoUrl: null, address: null },
   eligibilityStatus: 'eligible',
   exclusionReason: null,
   lineItems: [
@@ -21,7 +21,7 @@ const eligibleResult: PublicQuoteResult = {
 };
 
 const excludedResult: PublicQuoteResult = {
-  firm: { firmId: 'firm-b', legalEntityName: 'Test Firm B (fixture)', tradingName: null, sraNumber: '654321' },
+  firm: { firmId: 'firm-b', legalEntityName: 'Test Firm B (fixture)', tradingName: null, sraNumber: '654321', logoUrl: null, address: null },
   eligibilityStatus: 'excluded_with_reason',
   exclusionReason: "This firm's maximum property value for this transaction type is £500,000.",
   lineItems: [],

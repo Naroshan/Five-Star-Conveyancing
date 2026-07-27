@@ -63,53 +63,93 @@ async function main() {
   if (reviewerMfaSecret) console.log(`  Demo Reviewer MFA secret (base32, for an authenticator app): ${reviewerMfaSecret}`);
 
   const firms = [
-    { name: 'Meridian Property Law (DEMO)', sra: '111111', baseFee: 850, leaseholdSupp: 150 },
-    { name: 'Northgate Conveyancing (DEMO)', sra: '222222', baseFee: 950, leaseholdSupp: 175 },
-  ];
+    {
+      name: 'Meridian Property Law (DEMO)',
+      sra: '111111',
+      logoUrl: null,
+      address: '14 Bridge Street, York, YO1 6DN (DEMO)',
+      transactionTypes: {
+        purchase: { baseFee: 850, leaseholdSupp: 150, searchFee: 280 },
+        sale: { baseFee: 750, leaseholdSupp: 150, searchFee: null },
+        remortgage: { baseFee: 495, leaseholdSupp: 100, searchFee: 280 },
+      },
+    },
+    {
+      name: 'Northgate Conveyancing (DEMO)',
+      sra: '222222',
+      logoUrl: null,
+      address: '52 Northgate, Halifax, HX1 1XA (DEMO)',
+      transactionTypes: {
+        purchase: { baseFee: 950, leaseholdSupp: 175, searchFee: 280 },
+        sale: { baseFee: 825, leaseholdSupp: 175, searchFee: null },
+        remortgage: { baseFee: 550, leaseholdSupp: 120, searchFee: 280 },
+      },
+    },
+  ] as const;
 
   for (const f of firms) {
     const existingFirm = await db.selectFrom('firms').selectAll().where('sra_number', '=', f.sra).executeTakeFirst();
-    const firmId = existingFirm?.firm_id ?? (await db.insertInto('firms').values({ legal_entity_name: f.name, sra_number: f.sra, status: 'active', quote_validity_days: 30 }).returning('firm_id').executeTakeFirstOrThrow()).firm_id;
+    const firmId =
+      existingFirm?.firm_id ??
+      (
+        await db
+          .insertInto('firms')
+          .values({ legal_entity_name: f.name, sra_number: f.sra, status: 'active', quote_validity_days: 30, logo_url: f.logoUrl, address: f.address })
+          .returning('firm_id')
+          .executeTakeFirstOrThrow()
+      ).firm_id;
 
-    const acceptsAlready = await db.selectFrom('firm_transaction_types').selectAll().where('firm_id', '=', firmId).where('transaction_type', '=', 'purchase').executeTakeFirst();
-    if (!acceptsAlready) {
-      await db.insertInto('firm_transaction_types').values({ firm_id: firmId, transaction_type: 'purchase', accepted: true }).execute();
+    for (const [transactionType, fees] of Object.entries(f.transactionTypes) as [
+      'purchase' | 'sale' | 'remortgage',
+      (typeof f.transactionTypes)[keyof typeof f.transactionTypes],
+    ][]) {
+      const acceptsAlready = await db
+        .selectFrom('firm_transaction_types')
+        .selectAll()
+        .where('firm_id', '=', firmId)
+        .where('transaction_type', '=', transactionType)
+        .executeTakeFirst();
+      if (!acceptsAlready) {
+        await db.insertInto('firm_transaction_types').values({ firm_id: firmId, transaction_type: transactionType, accepted: true }).execute();
+      }
+
+      const band = await createFeeValueBandDraft(db, author, {
+        firmId, transactionType, valueMin: 0, valueMax: null, boundaryRule: 'inclusive_upper',
+        baseFee: fees.baseFee, effectiveDate: '2026-01-01', expiryDate: null,
+      });
+      await submitFeeValueBandForReview(db, author, band.bandId);
+      await approveFeeValueBand(db, reviewer, band.bandId);
+
+      const baseFeeRule = await createFeeRuleDraft(db, author, {
+        firmId, transactionType, chargeName: 'Legal fee', chargeType: 'base_fee', triggerKey: null,
+        calculationType: 'fixed', amount: null, minAmount: null, maxAmount: null, formulaExpression: null,
+        vatTreatment: 'standard', isGuaranteed: true, isEstimated: false, effectiveDate: '2026-01-01', expiryDate: null,
+        displayOrder: 1, clientFacingExplanation: 'Base conveyancing legal fee. (Demo data.)',
+      });
+      await submitFeeRuleForReview(db, author, baseFeeRule.feeRuleId);
+      await approveFeeRule(db, reviewer, baseFeeRule.feeRuleId);
+
+      const leaseholdRule = await createFeeRuleDraft(db, author, {
+        firmId, transactionType, chargeName: 'Leasehold supplement', chargeType: 'supplement', triggerKey: 'leasehold',
+        calculationType: 'fixed', amount: fees.leaseholdSupp, minAmount: null, maxAmount: null, formulaExpression: null,
+        vatTreatment: 'standard', isGuaranteed: true, isEstimated: false, effectiveDate: '2026-01-01', expiryDate: null,
+        displayOrder: 2, clientFacingExplanation: 'Additional work reviewing lease terms. (Demo data.)',
+      });
+      await submitFeeRuleForReview(db, author, leaseholdRule.feeRuleId);
+      await approveFeeRule(db, reviewer, leaseholdRule.feeRuleId);
+
+      if (fees.searchFee !== null) {
+        const searchDisb = await createDisbursementRuleDraft(db, author, {
+          firmId, transactionType, chargeName: 'Search pack', category: 'search', amountType: 'fixed',
+          amount: fees.searchFee, minAmount: null, maxAmount: null, vatTreatment: 'exempt', conditionalTriggerExpression: null,
+          effectiveDate: '2026-01-01', expiryDate: null, displayOrder: 1, clientFacingExplanation: 'Local authority, water and environmental searches. (Demo data.)',
+        });
+        await submitDisbursementRuleForReview(db, author, searchDisb.disbursementId);
+        await approveDisbursementRule(db, reviewer, searchDisb.disbursementId);
+      }
+
+      console.log(`Seeded and approved: ${f.name} — ${transactionType}`);
     }
-
-    const band = await createFeeValueBandDraft(db, author, {
-      firmId, transactionType: 'purchase', valueMin: 0, valueMax: null, boundaryRule: 'inclusive_upper',
-      baseFee: f.baseFee, effectiveDate: '2026-01-01', expiryDate: null,
-    });
-    await submitFeeValueBandForReview(db, author, band.bandId);
-    await approveFeeValueBand(db, reviewer, band.bandId);
-
-    const baseFeeRule = await createFeeRuleDraft(db, author, {
-      firmId, transactionType: 'purchase', chargeName: 'Legal fee', chargeType: 'base_fee', triggerKey: null,
-      calculationType: 'fixed', amount: null, minAmount: null, maxAmount: null, formulaExpression: null,
-      vatTreatment: 'standard', isGuaranteed: true, isEstimated: false, effectiveDate: '2026-01-01', expiryDate: null,
-      displayOrder: 1, clientFacingExplanation: 'Base conveyancing legal fee. (Demo data.)',
-    });
-    await submitFeeRuleForReview(db, author, baseFeeRule.feeRuleId);
-    await approveFeeRule(db, reviewer, baseFeeRule.feeRuleId);
-
-    const leaseholdRule = await createFeeRuleDraft(db, author, {
-      firmId, transactionType: 'purchase', chargeName: 'Leasehold supplement', chargeType: 'supplement', triggerKey: 'leasehold',
-      calculationType: 'fixed', amount: f.leaseholdSupp, minAmount: null, maxAmount: null, formulaExpression: null,
-      vatTreatment: 'standard', isGuaranteed: true, isEstimated: false, effectiveDate: '2026-01-01', expiryDate: null,
-      displayOrder: 2, clientFacingExplanation: 'Additional work reviewing lease terms. (Demo data.)',
-    });
-    await submitFeeRuleForReview(db, author, leaseholdRule.feeRuleId);
-    await approveFeeRule(db, reviewer, leaseholdRule.feeRuleId);
-
-    const searchDisb = await createDisbursementRuleDraft(db, author, {
-      firmId, transactionType: 'purchase', chargeName: 'Search pack', category: 'search', amountType: 'fixed',
-      amount: 280, minAmount: null, maxAmount: null, vatTreatment: 'exempt', conditionalTriggerExpression: null,
-      effectiveDate: '2026-01-01', expiryDate: null, displayOrder: 1, clientFacingExplanation: 'Local authority, water and environmental searches. (Demo data.)',
-    });
-    await submitDisbursementRuleForReview(db, author, searchDisb.disbursementId);
-    await approveDisbursementRule(db, reviewer, searchDisb.disbursementId);
-
-    console.log(`Seeded and approved: ${f.name}`);
   }
 
   // One deliberately pending item, left unapproved on purpose, so the admin

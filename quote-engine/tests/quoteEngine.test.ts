@@ -18,6 +18,8 @@ function makeTestFirm(overrides: Partial<FirmRuleSet> = {}): FirmRuleSet {
       sraNumber: null,
       status: 'active',
       quoteValidityDays: 30,
+      logoUrl: null,
+      address: null,
     },
     transactionTypes: [{ firmId: 'test-firm-a', transactionType: 'purchase', accepted: true }],
     restrictions: [],
@@ -224,9 +226,9 @@ describe('eligibility and exclusion', () => {
 
 describe('regression isolation', () => {
   it('changing one firm\'s fee does not change another firm\'s quote', () => {
-    const firmA = makeTestFirm({ firm: { firmId: 'test-firm-a', legalEntityName: 'Firm A', tradingName: null, sraNumber: null, status: 'active', quoteValidityDays: 30 } });
+    const firmA = makeTestFirm({ firm: { firmId: 'test-firm-a', legalEntityName: 'Firm A', tradingName: null, sraNumber: null, status: 'active', quoteValidityDays: 30, logoUrl: null, address: null } });
     const firmB = makeTestFirm({
-      firm: { firmId: 'test-firm-b', legalEntityName: 'Firm B', tradingName: null, sraNumber: null, status: 'active', quoteValidityDays: 30 },
+      firm: { firmId: 'test-firm-b', legalEntityName: 'Firm B', tradingName: null, sraNumber: null, status: 'active', quoteValidityDays: 30, logoUrl: null, address: null },
       feeValueBands: makeTestFirm().feeValueBands.map((b) => ({ ...b, firmId: 'test-firm-b', baseFee: b.baseFee + 500 })),
       feeRules: makeTestFirm().feeRules.map((r) => ({ ...r, firmId: 'test-firm-b' })),
       disbursementRules: makeTestFirm().disbursementRules.map((d) => ({ ...d, firmId: 'test-firm-b' })),

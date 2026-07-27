@@ -285,6 +285,8 @@ export function mapFirm(row: Selectable<Database['firms']>): Firm {
     sraNumber: row.sra_number,
     status: row.status,
     quoteValidityDays: row.quote_validity_days,
+    logoUrl: row.logo_url,
+    address: row.address,
   };
 }
 

@@ -52,6 +52,8 @@ export interface Firm {
   sraNumber: string | null;
   status: 'pending' | 'active' | 'suspended' | 'removed';
   quoteValidityDays: number;
+  logoUrl: string | null;
+  address: string | null;
 }
 
 export interface FirmTransactionType {

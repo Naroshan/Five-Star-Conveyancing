@@ -10,6 +10,8 @@ create table firms (
   sra_number text,
   status text not null check (status in ('pending', 'active', 'suspended', 'removed')),
   quote_validity_days integer not null default 30,
+  logo_url text,
+  address text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

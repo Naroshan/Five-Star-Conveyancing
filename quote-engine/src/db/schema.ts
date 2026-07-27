@@ -16,6 +16,8 @@ export interface FirmsTable {
   sra_number: string | null;
   status: 'pending' | 'active' | 'suspended' | 'removed';
   quote_validity_days: number;
+  logo_url: string | null;
+  address: string | null;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
 }

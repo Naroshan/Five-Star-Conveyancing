@@ -54,6 +54,20 @@ export function MailIcon({ size, color = 'currentColor' }: IconProps) {
   );
 }
 
+export function MapPinIcon({ size, color = 'currentColor' }: IconProps) {
+  return (
+    <Svg size={size}>
+      <path
+        d="M12 21s7-7.1 7-12a7 7 0 1 0-14 0c0 4.9 7 12 7 12Z"
+        stroke={color}
+        strokeWidth={STROKE}
+        strokeLinejoin="round"
+      />
+      <circle cx={12} cy={9} r={2.4} stroke={color} strokeWidth={STROKE} />
+    </Svg>
+  );
+}
+
 export function BookmarkIcon({ size, color = 'currentColor' }: IconProps) {
   return (
     <Svg size={size}>

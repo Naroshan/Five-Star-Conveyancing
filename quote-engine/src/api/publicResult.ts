@@ -2,11 +2,11 @@
 // Used by both createQuote.ts and getQuote.ts so the two endpoints can never
 // drift into returning different shapes for the same underlying data.
 //
-// Adds firm display data (legal/trading name, SRA number) that QuoteResult
-// alone doesn't carry — without this, the results page would have nothing
-// to show next to each result but a bare firmId. calculationAudit is
-// deliberately still omitted (internal reproducibility/compliance data, not
-// client-facing).
+// Adds firm display data (legal/trading name, SRA number, logo, address)
+// that QuoteResult alone doesn't carry — without this, the results page
+// would have nothing to show next to each result but a bare firmId.
+// calculationAudit is deliberately still omitted (internal reproducibility/
+// compliance data, not client-facing).
 
 import type { Firm, LineItem, QuoteResult } from '../types.js';
 
@@ -15,6 +15,8 @@ export interface PublicFirmSummary {
   legalEntityName: string;
   tradingName: string | null;
   sraNumber: string | null;
+  logoUrl: string | null;
+  address: string | null;
 }
 
 export interface PublicQuoteResult {
@@ -35,8 +37,15 @@ export function toPublicResult(result: QuoteResult, firmsById: Map<string, Firm>
   // constraint against firms — but a display fallback is cheap insurance
   // against ever crashing a results page over a data anomaly.
   const firmSummary: PublicFirmSummary = firm
-    ? { firmId: firm.firmId, legalEntityName: firm.legalEntityName, tradingName: firm.tradingName, sraNumber: firm.sraNumber }
-    : { firmId: result.firmId, legalEntityName: 'Firm details unavailable', tradingName: null, sraNumber: null };
+    ? {
+        firmId: firm.firmId,
+        legalEntityName: firm.legalEntityName,
+        tradingName: firm.tradingName,
+        sraNumber: firm.sraNumber,
+        logoUrl: firm.logoUrl,
+        address: firm.address,
+      }
+    : { firmId: result.firmId, legalEntityName: 'Firm details unavailable', tradingName: null, sraNumber: null, logoUrl: null, address: null };
 
   return {
     firm: firmSummary,

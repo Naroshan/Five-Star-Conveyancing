@@ -8,7 +8,7 @@ import type { PublicQuoteResult } from '../../src/api/publicResult.js';
 
 function makeResult(overrides: Partial<PublicQuoteResult> & { firmId: string; name: string }): PublicQuoteResult {
   return {
-    firm: { firmId: overrides.firmId, legalEntityName: overrides.name, tradingName: null, sraNumber: '111111' },
+    firm: { firmId: overrides.firmId, legalEntityName: overrides.name, tradingName: null, sraNumber: '111111', logoUrl: null, address: null },
     eligibilityStatus: 'eligible',
     exclusionReason: null,
     lineItems: [

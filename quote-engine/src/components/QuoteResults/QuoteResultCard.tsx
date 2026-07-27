@@ -1,8 +1,47 @@
 import type { CSSProperties } from 'react';
-import type { PublicQuoteResult } from '../../api/publicResult.js';
+import type { PublicFirmSummary, PublicQuoteResult } from '../../api/publicResult.js';
 import { theme } from '../theme.js';
-import { ShieldCheckIcon, MailIcon, BookmarkIcon, PhoneIcon, RibbonBadgeIcon } from '../icons.js';
+import { ShieldCheckIcon, MailIcon, BookmarkIcon, PhoneIcon, RibbonBadgeIcon, MapPinIcon } from '../icons.js';
 import { FeeBreakdown } from './FeeBreakdown.js';
+
+function firmInitials(name: string): string {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join('')
+    .toUpperCase();
+}
+
+/** Firm logo if one is on file, otherwise a plain initials badge — never a broken image, never an invented mark. */
+function FirmLogo({ firm, displayName, size }: { firm: PublicFirmSummary; displayName: string; size: number }) {
+  const badgeStyle: CSSProperties = {
+    width: size,
+    height: size,
+    borderRadius: theme.radius.control,
+    flexShrink: 0,
+    overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  };
+
+  if (firm.logoUrl) {
+    return (
+      <span style={badgeStyle}>
+        {/* eslint-disable-next-line @next/next/no-img-element -- this package can't depend on next/image */}
+        <img src={firm.logoUrl} alt={`${displayName} logo`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+      </span>
+    );
+  }
+
+  return (
+    <span style={{ ...badgeStyle, background: theme.color.excludedBg, color: theme.color.textSecondary, fontSize: size * 0.4, fontWeight: 700 }}>
+      {firmInitials(displayName)}
+    </span>
+  );
+}
 
 export interface QuoteResultCardProps {
   result: PublicQuoteResult;
@@ -40,11 +79,14 @@ export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, o
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
-          <div>
-            <p style={{ fontWeight: 500, fontSize: 15, margin: 0, color: theme.color.excludedText }}>{displayName}</p>
-            {result.firm.sraNumber && (
-              <p style={{ fontSize: 12, color: theme.color.textSecondary, margin: '4px 0 0' }}>SRA {result.firm.sraNumber}</p>
-            )}
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+            <FirmLogo firm={result.firm} displayName={displayName} size={36} />
+            <div>
+              <p style={{ fontWeight: 500, fontSize: 15, margin: 0, color: theme.color.excludedText }}>{displayName}</p>
+              {result.firm.sraNumber && (
+                <p style={{ fontSize: 12, color: theme.color.textSecondary, margin: '4px 0 0' }}>SRA {result.firm.sraNumber}</p>
+              )}
+            </div>
           </div>
           <span style={{ fontSize: 11, color: theme.color.textSecondary }}>Not available for this quote</span>
         </div>
@@ -102,18 +144,27 @@ export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, o
         </span>
       )}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
-        <div>
-          <p style={{ fontWeight: 500, fontSize: 15, margin: 0, color: theme.color.textHeading }}>{displayName}</p>
-          <p style={{ fontSize: 12, color: theme.color.textSecondary, margin: '4px 0 0', display: 'flex', alignItems: 'center', gap: 4 }}>
-            {result.firm.sraNumber && (
-              <>
-                <ShieldCheckIcon size={13} color={theme.color.teal} />
-                <span>SRA {result.firm.sraNumber}</span>
-                <span>·</span>
-              </>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+          <FirmLogo firm={result.firm} displayName={displayName} size={40} />
+          <div>
+            <p style={{ fontWeight: 500, fontSize: 15, margin: 0, color: theme.color.textHeading }}>{displayName}</p>
+            <p style={{ fontSize: 12, color: theme.color.textSecondary, margin: '4px 0 0', display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
+              {result.firm.sraNumber && (
+                <>
+                  <ShieldCheckIcon size={13} color={theme.color.teal} />
+                  <span>SRA {result.firm.sraNumber}</span>
+                  <span>·</span>
+                </>
+              )}
+              <span>{fixedFee ? 'Fixed fee' : 'Estimate — some figures may vary'}</span>
+            </p>
+            {result.firm.address && (
+              <p style={{ fontSize: 11.5, color: theme.color.textSecondary, margin: '4px 0 0', display: 'flex', alignItems: 'center', gap: 4 }}>
+                <MapPinIcon size={12} color={theme.color.textSecondary} />
+                <span>{result.firm.address}</span>
+              </p>
             )}
-            <span>{fixedFee ? 'Fixed fee' : 'Estimate — some figures may vary'}</span>
-          </p>
+          </div>
         </div>
         <div style={{ textAlign: 'right' }}>
           <p style={{ fontSize: 20, fontWeight: 500, margin: 0, color: theme.color.textHeading }}>
