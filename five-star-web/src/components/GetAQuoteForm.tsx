@@ -47,20 +47,33 @@ function mortgageLabelFor(transactionType: TransactionType): string {
   return "Yes, I'm using a mortgage";
 }
 
+// A lease extension is, by definition, on a leasehold property — no need to ask.
+function tenureIsFixedLeasehold(transactionType: TransactionType): boolean {
+  return transactionType === "lease_extension";
+}
+
 export function GetAQuoteForm({ initialTransactionType }: { initialTransactionType: TransactionType }) {
   const { submit, submitting, error } = useQuoteSubmit();
   const [transactionType, setTransactionType] = useState<TransactionType>(initialTransactionType);
   const [postcode, setPostcode] = useState("");
   const [propertyValue, setPropertyValue] = useState("");
-  const [freeholdOrLeasehold, setFreeholdOrLeasehold] = useState<"freehold" | "leasehold">("freehold");
+  const [freeholdOrLeasehold, setFreeholdOrLeasehold] = useState<"freehold" | "leasehold">(
+    tenureIsFixedLeasehold(initialTransactionType) ? "leasehold" : "freehold"
+  );
   const [mortgageInvolved, setMortgageInvolved] = useState(true);
   const [flags, setFlags] = useState<Record<string, boolean>>({});
 
   const activeType = TRANSACTION_TYPES.find((t) => t.value === transactionType) ?? TRANSACTION_TYPES[0];
   const availableFlags = flagOptionsFor(transactionType);
+  const tenureFixed = tenureIsFixedLeasehold(transactionType);
 
   function toggleFlag(key: string) {
     setFlags((prev) => ({ ...prev, [key]: !prev[key] }));
+  }
+
+  function selectTransactionType(next: TransactionType) {
+    setTransactionType(next);
+    if (tenureIsFixedLeasehold(next)) setFreeholdOrLeasehold("leasehold");
   }
 
   function handleSubmit(e: FormEvent) {
@@ -96,7 +109,7 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
                   <button
                     key={opt.value}
                     type="button"
-                    onClick={() => setTransactionType(opt.value)}
+                    onClick={() => selectTransactionType(opt.value)}
                     aria-pressed={selected}
                     style={{
                       fontSize: 13,
@@ -138,28 +151,34 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
             />
           </Field>
 
-          <Field label="Freehold or leasehold?">
-            <div style={{ display: "flex", gap: 16 }}>
-              <label style={{ fontSize: 14, display: "flex", alignItems: "center", gap: 6 }}>
-                <input
-                  type="radio"
-                  name="tenure"
-                  checked={freeholdOrLeasehold === "freehold"}
-                  onChange={() => setFreeholdOrLeasehold("freehold")}
-                />
-                Freehold
-              </label>
-              <label style={{ fontSize: 14, display: "flex", alignItems: "center", gap: 6 }}>
-                <input
-                  type="radio"
-                  name="tenure"
-                  checked={freeholdOrLeasehold === "leasehold"}
-                  onChange={() => setFreeholdOrLeasehold("leasehold")}
-                />
-                Leasehold
-              </label>
-            </div>
-          </Field>
+          {tenureFixed ? (
+            <Field label="Tenure">
+              <p style={{ fontSize: 14, color: TEXT_MUTED, margin: 0 }}>Leasehold (a lease extension is always on a leasehold property)</p>
+            </Field>
+          ) : (
+            <Field label="Freehold or leasehold?">
+              <div style={{ display: "flex", gap: 16 }}>
+                <label style={{ fontSize: 14, display: "flex", alignItems: "center", gap: 6 }}>
+                  <input
+                    type="radio"
+                    name="tenure"
+                    checked={freeholdOrLeasehold === "freehold"}
+                    onChange={() => setFreeholdOrLeasehold("freehold")}
+                  />
+                  Freehold
+                </label>
+                <label style={{ fontSize: 14, display: "flex", alignItems: "center", gap: 6 }}>
+                  <input
+                    type="radio"
+                    name="tenure"
+                    checked={freeholdOrLeasehold === "leasehold"}
+                    onChange={() => setFreeholdOrLeasehold("leasehold")}
+                  />
+                  Leasehold
+                </label>
+              </div>
+            </Field>
+          )}
 
           {showsMortgageField(transactionType) && (
             <Field label="Is a mortgage involved?">
