@@ -4,6 +4,8 @@ export interface PublicFirmSummary {
     legalEntityName: string;
     tradingName: string | null;
     sraNumber: string | null;
+    logoUrl: string | null;
+    address: string | null;
 }
 export interface PublicQuoteResult {
     firm: PublicFirmSummary;

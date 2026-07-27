@@ -12,6 +12,9 @@ export function StarIcon({ size, color = 'currentColor' }) {
 export function MailIcon({ size, color = 'currentColor' }) {
     return (_jsxs(Svg, { size: size, children: [_jsx("rect", { x: 4, y: 5.5, width: 16, height: 13, rx: 2, stroke: color, strokeWidth: STROKE }), _jsx("path", { d: "M4.5 6.5 12 12.5l7.5-6", stroke: color, strokeWidth: STROKE, strokeLinecap: "round", strokeLinejoin: "round" })] }));
 }
+export function MapPinIcon({ size, color = 'currentColor' }) {
+    return (_jsxs(Svg, { size: size, children: [_jsx("path", { d: "M12 21s7-7.1 7-12a7 7 0 1 0-14 0c0 4.9 7 12 7 12Z", stroke: color, strokeWidth: STROKE, strokeLinejoin: "round" }), _jsx("circle", { cx: 12, cy: 9, r: 2.4, stroke: color, strokeWidth: STROKE })] }));
+}
 export function BookmarkIcon({ size, color = 'currentColor' }) {
     return (_jsx(Svg, { size: size, children: _jsx("path", { d: "M6.5 4h11v16l-5.5-3.6L6.5 20V4Z", stroke: color, strokeWidth: STROKE, strokeLinejoin: "round" }) }));
 }
