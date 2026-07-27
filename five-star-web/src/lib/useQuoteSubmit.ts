@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import type { TransactionType } from "five-star-conveyancing-quote-engine/types";
 
 export interface QuoteSubmitBody {
-  transactionType: "purchase";
+  transactionType: TransactionType;
   postcode: string;
   jurisdiction: "england";
   propertyValue: number;
