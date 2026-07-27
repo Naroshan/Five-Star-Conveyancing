@@ -4,7 +4,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ResultsInteractive } from "@/components/ResultsInteractive";
 import { db } from "@/lib/db";
-import { NAVY, CREAM, BORDER, TEXT_BODY, ERROR, RADIUS, fraunces } from "@/lib/theme";
+import { NAVY, CREAM, BORDER, TEXT_BODY, ERROR, RADIUS, display } from "@/lib/theme";
 
 // This page reads a quote by reference from the database on every request, so
 // it must never be statically prerendered at build time (when no database
@@ -36,7 +36,7 @@ export default async function QuoteResultsPage({ params }: { params: Promise<{ r
     <>
       <SiteHeader />
       <main style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 64px", background: CREAM }}>
-        <h1 style={{ ...fraunces, fontSize: 28, fontWeight: 600, color: NAVY, marginBottom: 20, letterSpacing: "-0.01em" }}>Your comparison</h1>
+        <h1 style={{ ...display, fontSize: 28, fontWeight: 600, color: NAVY, marginBottom: 20, letterSpacing: "-0.01em" }}>Your comparison</h1>
 
         {data.status === "expired" && (
           <div style={{ background: CREAM, border: `1px solid ${BORDER}`, borderRadius: RADIUS.md, padding: 20, textAlign: "center" }}>

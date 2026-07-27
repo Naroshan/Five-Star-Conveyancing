@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, GRADIENT_CTA, RADIUS, SHADOW, fraunces } from "@/lib/theme";
+import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, GRADIENT_CTA, RADIUS, SHADOW, display } from "@/lib/theme";
 import { ShieldCheckIcon, PoundCoinIcon, CheckCircleIcon } from "@/components/icons";
 import contentStyles from "@/styles/contentPage.module.css";
 import styles from "./page.module.css";
@@ -27,7 +27,7 @@ export default function AboutPage() {
           <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 18 }}>
             About us
           </div>
-          <h1 className={contentStyles.heroHeading} style={{ ...fraunces, fontWeight: 600, lineHeight: 1.1, color: NAVY, margin: "0 0 16px", letterSpacing: "-0.02em" }}>
+          <h1 className={contentStyles.heroHeading} style={{ ...display, fontWeight: 600, lineHeight: 1.1, color: NAVY, margin: "0 0 16px", letterSpacing: "-0.02em" }}>
             Conveyancing quotes you can actually compare
           </h1>
           <p style={{ fontSize: 16, lineHeight: 1.6, color: TEXT_BODY, maxWidth: 560, margin: 0 }}>

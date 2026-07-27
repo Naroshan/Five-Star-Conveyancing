@@ -32,7 +32,7 @@ export const SPACE = { xs: 8, sm: 16, md: 24, lg: 40, xl: 64 };
 // Bold gradients — the direct MoneySuperMarket/Konnect-You visual language
 // this site was missing: elevated cards and gradient bands instead of flat
 // fills and thin borders. Built only from the hues already declared above.
-export const GRADIENT_HERO = "linear-gradient(135deg, oklch(0.2 0.02 240) 0%, oklch(0.32 0.09 280) 45%, oklch(0.5 0.22 350) 100%)";
+export const GRADIENT_HERO = "linear-gradient(135deg, oklch(0.22 0.06 260) 0%, oklch(0.34 0.14 290) 45%, oklch(0.5 0.22 350) 100%)";
 export const GRADIENT_CTA = "linear-gradient(120deg, oklch(0.5 0.22 350) 0%, oklch(0.4 0.2 350) 100%)";
 export const GRADIENT_GOLD_BAND = "linear-gradient(120deg, oklch(0.8 0.14 85) 0%, oklch(0.72 0.16 70) 100%)";
 export const GRADIENT_TEAL = "linear-gradient(135deg, oklch(0.48 0.1 190) 0%, oklch(0.38 0.09 200) 100%)";
@@ -51,5 +51,10 @@ export const ICON_BADGE_BG = "oklch(0.95 0.03 190)";
 export const ICON_BADGE_BG_ACCENT = "oklch(0.94 0.05 350)";
 export const ICON_BADGE_BG_GOLD = "oklch(0.94 0.04 80)";
 
-export const fraunces = { fontFamily: "var(--font-fraunces), 'Fraunces', serif" };
+// Bold rounded display font (Baloo 2) — used for every headline and the
+// logo. Replaces the earlier Fraunces-serif "editorial" treatment, which
+// read as generic AI-template output rather than matching the bold
+// confident headline character of the Konnect You / MoneySuperMarket
+// reference sites this redesign is based on.
+export const display = { fontFamily: "var(--font-display), 'Baloo 2', sans-serif" };
 export const manrope = { fontFamily: "var(--font-manrope), 'Manrope', sans-serif" };

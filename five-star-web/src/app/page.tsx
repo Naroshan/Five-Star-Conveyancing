@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { HeroQuoteWidget } from "@/components/HeroQuoteWidget";
+import { BlobBackground } from "@/components/BlobBackground";
 import {
   NAVY,
   TEAL,
@@ -18,7 +19,7 @@ import {
   ICON_BADGE_BG,
   ICON_BADGE_BG_ACCENT,
   ICON_BADGE_BG_GOLD,
-  fraunces,
+  display,
 } from "@/lib/theme";
 import { ShieldCheckIcon, PoundCoinIcon, CheckCircleIcon, StarIcon, RibbonBadgeIcon } from "@/components/icons";
 import styles from "./page.module.css";
@@ -62,15 +63,16 @@ export default function HomePage() {
       <SiteHeader />
       <div style={{ background: CREAM }}>
         {/* HERO */}
-        <section className={styles.hero} style={{ display: "grid", background: GRADIENT_HERO }}>
-          <div className={styles.heroCol}>
+        <section className={styles.hero} style={{ display: "grid", background: GRADIENT_HERO, position: "relative", overflow: "hidden" }}>
+          <BlobBackground />
+          <div className={styles.heroCol} style={{ position: "relative", zIndex: 1 }}>
             <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: "oklch(0.85 0.15 80)", marginBottom: 22 }}>
               Conveyancing, compared honestly
             </div>
             <h1
               className={styles.heroHeading}
               style={{
-                ...fraunces,
+                ...display,
                 fontWeight: 600,
                 lineHeight: 1.05,
                 color: "white",
@@ -79,7 +81,7 @@ export default function HomePage() {
                 textWrap: "balance",
               }}
             >
-              Know exactly what you&apos;ll pay, before you choose.
+              Know exactly <span style={{ color: "oklch(0.82 0.15 85)" }}>what you&apos;ll pay</span>, before you choose.
             </h1>
             <p style={{ fontSize: 17, lineHeight: 1.65, color: "oklch(0.85 0.03 240)", maxWidth: 440, margin: "0 0 36px" }}>
               Legal fee, VAT and disbursements — itemised, side by side, from SRA-regulated firms only.
@@ -109,7 +111,7 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
-          <div className={styles.heroCol} style={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: 24 }}>
+          <div className={styles.heroCol} style={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: 24, position: "relative", zIndex: 1 }}>
             <HeroQuoteWidget />
             <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
               <StatChip icon={StarIcon} value="4.8/5" label="Trustpilot · 6,200+ reviews" />
@@ -123,7 +125,7 @@ export default function HomePage() {
         <section className={styles.sectionPad}>
           <div className={styles.compareGrid} style={{ display: "grid" }}>
             <div>
-              <h2 className={styles.compareHeading} style={{ ...fraunces, fontWeight: 600, color: NAVY, margin: "0 0 12px" }}>Real quotes, side by side</h2>
+              <h2 className={styles.compareHeading} style={{ ...display, fontWeight: 600, color: NAVY, margin: "0 0 12px" }}>Real quotes, side by side</h2>
               <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.6, margin: "0 0 20px" }}>Example results for a £250,000 freehold purchase.</p>
               <Link
                 href="/get-a-quote"
@@ -178,7 +180,7 @@ export default function HomePage() {
                       <span style={{ fontWeight: 600, color: TEXT_MUTED, fontSize: 12.5, marginLeft: 4 }}>{q.ratingLabel}</span>
                     </div>
                   </div>
-                  <div style={{ ...fraunces, fontSize: 20, fontWeight: 600, color: q.cheapest ? "oklch(0.5 0.22 350)" : TEXT_HEADING }}>{q.price}</div>
+                  <div style={{ ...display, fontSize: 20, fontWeight: 600, color: q.cheapest ? "oklch(0.5 0.22 350)" : TEXT_HEADING }}>{q.price}</div>
                 </div>
               ))}
             </div>
@@ -188,7 +190,7 @@ export default function HomePage() {
         {/* FOCAL STAT */}
         <section className={styles.sectionPad} style={{ textAlign: "center", background: GRADIENT_GOLD_BAND }}>
           <PoundCoinIcon size={44} color="oklch(0.35 0.06 80)" />
-          <div className={styles.focalValue} style={{ ...fraunces, fontWeight: 600, color: NAVY, marginTop: 8, marginBottom: 10 }}>£480</div>
+          <div className={styles.focalValue} style={{ ...display, fontWeight: 600, color: NAVY, marginTop: 8, marginBottom: 10 }}>£480</div>
           <p style={{ fontSize: 15.5, color: "oklch(0.3 0.05 80)", maxWidth: 420, margin: "0 auto", fontWeight: 600 }}>
             the typical gap between the cheapest and priciest quote on a £250,000 purchase. We show you both.
           </p>
@@ -222,7 +224,7 @@ export default function HomePage() {
 
         {/* HOW IT WORKS */}
         <section className={styles.sectionPad}>
-          <h2 className={styles.sectionHeading} style={{ ...fraunces, fontWeight: 600, color: NAVY, margin: "0 0 36px" }}>How it works</h2>
+          <h2 className={styles.sectionHeading} style={{ ...display, fontWeight: 600, color: NAVY, margin: "0 0 36px" }}>How it works</h2>
           <div className={styles.howGrid} style={{ display: "grid" }}>
             <div className={styles.howConnector} />
             {HOW_IT_WORKS.map((s) => (
@@ -238,7 +240,7 @@ export default function HomePage() {
                     alignItems: "center",
                     justifyContent: "center",
                     margin: "0 auto 14px",
-                    ...fraunces,
+                    ...display,
                     fontSize: 16,
                     fontWeight: 600,
                   }}
@@ -254,7 +256,7 @@ export default function HomePage() {
 
         {/* TESTIMONIALS */}
         <section className={styles.sectionPad} style={{ background: CREAM_ALT }}>
-          <h2 className={styles.sectionHeading} style={{ ...fraunces, fontWeight: 600, color: NAVY, margin: "0 0 36px" }}>What movers say</h2>
+          <h2 className={styles.sectionHeading} style={{ ...display, fontWeight: 600, color: NAVY, margin: "0 0 36px" }}>What movers say</h2>
           <div className={styles.testimonialsGrid} style={{ display: "grid" }}>
             {TESTIMONIALS.map((t) => (
               <div key={t.author} style={{ background: "white", borderRadius: RADIUS.lg, boxShadow: SHADOW.md, padding: 26 }}>
@@ -292,8 +294,9 @@ export default function HomePage() {
         </section>
 
         {/* CTA BAND */}
-        <section className={styles.sectionPad} style={{ textAlign: "center", background: GRADIENT_HERO }}>
-          <h2 className={styles.ctaHeading} style={{ ...fraunces, fontWeight: 600, color: "white", margin: "0 0 24px" }}>Ready to compare?</h2>
+        <section className={styles.sectionPad} style={{ textAlign: "center", background: GRADIENT_HERO, position: "relative", overflow: "hidden" }}>
+          <BlobBackground />
+          <h2 className={styles.ctaHeading} style={{ ...display, fontWeight: 600, color: "white", margin: "0 0 24px", position: "relative", zIndex: 1 }}>Ready to compare?</h2>
           <Link
             href="/get-a-quote"
             style={{
@@ -306,6 +309,8 @@ export default function HomePage() {
               borderRadius: RADIUS.pill,
               boxShadow: SHADOW.lg,
               textDecoration: "none",
+              position: "relative",
+              zIndex: 1,
             }}
           >
             Get my quotes →
@@ -324,7 +329,7 @@ function StatChip({ icon: Icon, value, label }: { icon: typeof StarIcon; value: 
         <Icon size={16} color={GOLD} />
       </div>
       <div>
-        <div style={{ ...fraunces, fontSize: 16, fontWeight: 600, color: "white", lineHeight: 1.1 }}>{value}</div>
+        <div style={{ ...display, fontSize: 16, fontWeight: 600, color: "white", lineHeight: 1.1 }}>{value}</div>
         <div style={{ fontSize: 10.5, color: "oklch(0.85 0.03 240)" }}>{label}</div>
       </div>
     </div>

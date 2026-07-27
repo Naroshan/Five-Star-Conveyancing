@@ -4,7 +4,7 @@ import { useState, type FormEvent } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useQuoteSubmit } from "@/lib/useQuoteSubmit";
-import { NAVY, CREAM, TEXT_HEADING, TEXT_MUTED, GRADIENT_CTA, ERROR, RADIUS, SHADOW, fraunces } from "@/lib/theme";
+import { NAVY, CREAM, TEXT_HEADING, TEXT_MUTED, GRADIENT_CTA, ERROR, RADIUS, SHADOW, display } from "@/lib/theme";
 
 const FLAG_OPTIONS: { key: string; label: string }[] = [
   { key: "buyToLet", label: "Buy-to-let purchase" },
@@ -48,7 +48,7 @@ export default function GetAQuotePage() {
         <div style={{ background: "white", borderRadius: RADIUS.lg, boxShadow: SHADOW.lg, overflow: "hidden" }}>
           <div style={{ height: 6, background: GRADIENT_CTA }} />
           <div style={{ padding: "40px 40px 44px" }}>
-            <h1 style={{ ...fraunces, fontSize: 30, fontWeight: 600, color: NAVY, marginBottom: 8, letterSpacing: "-0.01em" }}>
+            <h1 style={{ ...display, fontSize: 30, fontWeight: 600, color: NAVY, marginBottom: 8, letterSpacing: "-0.01em" }}>
               Get a purchase quote
             </h1>
             <p style={{ fontSize: 14, color: TEXT_MUTED, marginBottom: 32 }}>

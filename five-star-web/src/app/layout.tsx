@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope, Fraunces } from "next/font/google";
+import { Manrope, Baloo_2 } from "next/font/google";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -8,10 +8,14 @@ const manrope = Manrope({
   variable: "--font-manrope",
 });
 
-const fraunces = Fraunces({
+// Bold, rounded, confident display type for headlines and the logo — the
+// direct opposite of a thin editorial serif, chosen to match the bold
+// geometric/rounded headline character of both Konnect You and
+// MoneySuperMarket rather than reading as a generic template.
+const display = Baloo_2({
   subsets: ["latin"],
-  weight: ["600"],
-  variable: "--font-fraunces",
+  weight: ["600", "700", "800"],
+  variable: "--font-display",
 });
 
 export const metadata: Metadata = {
@@ -30,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${manrope.variable} ${fraunces.variable}`}>
+    <html lang="en" className={`${manrope.variable} ${display.variable}`}>
       <body>{children}</body>
     </html>
   );

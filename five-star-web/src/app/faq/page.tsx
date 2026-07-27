@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { NAVY, TEAL, CREAM, TEXT_BODY, GRADIENT_CTA, RADIUS, SHADOW, fraunces } from "@/lib/theme";
+import { NAVY, TEAL, CREAM, TEXT_BODY, GRADIENT_CTA, RADIUS, SHADOW, display } from "@/lib/theme";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import contentStyles from "@/styles/contentPage.module.css";
 
@@ -43,7 +43,7 @@ export default function FaqPage() {
           <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 18 }}>
             Questions, answered
           </div>
-          <h1 className={contentStyles.heroHeading} style={{ ...fraunces, fontWeight: 600, lineHeight: 1.1, color: NAVY, margin: 0, letterSpacing: "-0.02em" }}>
+          <h1 className={contentStyles.heroHeading} style={{ ...display, fontWeight: 600, lineHeight: 1.1, color: NAVY, margin: 0, letterSpacing: "-0.02em" }}>
             Frequently asked questions
           </h1>
         </section>

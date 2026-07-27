@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { NAVY, CREAM, TEAL, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, GRADIENT_CTA, GRADIENT_TEAL, RADIUS, SHADOW, fraunces } from "@/lib/theme";
+import { NAVY, CREAM, TEAL, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, GRADIENT_CTA, GRADIENT_TEAL, RADIUS, SHADOW, display } from "@/lib/theme";
 import { HomeIcon, ClockIcon, CheckCircleIcon } from "@/components/icons";
 import contentStyles from "@/styles/contentPage.module.css";
 import styles from "./page.module.css";
@@ -42,7 +42,7 @@ export default function HowItWorksPage() {
           <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 18 }}>
             The process
           </div>
-          <h1 className={contentStyles.heroHeading} style={{ ...fraunces, fontWeight: 600, lineHeight: 1.1, color: NAVY, margin: "0 0 16px", letterSpacing: "-0.02em" }}>
+          <h1 className={contentStyles.heroHeading} style={{ ...display, fontWeight: 600, lineHeight: 1.1, color: NAVY, margin: "0 0 16px", letterSpacing: "-0.02em" }}>
             How it works
           </h1>
           <p style={{ fontSize: 16, lineHeight: 1.6, color: TEXT_BODY, maxWidth: 480, margin: 0 }}>
@@ -68,7 +68,7 @@ export default function HowItWorksPage() {
                 <step.icon size={24} color="white" />
               </div>
               <div>
-                <div style={{ ...fraunces, fontSize: 13, fontWeight: 600, color: TEAL, marginBottom: 4 }}>Step {step.n}</div>
+                <div style={{ ...display, fontSize: 13, fontWeight: 600, color: TEAL, marginBottom: 4 }}>Step {step.n}</div>
                 <h2 style={{ fontSize: 19, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>{step.title}</h2>
                 <p style={{ fontSize: 15, color: TEXT_MUTED, lineHeight: 1.65, maxWidth: 620, margin: 0 }}>{step.body}</p>
               </div>

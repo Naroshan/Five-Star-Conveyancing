@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { GUIDES, getGuide } from "@/lib/guides";
-import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, GRADIENT_CTA, RADIUS, SHADOW, fraunces } from "@/lib/theme";
+import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, GRADIENT_CTA, RADIUS, SHADOW, display } from "@/lib/theme";
 import contentStyles from "@/styles/contentPage.module.css";
 
 export function generateStaticParams() {
@@ -49,7 +49,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
             >
               <guide.icon size={26} color={guide.iconColor} />
             </div>
-            <h1 className={contentStyles.heroHeading} style={{ ...fraunces, fontWeight: 600, lineHeight: 1.1, color: NAVY, margin: 0, letterSpacing: "-0.02em" }}>
+            <h1 className={contentStyles.heroHeading} style={{ ...display, fontWeight: 600, lineHeight: 1.1, color: NAVY, margin: 0, letterSpacing: "-0.02em" }}>
               {guide.title}
             </h1>
           </div>
