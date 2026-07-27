@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, GRADIENT_CTA, RADIUS, SHADOW, display } from "@/lib/theme";
-import { ShieldCheckIcon, PoundCoinIcon, CheckCircleIcon } from "@/components/icons";
+import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, GRADIENT_CTA, GRADIENT_TEAL, ACCENT_BOLD, ICON_BADGE_BG_GOLD, RADIUS, SHADOW, display } from "@/lib/theme";
+import { ShieldCheckIcon, PoundCoinIcon, CheckCircleIcon, StarIcon } from "@/components/icons";
 import contentStyles from "@/styles/contentPage.module.css";
 import styles from "./page.module.css";
 
@@ -37,23 +37,71 @@ export default function AboutPage() {
           </p>
         </section>
 
-        <div className={contentStyles.list}>
-          <div className={contentStyles.itemPad} style={{ background: "white", borderRadius: RADIUS.md, boxShadow: SHADOW.sm }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>What we do</h2>
-            <p style={{ fontSize: 14.5, color: TEXT_MUTED, lineHeight: 1.65, maxWidth: 680, margin: 0 }}>
-              We show quotes from SRA-regulated conveyancing firms side by side, with legal fee, VAT and disbursements
-              itemised for each one — rather than a single bundled total that hides how it&apos;s made up. You compare,
-              choose the firm that&apos;s right for you, and we pass your details on so they can get in touch directly.
-            </p>
+        <section className={styles.introSection}>
+          <div className={styles.introCard} style={{ background: ICON_BADGE_BG_GOLD, borderRadius: RADIUS.lg }}>
+            <div>
+              <h2 style={{ ...display, fontSize: 26, fontWeight: 600, color: NAVY, margin: "0 0 18px" }}>
+                About Five Star Conveyancing
+              </h2>
+              <p style={{ fontSize: 14.5, color: TEXT_BODY, lineHeight: 1.7, margin: "0 0 16px" }}>
+                We show quotes from SRA-regulated conveyancing firms side by side, with legal fee, VAT and
+                disbursements itemised for each one — rather than a single bundled total that hides how it&apos;s
+                made up. You compare, choose the firm that&apos;s right for you, and we pass your details on so
+                they can get in touch directly.
+              </p>
+              <p style={{ fontSize: 14.5, color: TEXT_BODY, lineHeight: 1.7, margin: 0 }}>
+                We don&apos;t act as your conveyancer ourselves, take a cut hidden inside the quote you see, or
+                charge you anything to compare or to select a firm. The firm you choose handles your actual
+                transaction.
+              </p>
+            </div>
+
+            <div className={styles.introPanel}>
+              <div
+                style={{
+                  background: GRADIENT_TEAL,
+                  borderRadius: RADIUS.lg,
+                  aspectRatio: "1 / 1",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: SHADOW.md,
+                }}
+              >
+                <ShieldCheckIcon size={72} color="white" />
+              </div>
+
+              <div
+                className={styles.introBadgeAccent}
+                style={{ background: "white", borderRadius: RADIUS.md, boxShadow: SHADOW.md, padding: "14px 18px", maxWidth: 220 }}
+              >
+                <p style={{ fontSize: 13.5, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 2px" }}>SRA-regulated only</p>
+                <p style={{ fontSize: 12, color: TEXT_MUTED, margin: 0 }}>100% of firms compared are regulated</p>
+              </div>
+
+              <div
+                className={styles.introBadgeCircle}
+                style={{
+                  background: ACCENT_BOLD,
+                  color: "white",
+                  borderRadius: "50%",
+                  width: 92,
+                  height: 92,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: SHADOW.md,
+                  textAlign: "center",
+                }}
+              >
+                <StarIcon size={16} color="white" />
+                <span style={{ fontSize: 14, fontWeight: 800, marginTop: 2 }}>4.8/5</span>
+                <span style={{ fontSize: 9, fontWeight: 700 }}>Trustpilot</span>
+              </div>
+            </div>
           </div>
-          <div className={contentStyles.itemPad} style={{ background: "white", borderRadius: RADIUS.md, boxShadow: SHADOW.sm }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>What we don&apos;t do</h2>
-            <p style={{ fontSize: 14.5, color: TEXT_MUTED, lineHeight: 1.65, maxWidth: 680, margin: 0 }}>
-              We don&apos;t act as your conveyancer ourselves, take a cut hidden inside the quote you see, or charge you
-              anything to compare or to select a firm. The firm you choose handles your actual transaction.
-            </p>
-          </div>
-        </div>
+        </section>
 
         <section>
           <div className={styles.sectionLabel}>

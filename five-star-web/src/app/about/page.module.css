@@ -8,6 +8,34 @@
   padding: 0 48px 8px;
 }
 
+.introSection {
+  padding: 0 48px 56px;
+}
+
+.introCard {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 48px;
+  align-items: center;
+  padding: 48px;
+}
+
+.introPanel {
+  position: relative;
+}
+
+.introBadgeAccent {
+  position: absolute;
+  left: -16px;
+  bottom: -16px;
+}
+
+.introBadgeCircle {
+  position: absolute;
+  right: -16px;
+  top: -16px;
+}
+
 @media (max-width: 1024px) {
   .principlesGrid {
     grid-template-columns: repeat(2, 1fr);
@@ -23,5 +51,21 @@
 
   .sectionLabel {
     padding: 0 20px 8px;
+  }
+
+  .introSection {
+    padding: 0 20px 40px;
+  }
+
+  .introCard {
+    grid-template-columns: 1fr;
+    padding: 28px;
+    gap: 56px;
+  }
+
+  .introBadgeAccent,
+  .introBadgeCircle {
+    left: 0;
+    right: 0;
   }
 }
