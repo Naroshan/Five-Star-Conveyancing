@@ -1,0 +1,36 @@
+.field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1.5px solid var(--contact-border);
+  border-radius: var(--contact-radius);
+  padding: 12px 16px;
+  transition: border-color 0.15s ease;
+}
+
+.field:focus-within {
+  border-color: var(--contact-accent);
+}
+
+.icon {
+  flex-shrink: 0;
+  display: flex;
+}
+
+.input,
+.textarea {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--contact-text);
+  font-size: 14.5px;
+  font-family: inherit;
+}
+
+.textarea {
+  resize: vertical;
+  line-height: 1.5;
+  padding-top: 2px;
+}

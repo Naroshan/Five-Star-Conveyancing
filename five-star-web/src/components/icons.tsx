@@ -198,6 +198,15 @@ export function ChevronDownIcon({ size, color = "currentColor", className }: Ico
   );
 }
 
+export function UserIcon({ size, color = "currentColor", className }: IconProps) {
+  return (
+    <Svg size={size} className={className}>
+      <circle cx={12} cy={8} r={3.6} stroke={color} strokeWidth={STROKE} />
+      <path d="M4.5 20c1.4-3.8 4.6-5.8 7.5-5.8s6.1 2 7.5 5.8" stroke={color} strokeWidth={STROKE} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
 export function MailIcon({ size, color = "currentColor", className }: IconProps) {
   return (
     <Svg size={size} className={className}>
