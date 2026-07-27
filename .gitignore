@@ -4,3 +4,8 @@ node_modules/
 *.log
 *.tsbuildinfo
 .netlify/
+
+# Local agent-skill tooling (npx skills add) — dev tooling, not app source
+.agents/
+.claude/skills/
+skills-lock.json
