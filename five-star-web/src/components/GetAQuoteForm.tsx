@@ -121,14 +121,23 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
       body: JSON.stringify({ name, email, phone, transactionType, postcode, propertyValue }),
     }).catch(() => {});
 
+    const mortgageFlag = showsMortgageField(transactionType) ? mortgageInvolved : true;
+    const submittedFlags = { ...flags };
+    if (freeholdOrLeasehold === "leasehold") submittedFlags.leasehold = true;
+    // Mirrored into flags (in addition to the top-level field below) because
+    // fee-rule/disbursement triggers can only key off answers.flags, not
+    // top-level ClientAnswers fields — e.g. Ackroyd Legal's Mortgage
+    // Administration Fee supplement triggers on flags.mortgageInvolved.
+    if (mortgageFlag) submittedFlags.mortgageInvolved = true;
+
     await submit({
       transactionType,
       postcode,
       jurisdiction: "england",
       propertyValue: Number(propertyValue),
       freeholdOrLeasehold,
-      mortgageInvolved: showsMortgageField(transactionType) ? mortgageInvolved : true,
-      flags: freeholdOrLeasehold === "leasehold" ? { ...flags, leasehold: true } : flags,
+      mortgageInvolved: mortgageFlag,
+      flags: submittedFlags,
     });
   }
 
