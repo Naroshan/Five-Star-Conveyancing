@@ -10,18 +10,17 @@
 // 'active' filter means they never appear in a new comparison again.
 
 import { createDb } from '../src/db/client.js';
+import { assertLooksLikeProductionDatabase } from './_dbSafety.js';
 
 async function main() {
   const connectionString = process.env.DATABASE_URL;
-  if (!connectionString || !connectionString.includes('five_star_data')) {
-    throw new Error('Refusing to run: DATABASE_URL must point at five_star_data.');
-  }
+  assertLooksLikeProductionDatabase(connectionString);
   const db = createDb(connectionString);
 
   const demoFirms = await db.selectFrom('firms').selectAll().where('legal_entity_name', 'like', '%(DEMO)%').execute();
 
   for (const firm of demoFirms) {
-    await db.updateTable('firms').set({ status: 'removed', updated_at: new Date() }).where('firm_id', '=', firm.firm_id).execute();
+    await db.updateTable('firms').set({ status: 'removed' }).where('firm_id', '=', firm.firm_id).execute();
   }
 
   console.log(`Deactivated ${demoFirms.length} demo firm(s): ${demoFirms.map((f) => f.legal_entity_name).join(', ') || '(none found)'}`);

@@ -20,12 +20,11 @@ import { approveFeeRule } from '../src/admin/feeRuleAdmin.js';
 import { approveFeeValueBand } from '../src/admin/feeValueBandAdmin.js';
 import { approveDisbursementRule } from '../src/admin/disbursementRuleAdmin.js';
 import type { AdminUser } from '../src/types.js';
+import { assertLooksLikeProductionDatabase } from './_dbSafety.js';
 
 async function main() {
   const connectionString = process.env.DATABASE_URL;
-  if (!connectionString || !connectionString.includes('five_star_data')) {
-    throw new Error('Refusing to run: DATABASE_URL must point at five_star_data.');
-  }
+  assertLooksLikeProductionDatabase(connectionString);
   const db = createDb(connectionString);
 
   const ackroyd = await db.selectFrom('firms').selectAll().where('sra_number', '=', '554585').executeTakeFirst();
