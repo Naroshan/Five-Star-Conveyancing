@@ -1,0 +1,11 @@
+/* Breakpoints: mobile <=640px (see src/lib/theme.ts) */
+
+.flagsGrid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 640px) {
+  .flagsGrid {
+    grid-template-columns: 1fr;
+  }
+}

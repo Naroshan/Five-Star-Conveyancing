@@ -18,6 +18,7 @@ import {
   display,
 } from "@/lib/theme";
 import { UserIcon, MailIcon, PhoneIcon, CheckCircleIcon } from "@/components/icons";
+import styles from "./GetAQuoteForm.module.css";
 import type { TransactionType } from "five-star-conveyancing-quote-engine/types";
 
 // Formspree form ID for lead notifications — same form used by the Contact
@@ -236,25 +237,27 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
               </Field>
             )}
 
-            {showsMortgageField(transactionType) && (
-              <Field label={mortgageLabelFor(transactionType)}>
-                <ButtonRow
-                  options={[{ value: "no", label: "No" }, { value: "yes", label: "Yes" }]}
-                  value={mortgageInvolved ? "yes" : "no"}
-                  onChange={(v) => setMortgageInvolved(v === "yes")}
-                />
-              </Field>
-            )}
+            <div className={styles.flagsGrid} style={{ display: "grid", gap: "4px 16px" }}>
+              {showsMortgageField(transactionType) && (
+                <CompactToggleField label={mortgageLabelFor(transactionType)}>
+                  <ButtonRow
+                    options={[{ value: "no", label: "No" }, { value: "yes", label: "Yes" }]}
+                    value={mortgageInvolved ? "yes" : "no"}
+                    onChange={(v) => setMortgageInvolved(v === "yes")}
+                  />
+                </CompactToggleField>
+              )}
 
-            {availableFlags.map((opt) => (
-              <Field key={opt.key} label={opt.label}>
-                <ButtonRow
-                  options={[{ value: "no", label: "No" }, { value: "yes", label: "Yes" }]}
-                  value={flags[opt.key] ? "yes" : "no"}
-                  onChange={(v) => toggleFlag(opt.key, v === "yes")}
-                />
-              </Field>
-            ))}
+              {availableFlags.map((opt) => (
+                <CompactToggleField key={opt.key} label={opt.label}>
+                  <ButtonRow
+                    options={[{ value: "no", label: "No" }, { value: "yes", label: "Yes" }]}
+                    value={flags[opt.key] ? "yes" : "no"}
+                    onChange={(v) => toggleFlag(opt.key, v === "yes")}
+                  />
+                </CompactToggleField>
+              ))}
+            </div>
 
             <div style={{ display: "flex", gap: 10 }}>
               <BackButton onClick={() => setStepIndex(0)} />
@@ -406,6 +409,15 @@ function BackButton({ onClick, disabled }: { onClick: () => void; disabled?: boo
     >
       Back
     </button>
+  );
+}
+
+function CompactToggleField({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div style={{ padding: "8px 0" }}>
+      <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: TEXT_HEADING, marginBottom: 6, lineHeight: 1.3 }}>{label}</label>
+      {children}
+    </div>
   );
 }
 
