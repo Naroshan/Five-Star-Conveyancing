@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useQuoteSubmit } from "@/lib/useQuoteSubmit";
 import { getServiceType } from "@/lib/serviceTypes";
+import { TRANSACTION_TYPES, tenureIsFixedLeasehold } from "@/lib/transactionTypes";
 import {
   NAVY,
   TEXT_HEADING,
@@ -27,21 +28,6 @@ import type { TransactionType } from "five-star-conveyancing-quote-engine/types"
 // form. Firing it here too, right at quote generation, means a lead is
 // captured even if the visitor never gets as far as selecting a specific firm.
 const LEAD_NOTIFY_FORM_ID = "xjgnakev";
-
-interface TransactionTypeOption {
-  value: TransactionType;
-  label: string;
-  noun: string;
-}
-
-const TRANSACTION_TYPES: TransactionTypeOption[] = [
-  { value: "purchase", label: "Buying a property", noun: "purchase" },
-  { value: "sale", label: "Selling a property", noun: "sale" },
-  { value: "sale_and_purchase", label: "Buying and selling a property", noun: "sale and purchase" },
-  { value: "remortgage", label: "Remortgaging a property", noun: "remortgage" },
-  { value: "transfer_of_equity", label: "Transferring ownership", noun: "transfer of equity" },
-  { value: "lease_extension", label: "Extending a lease", noun: "lease extension" },
-];
 
 const FLAG_OPTIONS: { key: string; label: string }[] = [
   { key: "buyToLet", label: "Buy-to-let purchase" },
@@ -69,11 +55,6 @@ function showsMortgageField(transactionType: TransactionType): boolean {
 function mortgageLabelFor(transactionType: TransactionType): string {
   if (transactionType === "sale") return "Is there an existing mortgage to pay off with the sale proceeds?";
   return "Is a mortgage involved?";
-}
-
-// A lease extension is, by definition, on a leasehold property — no need to ask.
-function tenureIsFixedLeasehold(transactionType: TransactionType): boolean {
-  return transactionType === "lease_extension";
 }
 
 const STEPS = ["Service", "Property", "Contact", "Matches"] as const;

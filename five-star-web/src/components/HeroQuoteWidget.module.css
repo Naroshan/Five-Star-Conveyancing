@@ -20,6 +20,12 @@
   border-right: 1px solid oklch(1 0 0 / 0.22);
 }
 
+/* Wider than the other two fields: its option labels ("Buying and selling
+   a property") are longer than a postcode or a £ amount. */
+.typeField {
+  flex: 1.6;
+}
+
 .divider {
   display: none;
 }
@@ -56,6 +62,10 @@
     border-right: none;
     border-bottom: 1px solid oklch(1 0 0 / 0.22);
     border-radius: 14px;
+  }
+
+  .typeField {
+    flex: 1 1 100%;
   }
 
   .submit {
