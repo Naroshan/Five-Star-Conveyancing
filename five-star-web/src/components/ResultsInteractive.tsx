@@ -6,11 +6,11 @@ import type { PublicQuoteResult } from "five-star-conveyancing-quote-engine/api/
 import { CREAM, BORDER, ACCENT_BOLD, TEXT_HEADING, TEXT_MUTED, GRADIENT_CTA, ERROR, RADIUS, SHADOW } from "@/lib/theme";
 import { UserIcon, MailIcon, PhoneIcon } from "@/components/icons";
 
-// Formspree form ID for lead notifications, separate from the general
-// Contact page form (ContactForm.tsx's xjgnakev) — this one is configured
-// to deliver to imad.chowdhury@ackroydlegal.com so a real person is
-// notified whenever a client selects a firm off their comparison.
-const LEAD_NOTIFY_FORM_ID = "REPLACE_WITH_FORMSPREE_FORM_ID";
+// Formspree form ID for lead notifications — same form used by the Contact
+// page (ContactForm.tsx) and by quote generation (GetAQuoteForm.tsx); all
+// submissions across the site are intentionally consolidated into this one
+// form, so a real person is notified whenever a client selects a firm.
+const LEAD_NOTIFY_FORM_ID = "xjgnakev";
 
 export function ResultsInteractive({ quoteReference, results }: { quoteReference: string; results: PublicQuoteResult[] }) {
   const [actionMessage, setActionMessage] = useState<string | null>(null);

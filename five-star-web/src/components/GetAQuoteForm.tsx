@@ -20,11 +20,12 @@ import {
 import { UserIcon, MailIcon, PhoneIcon, CheckCircleIcon } from "@/components/icons";
 import type { TransactionType } from "five-star-conveyancing-quote-engine/types";
 
-// Formspree form ID for lead notifications — same one used when a client
-// selects a firm (ResultsInteractive.tsx). Firing it here too, right at
-// quote generation, means a lead reaches imad.chowdhury@ackroydlegal.com
-// even if the visitor never gets as far as selecting a specific firm.
-const LEAD_NOTIFY_FORM_ID = "REPLACE_WITH_FORMSPREE_FORM_ID";
+// Formspree form ID for lead notifications — same form used by the Contact
+// page (ContactForm.tsx) and by firm selection (ResultsInteractive.tsx); all
+// submissions across the site are intentionally consolidated into this one
+// form. Firing it here too, right at quote generation, means a lead is
+// captured even if the visitor never gets as far as selecting a specific firm.
+const LEAD_NOTIFY_FORM_ID = "xjgnakev";
 
 interface TransactionTypeOption {
   value: TransactionType;
