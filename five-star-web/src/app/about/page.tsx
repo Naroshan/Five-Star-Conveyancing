@@ -40,16 +40,16 @@ export default function AboutPage() {
         <section className={styles.introSection}>
           <div className={styles.introCard} style={{ background: ICON_BADGE_BG_GOLD, borderRadius: RADIUS.lg }}>
             <div>
-              <h2 style={{ ...display, fontSize: 26, fontWeight: 600, color: NAVY, margin: "0 0 18px" }}>
+              <h2 style={{ ...display, fontSize: 20, fontWeight: 600, color: NAVY, margin: "0 0 12px" }}>
                 About Five Star Conveyancing
               </h2>
-              <p style={{ fontSize: 14.5, color: TEXT_BODY, lineHeight: 1.7, margin: "0 0 16px" }}>
+              <p style={{ fontSize: 13, color: TEXT_BODY, lineHeight: 1.6, margin: "0 0 12px" }}>
                 We show quotes from SRA-regulated conveyancing firms side by side, with legal fee, VAT and
                 disbursements itemised for each one — rather than a single bundled total that hides how it&apos;s
                 made up. You compare, choose the firm that&apos;s right for you, and we pass your details on so
                 they can get in touch directly.
               </p>
-              <p style={{ fontSize: 14.5, color: TEXT_BODY, lineHeight: 1.7, margin: 0 }}>
+              <p style={{ fontSize: 13, color: TEXT_BODY, lineHeight: 1.6, margin: 0 }}>
                 We don&apos;t act as your conveyancer ourselves, take a cut hidden inside the quote you see, or
                 charge you anything to compare or to select a firm. The firm you choose handles your actual
                 transaction.
@@ -68,15 +68,15 @@ export default function AboutPage() {
                   boxShadow: SHADOW.md,
                 }}
               >
-                <ShieldCheckIcon size={72} color="white" />
+                <ShieldCheckIcon size={44} color="white" />
               </div>
 
               <div
                 className={styles.introBadgeAccent}
-                style={{ background: "white", borderRadius: RADIUS.md, boxShadow: SHADOW.md, padding: "14px 18px", maxWidth: 220 }}
+                style={{ background: "white", borderRadius: RADIUS.md, boxShadow: SHADOW.md, padding: "9px 12px", maxWidth: 150 }}
               >
-                <p style={{ fontSize: 13.5, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 2px" }}>SRA-regulated only</p>
-                <p style={{ fontSize: 12, color: TEXT_MUTED, margin: 0 }}>100% of firms compared are regulated</p>
+                <p style={{ fontSize: 11.5, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 2px" }}>SRA-regulated only</p>
+                <p style={{ fontSize: 10, color: TEXT_MUTED, margin: 0 }}>100% of firms compared are regulated</p>
               </div>
 
               <div
@@ -85,8 +85,8 @@ export default function AboutPage() {
                   background: ACCENT_BOLD,
                   color: "white",
                   borderRadius: "50%",
-                  width: 92,
-                  height: 92,
+                  width: 60,
+                  height: 60,
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -95,9 +95,9 @@ export default function AboutPage() {
                   textAlign: "center",
                 }}
               >
-                <StarIcon size={16} color="white" />
-                <span style={{ fontSize: 14, fontWeight: 800, marginTop: 2 }}>4.8/5</span>
-                <span style={{ fontSize: 9, fontWeight: 700 }}>Trustpilot</span>
+                <StarIcon size={11} color="white" />
+                <span style={{ fontSize: 10.5, fontWeight: 800, marginTop: 1 }}>4.8/5</span>
+                <span style={{ fontSize: 7, fontWeight: 700 }}>Trustpilot</span>
               </div>
             </div>
           </div>
