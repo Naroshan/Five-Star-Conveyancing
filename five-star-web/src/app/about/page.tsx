@@ -24,13 +24,13 @@ export default function AboutPage() {
       <SiteHeader />
       <div style={{ background: CREAM }}>
         <section className={contentStyles.hero}>
-          <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 18 }}>
+          <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 12 }}>
             About us
           </div>
           <h1 className={contentStyles.heroHeading} style={{ ...display, fontWeight: 600, lineHeight: 1.1, color: NAVY, margin: "0 0 16px", letterSpacing: "-0.02em" }}>
             Conveyancing quotes you can actually compare
           </h1>
-          <p style={{ fontSize: 16, lineHeight: 1.6, color: TEXT_BODY, maxWidth: 560, margin: 0 }}>
+          <p style={{ fontSize: 14, lineHeight: 1.55, color: TEXT_BODY, maxWidth: 560, margin: 0 }}>
             Five Star Conveyancing exists to fix one specific problem: conveyancing quotes that bundle legal fee, VAT
             and disbursements into a single number, making it hard to tell what you&apos;re actually being charged for
             until you&apos;re already committed.
@@ -122,7 +122,7 @@ export default function AboutPage() {
 
         <div className={contentStyles.list}>
           <div className={contentStyles.itemPad} style={{ background: "white", borderRadius: RADIUS.md, boxShadow: SHADOW.sm }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>Regulatory information</h2>
+            <h2 style={{ fontSize: 15, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>Regulatory information</h2>
             <p style={{ fontSize: 14.5, color: TEXT_MUTED, lineHeight: 1.65, maxWidth: 680, margin: 0 }}>
               Full regulatory disclosures, our complaints procedure, and company ownership information are pending
               final review before publication. In the meantime, every firm shown in a comparison is independently

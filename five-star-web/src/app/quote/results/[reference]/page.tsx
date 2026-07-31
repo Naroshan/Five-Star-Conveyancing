@@ -35,8 +35,8 @@ export default async function QuoteResultsPage({ params }: { params: Promise<{ r
   return (
     <>
       <SiteHeader />
-      <main style={{ maxWidth: 720, margin: "0 auto", padding: "36px 24px 48px", background: CREAM }}>
-        <h1 style={{ ...display, fontSize: 28, fontWeight: 600, color: NAVY, marginBottom: 20, letterSpacing: "-0.01em" }}>Your comparison</h1>
+      <main style={{ maxWidth: 700, margin: "0 auto", padding: "26px 24px 36px", background: CREAM }}>
+        <h1 style={{ ...display, fontSize: 21, fontWeight: 600, color: NAVY, marginBottom: 14, letterSpacing: "-0.01em" }}>Your comparison</h1>
 
         {data.status === "expired" && (
           <div style={{ background: CREAM, border: `1px solid ${BORDER}`, borderRadius: RADIUS.md, padding: 20, textAlign: "center" }}>

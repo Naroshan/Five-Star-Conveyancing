@@ -3,46 +3,46 @@
    (see src/lib/theme.ts). */
 
 .hero {
-  padding: 52px 48px 40px;
+  padding: 34px 40px 26px;
 }
 
 .heroHeading {
-  font-size: 42px;
+  font-size: 32px;
 }
 
 .ctaSection {
-  padding: 40px 48px;
+  padding: 28px 40px;
 }
 
 .itemPad {
-  padding: 22px 26px;
+  padding: 16px 20px;
 }
 
 .list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 0 48px 44px;
+  gap: 10px;
+  padding: 0 40px 32px;
 }
 
 @media (max-width: 640px) {
   .hero {
-    padding: 32px 20px 26px;
+    padding: 24px 20px 18px;
   }
 
   .heroHeading {
-    font-size: 28px;
+    font-size: 23px;
   }
 
   .ctaSection {
-    padding: 30px 20px;
+    padding: 22px 20px;
   }
 
   .itemPad {
-    padding: 18px 20px;
+    padding: 14px 16px;
   }
 
   .list {
-    padding: 0 20px 32px;
+    padding: 0 20px 24px;
   }
 }

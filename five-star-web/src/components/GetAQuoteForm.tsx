@@ -157,19 +157,19 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
   return (
     <div style={{ background: "white", borderRadius: RADIUS.lg, boxShadow: SHADOW.lg, overflow: "hidden" }}>
       <div style={{ height: 6, background: GRADIENT_CTA }} />
-      <div style={{ padding: "28px 32px 34px" }}>
+      <div style={{ padding: "20px 24px 26px" }}>
         <StepIndicator steps={STEPS} activeIndex={stepIndex} />
 
         {currentStep === "Service" && (
-          <form onSubmit={(e) => goToStep(e, 1)} style={{ display: "flex", flexDirection: "column", gap: 20, marginTop: 28 }}>
+          <form onSubmit={(e) => goToStep(e, 1)} style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 18 }}>
             <div>
-              <h1 style={{ ...display, fontSize: 26, fontWeight: 600, color: NAVY, marginBottom: 8, letterSpacing: "-0.01em" }}>
+              <h1 style={{ ...display, fontSize: 20, fontWeight: 600, color: NAVY, marginBottom: 6, letterSpacing: "-0.01em" }}>
                 Find verified conveyancing firms
               </h1>
-              <p style={{ fontSize: 14, color: TEXT_MUTED, margin: 0 }}>What are you doing?</p>
+              <p style={{ fontSize: 13, color: TEXT_MUTED, margin: 0 }}>What are you doing?</p>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {TRANSACTION_TYPES.map((opt) => {
                 const selected = opt.value === transactionType;
                 const service = getServiceType(opt.value.replaceAll("_", "-"));
@@ -179,11 +179,11 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: 14,
+                      gap: 12,
                       border: `1.5px solid ${selected ? ACCENT_BOLD : BORDER}`,
                       background: selected ? "oklch(0.97 0.02 350)" : "white",
                       borderRadius: RADIUS.md,
-                      padding: "14px 18px",
+                      padding: "10px 14px",
                       cursor: "pointer",
                     }}
                   >
@@ -194,8 +194,8 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
                       onChange={() => selectTransactionType(opt.value)}
                     />
                     <div>
-                      <p style={{ fontSize: 14.5, fontWeight: 700, color: TEXT_HEADING, margin: 0 }}>{opt.label}</p>
-                      {service && <p style={{ fontSize: 12.5, color: TEXT_MUTED, margin: "2px 0 0" }}>{service.short}</p>}
+                      <p style={{ fontSize: 13.5, fontWeight: 700, color: TEXT_HEADING, margin: 0 }}>{opt.label}</p>
+                      {service && <p style={{ fontSize: 11.5, color: TEXT_MUTED, margin: "2px 0 0" }}>{service.short}</p>}
                     </div>
                   </label>
                 );
@@ -207,8 +207,8 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
         )}
 
         {currentStep === "Property" && (
-          <form onSubmit={(e) => goToStep(e, 2)} style={{ display: "flex", flexDirection: "column", gap: 20, marginTop: 28 }}>
-            <h2 style={{ ...display, fontSize: 22, fontWeight: 600, color: NAVY, margin: 0 }}>
+          <form onSubmit={(e) => goToStep(e, 2)} style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 18 }}>
+            <h2 style={{ ...display, fontSize: 18, fontWeight: 600, color: NAVY, margin: 0 }}>
               About the property{transactionType === "sale" ? " you're selling" : transactionType === "purchase" ? " you're buying" : ""}
             </h2>
 
@@ -278,9 +278,9 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
         )}
 
         {currentStep === "Contact" && (
-          <form onSubmit={handleFinalSubmit} style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 28 }}>
+          <form onSubmit={handleFinalSubmit} style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 18 }}>
             <div>
-              <h2 style={{ ...display, fontSize: 22, fontWeight: 800, color: NAVY, margin: "0 0 6px" }}>Your details</h2>
+              <h2 style={{ ...display, fontSize: 18, fontWeight: 800, color: NAVY, margin: "0 0 6px" }}>Your details</h2>
               <p style={{ fontSize: 13.5, fontWeight: 700, color: TEXT_HEADING, margin: 0 }}>
                 So we can show you your matches, and firms can get in touch about your enquiry.
               </p>
@@ -324,24 +324,24 @@ function StepIndicator({ steps, activeIndex }: { steps: readonly string[]; activ
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
               <div
                 style={{
-                  width: 30,
-                  height: 30,
+                  width: 24,
+                  height: 24,
                   borderRadius: "50%",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: 12.5,
+                  fontSize: 11,
                   fontWeight: 800,
                   color: done || active ? "white" : TEXT_MUTED,
                   background: done ? GRADIENT_TEAL : active ? ACCENT_BOLD : "white",
                   border: done || active ? "none" : `1.5px solid ${BORDER}`,
                 }}
               >
-                {done ? <CheckCircleIcon size={15} color="white" /> : i + 1}
+                {done ? <CheckCircleIcon size={12} color="white" /> : i + 1}
               </div>
-              <span style={{ fontSize: 10.5, fontWeight: 700, color: active ? TEXT_HEADING : TEXT_MUTED, whiteSpace: "nowrap" }}>{step}</span>
+              <span style={{ fontSize: 9.5, fontWeight: 700, color: active ? TEXT_HEADING : TEXT_MUTED, whiteSpace: "nowrap" }}>{step}</span>
             </div>
-            {i < steps.length - 1 && <div style={{ flex: 1, height: 1.5, background: done ? GRADIENT_TEAL : BORDER, margin: "0 6px 18px" }} />}
+            {i < steps.length - 1 && <div style={{ flex: 1, height: 1.5, background: done ? GRADIENT_TEAL : BORDER, margin: "0 6px 14px" }} />}
           </div>
         );
       })}
@@ -361,9 +361,9 @@ function ButtonRow({ options, value, onChange }: { options: { value: string; lab
             onClick={() => onChange(opt.value)}
             aria-pressed={selected}
             style={{
-              fontSize: 13.5,
+              fontSize: 12.5,
               fontWeight: 700,
-              padding: "9px 20px",
+              padding: "7px 16px",
               borderRadius: RADIUS.sm,
               border: `1.5px solid ${selected ? ACCENT_BOLD : BORDER}`,
               background: selected ? ACCENT_BOLD : "white",
@@ -392,8 +392,8 @@ function StepSubmitButton({ children, disabled }: { children: React.ReactNode; d
         fontWeight: 800,
         border: "none",
         borderRadius: RADIUS.pill,
-        padding: "14px 20px",
-        fontSize: 15,
+        padding: "11px 18px",
+        fontSize: 14,
         opacity: disabled ? 0.7 : 1,
       }}
     >
@@ -413,8 +413,8 @@ function BackButton({ onClick, disabled }: { onClick: () => void; disabled?: boo
         color: TEXT_HEADING,
         border: `1px solid ${BORDER}`,
         borderRadius: RADIUS.pill,
-        padding: "14px 22px",
-        fontSize: 14,
+        padding: "11px 18px",
+        fontSize: 13,
         cursor: "pointer",
       }}
     >
@@ -435,7 +435,7 @@ function CompactToggleField({ label, children }: { label: string; children: Reac
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: TEXT_HEADING, marginBottom: 8 }}>{label}</label>
+      <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: TEXT_HEADING, marginBottom: 6 }}>{label}</label>
       {children}
     </div>
   );
@@ -444,8 +444,8 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function ContactField({ label, icon, children }: { label: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <div>
-      <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: TEXT_HEADING, marginBottom: 8 }}>{label}</label>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, border: `1.5px solid ${BORDER}`, borderRadius: RADIUS.sm, padding: "10px 14px" }}>
+      <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: TEXT_HEADING, marginBottom: 6 }}>{label}</label>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, border: `1.5px solid ${BORDER}`, borderRadius: RADIUS.sm, padding: "8px 12px" }}>
         {icon}
         {children}
       </div>

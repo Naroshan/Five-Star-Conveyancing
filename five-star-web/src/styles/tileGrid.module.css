@@ -2,16 +2,16 @@
    Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts). */
 
 .gridSection {
-  padding: 0 48px 56px;
+  padding: 0 40px 40px;
 }
 
 .grid {
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 14px;
 }
 
 .item {
-  padding: 32px;
+  padding: 22px;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
@@ -28,7 +28,7 @@
 
 @media (max-width: 640px) {
   .gridSection {
-    padding: 0 20px 40px;
+    padding: 0 20px 28px;
   }
 
   .grid {
@@ -36,7 +36,7 @@
   }
 
   .item {
-    padding: 24px;
+    padding: 18px;
   }
 
   .item:hover {

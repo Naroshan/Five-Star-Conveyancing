@@ -1,43 +1,43 @@
 /* Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts) */
 
 .hero {
-  padding: 72px 48px 60px;
+  padding: 44px 40px 36px;
 }
 
 .heroInner {
-  max-width: 880px;
+  max-width: 780px;
 }
 
 .heroBarWrap {
-  max-width: 720px;
+  max-width: 640px;
   margin: 0 auto;
 }
 
 .heroHeading {
-  font-size: 60px;
+  font-size: 44px;
 }
 
 .sectionPad {
-  padding: 48px 48px;
+  padding: 32px 40px;
 }
 
 .compareHeading {
-  font-size: 28px;
+  font-size: 22px;
 }
 
 .compareGrid {
   grid-template-columns: 1fr 1.3fr;
-  gap: 48px;
+  gap: 32px;
 }
 
 .quoteCards {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 
 .focalValue {
-  font-size: 46px;
+  font-size: 36px;
 }
 
 .ledgerCheck {
@@ -46,12 +46,12 @@
 }
 
 .sectionHeading {
-  font-size: 30px;
+  font-size: 24px;
 }
 
 .howGrid {
   grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  gap: 16px;
   position: relative;
 }
 
@@ -68,16 +68,16 @@
 
 .testimonialsGrid {
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 16px;
 }
 
 .ctaHeading {
-  font-size: 32px;
+  font-size: 26px;
 }
 
 @media (max-width: 1024px) {
   .heroHeading {
-    font-size: 44px;
+    font-size: 36px;
   }
 
   .howGrid,
@@ -92,28 +92,28 @@
 
 @media (max-width: 640px) {
   .hero {
-    padding: 40px 20px 36px;
+    padding: 30px 20px 26px;
   }
 
   .heroHeading {
-    font-size: 34px;
+    font-size: 28px;
   }
 
   .sectionPad {
-    padding: 30px 20px;
+    padding: 22px 20px;
   }
 
   .compareHeading {
-    font-size: 22px;
+    font-size: 19px;
   }
 
   .compareGrid {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 18px;
   }
 
   .focalValue {
-    font-size: 32px;
+    font-size: 27px;
   }
 
   .pillarsGrid,
@@ -127,10 +127,10 @@
   }
 
   .sectionHeading {
-    font-size: 24px;
+    font-size: 19px;
   }
 
   .ctaHeading {
-    font-size: 24px;
+    font-size: 20px;
   }
 }

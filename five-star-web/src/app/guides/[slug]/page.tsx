@@ -31,10 +31,10 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
       <SiteHeader />
       <div style={{ background: CREAM }}>
         <section className={contentStyles.hero}>
-          <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 18 }}>
+          <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 12 }}>
             Guide
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 18, marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 18, marginBottom: 10 }}>
             <div
               style={{
                 width: 56,
@@ -53,13 +53,13 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
               {guide.title}
             </h1>
           </div>
-          <p style={{ fontSize: 16, lineHeight: 1.6, color: TEXT_BODY, maxWidth: 560, margin: 0 }}>{guide.description}</p>
+          <p style={{ fontSize: 14, lineHeight: 1.55, color: TEXT_BODY, maxWidth: 560, margin: 0 }}>{guide.description}</p>
         </section>
 
         <div className={contentStyles.list}>
           {guide.sections.map((s) => (
             <div key={s.heading} className={contentStyles.itemPad} style={{ background: "white", borderRadius: RADIUS.md, boxShadow: SHADOW.sm }}>
-              <h2 style={{ fontSize: 17, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>{s.heading}</h2>
+              <h2 style={{ fontSize: 15, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>{s.heading}</h2>
               <p style={{ fontSize: 14.5, color: TEXT_MUTED, lineHeight: 1.65, maxWidth: 680, margin: 0 }}>{s.body}</p>
             </div>
           ))}

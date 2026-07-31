@@ -29,7 +29,7 @@ export default async function GetAQuotePage({ searchParams }: { searchParams: Pr
   return (
     <>
       <SiteHeader />
-      <main style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px 56px", background: CREAM }}>
+      <main style={{ maxWidth: 720, margin: "0 auto", padding: "28px 24px 40px", background: CREAM }}>
         <GetAQuoteForm initialTransactionType={initialTransactionType} />
       </main>
       <SiteFooter />

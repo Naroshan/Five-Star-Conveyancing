@@ -34,10 +34,10 @@ export default async function ServiceTypePage({ params }: { params: Promise<{ sl
       <SiteHeader />
       <div style={{ background: CREAM }}>
         <section className={contentStyles.hero}>
-          <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 18 }}>
+          <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 12 }}>
             Services
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 18, marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 18, marginBottom: 10 }}>
             <div
               style={{
                 width: 56,
@@ -56,12 +56,12 @@ export default async function ServiceTypePage({ params }: { params: Promise<{ sl
               {service.title} conveyancing
             </h1>
           </div>
-          <p style={{ fontSize: 16, lineHeight: 1.6, color: TEXT_BODY, maxWidth: 560, margin: 0 }}>{service.intro}</p>
+          <p style={{ fontSize: 14, lineHeight: 1.55, color: TEXT_BODY, maxWidth: 560, margin: 0 }}>{service.intro}</p>
         </section>
 
         <div className={contentStyles.list}>
           <div className={contentStyles.itemPad} style={{ background: "white", borderRadius: RADIUS.md, boxShadow: SHADOW.sm }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 14px" }}>What&apos;s involved</h2>
+            <h2 style={{ fontSize: 15, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 14px" }}>What&apos;s involved</h2>
             <ul style={{ display: "flex", flexDirection: "column", gap: 10, margin: 0, padding: 0, listStyle: "none" }}>
               {service.whatsInvolved.map((item) => (
                 <li key={item} style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 14.5, color: TEXT_MUTED, lineHeight: 1.6 }}>
@@ -75,7 +75,7 @@ export default async function ServiceTypePage({ params }: { params: Promise<{ sl
           </div>
 
           <div className={contentStyles.itemPad} style={{ background: "white", borderRadius: RADIUS.md, boxShadow: SHADOW.sm }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>Who it&apos;s for</h2>
+            <h2 style={{ fontSize: 15, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>Who it&apos;s for</h2>
             <p style={{ fontSize: 14.5, color: TEXT_MUTED, lineHeight: 1.65, margin: 0 }}>{service.whoItsFor}</p>
           </div>
         </div>

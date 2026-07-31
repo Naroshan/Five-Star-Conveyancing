@@ -55,13 +55,13 @@ export default function FeesExplainedPage() {
       <SiteHeader />
       <div style={{ background: CREAM }}>
         <section className={contentStyles.hero}>
-          <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 18 }}>
+          <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 12 }}>
             No hidden totals
           </div>
           <h1 className={contentStyles.heroHeading} style={{ ...display, fontWeight: 600, lineHeight: 1.1, color: NAVY, margin: "0 0 16px", letterSpacing: "-0.02em" }}>
             Fees explained
           </h1>
-          <p style={{ fontSize: 16, lineHeight: 1.6, color: TEXT_BODY, maxWidth: 520, margin: 0 }}>
+          <p style={{ fontSize: 14, lineHeight: 1.55, color: TEXT_BODY, maxWidth: 520, margin: 0 }}>
             What the terms on your comparison actually mean, and why we show them separately rather than as one
             bundled number.
           </p>

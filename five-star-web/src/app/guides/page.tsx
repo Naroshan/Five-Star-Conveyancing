@@ -18,13 +18,13 @@ export default function GuidesPage() {
       <SiteHeader />
       <div style={{ background: CREAM }}>
         <section className={contentStyles.hero}>
-          <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 18 }}>
+          <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 12 }}>
             Learn
           </div>
           <h1 className={contentStyles.heroHeading} style={{ ...display, fontWeight: 600, lineHeight: 1.1, color: NAVY, margin: "0 0 16px", letterSpacing: "-0.02em" }}>
             Guides
           </h1>
-          <p style={{ fontSize: 16, lineHeight: 1.6, color: TEXT_BODY, maxWidth: 520, margin: 0 }}>
+          <p style={{ fontSize: 14, lineHeight: 1.55, color: TEXT_BODY, maxWidth: 520, margin: 0 }}>
             Plain-English explanations of how conveyancing actually works, written so you know what to expect before you start.
           </p>
         </section>
@@ -40,19 +40,19 @@ export default function GuidesPage() {
               >
                 <div
                   style={{
-                    width: 52,
-                    height: 52,
+                    width: 40,
+                    height: 40,
                     borderRadius: "50%",
                     background: g.iconBg,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    marginBottom: 16,
+                    marginBottom: 10,
                   }}
                 >
-                  <g.icon size={24} color={g.iconColor} />
+                  <g.icon size={18} color={g.iconColor} />
                 </div>
-                <h2 style={{ fontSize: 17, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 8px" }}>{g.title}</h2>
+                <h2 style={{ fontSize: 15, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 8px" }}>{g.title}</h2>
                 <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.6, margin: 0 }}>{g.description}</p>
               </Link>
             ))}
