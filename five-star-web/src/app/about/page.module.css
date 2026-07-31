@@ -9,15 +9,15 @@
 }
 
 .introSection {
-  padding: 0 48px 56px;
+  padding: 0 48px 44px;
 }
 
 .introCard {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
-  gap: 48px;
+  gap: 40px;
   align-items: center;
-  padding: 48px;
+  padding: 36px;
 }
 
 .introPanel {
@@ -54,13 +54,13 @@
   }
 
   .introSection {
-    padding: 0 20px 40px;
+    padding: 0 20px 32px;
   }
 
   .introCard {
     grid-template-columns: 1fr;
-    padding: 28px;
-    gap: 56px;
+    padding: 24px;
+    gap: 48px;
   }
 
   .introBadgeAccent,

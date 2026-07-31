@@ -157,7 +157,7 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
   return (
     <div style={{ background: "white", borderRadius: RADIUS.lg, boxShadow: SHADOW.lg, overflow: "hidden" }}>
       <div style={{ height: 6, background: GRADIENT_CTA }} />
-      <div style={{ padding: "36px 40px 44px" }}>
+      <div style={{ padding: "28px 32px 34px" }}>
         <StepIndicator steps={STEPS} activeIndex={stepIndex} />
 
         {currentStep === "Service" && (
@@ -280,20 +280,20 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
         {currentStep === "Contact" && (
           <form onSubmit={handleFinalSubmit} style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 28 }}>
             <div>
-              <h2 style={{ ...display, fontSize: 22, fontWeight: 600, color: NAVY, margin: "0 0 6px" }}>Your details</h2>
-              <p style={{ fontSize: 13.5, color: TEXT_MUTED, margin: 0 }}>
+              <h2 style={{ ...display, fontSize: 22, fontWeight: 800, color: NAVY, margin: "0 0 6px" }}>Your details</h2>
+              <p style={{ fontSize: 13.5, fontWeight: 700, color: TEXT_HEADING, margin: 0 }}>
                 So we can show you your matches, and firms can get in touch about your enquiry.
               </p>
             </div>
 
-            <ContactField icon={<UserIcon size={16} color={ACCENT_BOLD} />}>
-              <input required autoComplete="name" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} />
+            <ContactField label="Full name" icon={<UserIcon size={16} color={ACCENT_BOLD} />}>
+              <input required autoComplete="name" placeholder="e.g. Jordan Smith" value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} />
             </ContactField>
-            <ContactField icon={<MailIcon size={16} color={ACCENT_BOLD} />}>
-              <input required type="email" autoComplete="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} style={inputStyle} />
+            <ContactField label="Email address" icon={<MailIcon size={16} color={ACCENT_BOLD} />}>
+              <input required type="email" autoComplete="email" placeholder="e.g. jordan@example.com" value={email} onChange={(e) => setEmail(e.target.value)} style={inputStyle} />
             </ContactField>
-            <ContactField icon={<PhoneIcon size={16} color={ACCENT_BOLD} />}>
-              <input required type="tel" autoComplete="tel" placeholder="Phone number" value={phone} onChange={(e) => setPhone(e.target.value)} style={inputStyle} />
+            <ContactField label="Phone number" icon={<PhoneIcon size={16} color={ACCENT_BOLD} />}>
+              <input required type="tel" autoComplete="tel" placeholder="e.g. 07700 900123" value={phone} onChange={(e) => setPhone(e.target.value)} style={inputStyle} />
             </ContactField>
 
             {error && (
@@ -441,11 +441,14 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function ContactField({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
+function ContactField({ label, icon, children }: { label: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, border: `1.5px solid ${BORDER}`, borderRadius: RADIUS.sm, padding: "10px 14px" }}>
-      {icon}
-      {children}
+    <div>
+      <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: TEXT_HEADING, marginBottom: 8 }}>{label}</label>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, border: `1.5px solid ${BORDER}`, borderRadius: RADIUS.sm, padding: "10px 14px" }}>
+        {icon}
+        {children}
+      </div>
     </div>
   );
 }

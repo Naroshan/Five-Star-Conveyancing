@@ -3,7 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { NAVY, TEAL, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, GRADIENT_CTA, RADIUS, SHADOW, ICON_BADGE_BG, ICON_BADGE_BG_ACCENT, ICON_BADGE_BG_GOLD, display } from "@/lib/theme";
-import { PoundCoinIcon, ReceiptIcon, ClockIcon } from "@/components/icons";
+import { PoundCoinIcon, ReceiptIcon, ClockIcon, DocumentExtendIcon } from "@/components/icons";
 import contentStyles from "@/styles/contentPage.module.css";
 
 export const metadata: Metadata = {
@@ -17,28 +17,35 @@ const TERMS = [
     bg: ICON_BADGE_BG,
     iconColor: TEAL,
     title: "Legal fee",
-    body: "The solicitor's or conveyancer's own charge for their professional work on your transaction. This is what you're paying them for their time and expertise — separate from any third-party costs.",
+    body: "The solicitor's or conveyancer's own charge for their professional work on your transaction — reviewing contracts, running searches, liaising with the other side, handling exchange and completion, and everything in between. This is what you're paying them for their time and expertise, separate from any third-party costs they arrange on your behalf. It's usually the single biggest line item, and it's also the one that varies most between firms, which is exactly why it's worth comparing rather than instructing the first firm you find.",
   },
   {
     icon: ReceiptIcon,
     bg: ICON_BADGE_BG_ACCENT,
     iconColor: "oklch(0.5 0.22 350)",
     title: "VAT",
-    body: "Value Added Tax, charged on top of most legal fees at the standard rate. Some disbursements attract VAT and some don't, depending on what they are — a genuine breakdown shows this per item rather than guessing.",
+    body: "Value Added Tax, charged on top of most legal fees at the standard rate, since solicitors' professional services are standard-rated for VAT purposes. Disbursements are more mixed — a genuine third-party pass-through cost (like a Land Registry fee) often carries no VAT, while a service the firm itself provides (like an ID check) usually does. A trustworthy breakdown shows VAT treatment per item rather than applying a blanket assumption across everything.",
   },
   {
     icon: PoundCoinIcon,
     bg: ICON_BADGE_BG_GOLD,
     iconColor: "oklch(0.6 0.14 80)",
     title: "Disbursements",
-    body: "Costs the firm pays to third parties on your behalf and passes on to you — for example search fees, Land Registry fees, or telegraphic transfer fees. These aren't the firm's own charge, so they're listed separately from the legal fee.",
+    body: "Costs the firm pays to third parties on your behalf and passes on to you at cost — for example local authority and environmental search fees, Land Registry registration and priority search fees, bankruptcy searches, or telegraphic transfer fees for moving money on completion day. These aren't the firm's own charge for their time, so they're listed separately from the legal fee rather than folded into it. The exact disbursements that apply depend on your specific transaction — a purchase and a remortgage, for instance, don't need the same searches.",
   },
   {
     icon: ClockIcon,
     bg: ICON_BADGE_BG,
     iconColor: TEAL,
     title: "Estimated vs guaranteed",
-    body: "Some charges are fixed and guaranteed up front. Others are genuinely estimated — usually because the exact cost depends on something that isn't known until later in the transaction. A trustworthy comparison should tell you which is which, not present an estimate as if it were guaranteed.",
+    body: "Some charges are fixed and guaranteed up front, because the firm can commit to them regardless of how your specific transaction unfolds. Others are genuinely estimated — usually because the exact cost depends on something that isn't known until later, like which local authority's search fee applies or exactly how a third-party provider prices a particular check. A trustworthy comparison labels each line clearly as one or the other, rather than presenting an estimate as if it were a guaranteed, locked-in figure.",
+  },
+  {
+    icon: DocumentExtendIcon,
+    bg: ICON_BADGE_BG_ACCENT,
+    iconColor: "oklch(0.5 0.22 350)",
+    title: "Stamp Duty Land Tax / Land Transaction Tax",
+    body: "A tax on property purchases — Stamp Duty Land Tax (SDLT) in England, Land Transaction Tax (LTT) in Wales — shown as an indicative estimate alongside the legal fee, VAT, and disbursements where it applies. It's genuinely a tax owed to HM Revenue & Customs or the Welsh Revenue Authority, not a fee charged by the firm or by us, and it isn't payable on every transaction type (a remortgage, for example, doesn't trigger it). Because the exact amount can depend on details a short form can't always capture fully — additional-property surcharges or available reliefs, for instance — your conveyancer will confirm the precise figure once they have the complete picture.",
   },
 ];
 

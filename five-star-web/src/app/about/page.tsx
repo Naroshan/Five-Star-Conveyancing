@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 };
 
 const PRINCIPLES = [
-  { icon: PoundCoinIcon, title: "Itemised, not bundled", body: "Legal fee, VAT and disbursements shown separately on every quote, so you can see exactly what you're paying for and to whom." },
-  { icon: ShieldCheckIcon, title: "SRA-regulated only", body: "Every firm compared is regulated by the Solicitors Regulation Authority. We don't list unregulated providers." },
-  { icon: CheckCircleIcon, title: "No obligation", body: "Comparing is free, and choosing a firm through the comparison isn't a binding commitment — you're free to instruct someone else if you change your mind." },
+  { icon: PoundCoinIcon, title: "Itemised, not bundled", body: "Legal fee, VAT and disbursements shown separately on every quote, so you can see exactly what you're paying for and to whom — not a single number that hides how it's actually made up, or that's cheaper on paper only because it excludes costs a competitor included." },
+  { icon: ShieldCheckIcon, title: "SRA-regulated only", body: "Every firm compared is regulated by the Solicitors Regulation Authority, with their SRA number shown on the results page so you can check it independently. We don't list unregulated 'conveyancing providers' or claims-management-style middlemen alongside genuine solicitors." },
+  { icon: CheckCircleIcon, title: "No obligation", body: "Comparing is free, however many quotes you look at, and choosing a firm through the comparison isn't a binding commitment — you're free to instruct someone else if you change your mind, right up until you've formally engaged a firm." },
 ];
 
 export default function AboutPage() {

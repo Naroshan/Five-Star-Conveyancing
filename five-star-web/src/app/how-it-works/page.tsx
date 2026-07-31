@@ -17,19 +17,19 @@ const STEPS = [
     n: "01",
     icon: HomeIcon,
     title: "Answer a few questions",
-    body: "Tell us about the property and the transaction — value, tenure, whether a mortgage is involved, and anything unusual about the situation.",
+    body: "Tell us what you're doing — buying, selling, remortgaging, transferring ownership, or extending a lease — and a handful of details about the property: its postcode, its approximate value, whether it's freehold or leasehold, and whether a mortgage is involved. Depending on your transaction, we might ask about a few situations that can affect the fee, like a buy-to-let purchase, shared ownership, Help to Buy, an unregistered title, or the Building Safety Act. It takes a few minutes, and none of it commits you to anything.",
   },
   {
     n: "02",
     icon: ClockIcon,
     title: "See a real comparison",
-    body: "We show you an itemised breakdown for each participating firm — legal fee, VAT, and disbursements listed separately, never bundled into one number.",
+    body: "We show you an itemised breakdown for each participating firm — legal fee, VAT, and disbursements listed separately, never bundled into one number that hides how it's made up. Where Stamp Duty Land Tax or Land Transaction Tax applies, we show an indicative estimate alongside it too. Each line is labelled clearly as either guaranteed or estimated, so you know exactly which figures are locked in and which are the firm's best current estimate — and every firm shown is regulated by the Solicitors Regulation Authority, with their SRA number displayed on the results page.",
   },
   {
     n: "03",
     icon: CheckCircleIcon,
     title: "Choose a firm",
-    body: "Pick the firm that's right for you directly from the comparison. There's no obligation, and no fee to use the comparison itself.",
+    body: "Pick the firm that's right for you directly from the comparison — by price, but also by whatever else matters to you, since the full itemised breakdown is there to look at, not just a headline number. Once you select a firm, we pass your details to them so they can get in touch and start the process. There's no obligation at this point and no fee to use the comparison itself: you're free to instruct a different firm later if your circumstances change or you simply change your mind.",
   },
 ];
 

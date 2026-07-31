@@ -1,7 +1,7 @@
 /* Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts) */
 
 .hero {
-  padding: 100px 48px 84px;
+  padding: 72px 48px 60px;
 }
 
 .heroInner {
@@ -18,7 +18,7 @@
 }
 
 .sectionPad {
-  padding: 64px 48px;
+  padding: 48px 48px;
 }
 
 .compareHeading {
@@ -92,7 +92,7 @@
 
 @media (max-width: 640px) {
   .hero {
-    padding: 56px 20px 48px;
+    padding: 40px 20px 36px;
   }
 
   .heroHeading {
@@ -100,7 +100,7 @@
   }
 
   .sectionPad {
-    padding: 40px 20px;
+    padding: 30px 20px;
   }
 
   .compareHeading {

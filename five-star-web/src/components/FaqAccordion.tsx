@@ -10,7 +10,7 @@ export interface FaqItem {
 }
 
 export function FaqAccordion({ items }: { items: FaqItem[] }) {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>

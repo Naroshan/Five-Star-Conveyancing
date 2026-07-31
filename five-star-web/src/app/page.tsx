@@ -106,6 +106,20 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* GUARANTEE STRIP — bold, punchy, built on real promises already
+            made elsewhere on the site (free to compare, itemised, no
+            obligation), not a fabricated discount or limited-time claim. */}
+        <section style={{ background: NAVY, padding: "22px 24px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: "12px 40px", maxWidth: 900, margin: "0 auto" }}>
+            {["No hidden fees", "No obligation, ever", "Always free to compare"].map((claim) => (
+              <div key={claim} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <CheckCircleIcon size={18} color="oklch(0.82 0.15 85)" />
+                <span style={{ ...display, fontSize: 15.5, fontWeight: 700, color: "white", whiteSpace: "nowrap" }}>{claim}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* COMPARE TEASER */}
         <section className={styles.sectionPad}>
           <div className={styles.compareGrid} style={{ display: "grid" }}>

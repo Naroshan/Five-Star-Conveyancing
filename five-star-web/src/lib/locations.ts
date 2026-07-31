@@ -59,6 +59,54 @@ export const LOCATIONS: Location[] = [
     intro:
       "Property transactions in Cardiff — and the rest of Wales — are taxed under Land Transaction Tax (LTT) rather than the Stamp Duty Land Tax charged in England, set and collected by the Welsh Revenue Authority. Make sure any quote you're comparing reflects LTT, not SDLT, disbursements.",
   },
+  {
+    slug: "bristol",
+    city: "Bristol",
+    jurisdiction: "England",
+    taxName: "Stamp Duty Land Tax",
+    intro:
+      "Bristol's property mix runs from Georgian and Victorian conversions to newer waterfront developments, and leasehold flats are common enough that lease-length and service-charge checks come up often during a purchase — an itemised quote makes it clear whether a firm's fee already accounts for that extra work.",
+  },
+  {
+    slug: "liverpool",
+    city: "Liverpool",
+    jurisdiction: "England",
+    taxName: "Stamp Duty Land Tax",
+    intro:
+      "From city-centre apartments to family houses across the wider Merseyside area, conveyancing in Liverpool spans a broad range of property types and price points — comparing itemised quotes side by side helps you see what's actually included before you commit to a firm.",
+  },
+  {
+    slug: "sheffield",
+    city: "Sheffield",
+    jurisdiction: "England",
+    taxName: "Stamp Duty Land Tax",
+    intro:
+      "Sheffield's terraced streets, student-let conversions, and newer developments each bring slightly different conveyancing considerations — a genuine itemised breakdown, rather than one bundled figure, makes it easier to see exactly what a firm is charging for and why.",
+  },
+  {
+    slug: "newcastle",
+    city: "Newcastle upon Tyne",
+    jurisdiction: "England",
+    taxName: "Stamp Duty Land Tax",
+    intro:
+      "Whether you're buying in the city centre or further out toward the coast, Newcastle conveyancing covers everything from Tyneside flats to freehold houses — comparing quotes lets you see the legal fee, VAT, and disbursements for your specific transaction rather than a generic estimate.",
+  },
+  {
+    slug: "nottingham",
+    city: "Nottingham",
+    jurisdiction: "England",
+    taxName: "Stamp Duty Land Tax",
+    intro:
+      "Nottingham's mix of established suburbs and city-centre new-builds means the searches and enquiries a purchase needs can differ significantly from one property to the next — an itemised quote helps you compare firms on exactly what they'll do for your transaction, not just a headline price.",
+  },
+  {
+    slug: "swansea",
+    city: "Swansea",
+    jurisdiction: "Wales",
+    taxName: "Land Transaction Tax",
+    intro:
+      "As in the rest of Wales, property transactions in Swansea are taxed under Land Transaction Tax (LTT), collected by the Welsh Revenue Authority rather than HM Revenue & Customs. If you're comparing quotes from firms based outside Wales, it's worth double-checking they've quoted LTT rather than the English SDLT by mistake.",
+  },
 ];
 
 export function getLocation(slug: string): Location | undefined {
