@@ -36,16 +36,16 @@ export function HeroQuoteWidget() {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className={styles.bar} style={{ borderRadius: RADIUS.pill, padding: "6px 6px 6px 22px" }}>
+      <form onSubmit={handleSubmit} className={styles.bar} style={{ borderRadius: RADIUS.pill, padding: "4px 4px 4px 16px" }}>
         <label className={`${styles.field} ${styles.typeField}`}>
-          <span style={{ fontSize: 10.5, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "oklch(1 0 0 / 0.65)" }}>
+          <span style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "oklch(1 0 0 / 0.65)" }}>
             What are you doing?
           </span>
           <select
             value={transactionType}
             onChange={(e) => setTransactionType(e.target.value as TransactionType)}
             className={styles.input}
-            style={{ appearance: "none", cursor: "pointer", fontSize: 13.5, width: "100%", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}
+            style={{ appearance: "none", cursor: "pointer", fontSize: 12, width: "100%", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}
           >
             {TRANSACTION_TYPES.map((opt) => (
               <option key={opt.value} value={opt.value} style={{ color: "black" }}>
@@ -56,11 +56,11 @@ export function HeroQuoteWidget() {
         </label>
 
         <label className={styles.field}>
-          <span style={{ fontSize: 10.5, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "oklch(1 0 0 / 0.65)" }}>
+          <span style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "oklch(1 0 0 / 0.65)" }}>
             Postcode
           </span>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <SearchPostcodeIcon size={15} color="oklch(1 0 0 / 0.55)" />
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <SearchPostcodeIcon size={13} color="oklch(1 0 0 / 0.55)" />
             <input
               required
               value={postcode}
@@ -72,11 +72,11 @@ export function HeroQuoteWidget() {
         </label>
 
         <label className={styles.field}>
-          <span style={{ fontSize: 10.5, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "oklch(1 0 0 / 0.65)" }}>
+          <span style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "oklch(1 0 0 / 0.65)" }}>
             Property value
           </span>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ color: "oklch(1 0 0 / 0.55)", fontWeight: 700, fontSize: 15 }}>£</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <span style={{ color: "oklch(1 0 0 / 0.55)", fontWeight: 700, fontSize: 13 }}>£</span>
             <input
               required
               type="number"
@@ -99,8 +99,8 @@ export function HeroQuoteWidget() {
             fontWeight: 800,
             border: "none",
             borderRadius: RADIUS.pill,
-            padding: "16px 30px",
-            fontSize: 15,
+            padding: "11px 20px",
+            fontSize: 13,
             whiteSpace: "nowrap",
             opacity: submitting ? 0.7 : 1,
           }}
@@ -110,12 +110,12 @@ export function HeroQuoteWidget() {
       </form>
 
       {error && (
-        <p style={{ fontSize: 12.5, color: ERROR, background: "white", padding: "8px 14px", borderRadius: RADIUS.sm, margin: "10px 0 0", display: "inline-block" }}>
+        <p style={{ fontSize: 11.5, color: ERROR, background: "white", padding: "7px 12px", borderRadius: RADIUS.sm, margin: "8px 0 0", display: "inline-block" }}>
           {error}
         </p>
       )}
 
-      <Link href="/get-a-quote" style={{ fontSize: 13, color: "oklch(1 0 0 / 0.75)", textDecoration: "underline", display: "inline-block", marginTop: 14 }}>
+      <Link href="/get-a-quote" style={{ fontSize: 12, color: "oklch(1 0 0 / 0.75)", textDecoration: "underline", display: "inline-block", marginTop: 10 }}>
         Want to add mortgage or leasehold details? Use the full form
       </Link>
     </div>
