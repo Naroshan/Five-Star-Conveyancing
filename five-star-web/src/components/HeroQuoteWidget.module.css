@@ -2,7 +2,7 @@
 
 .bar {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 4px;
   background: oklch(1 0 0 / 0.14);
   backdrop-filter: blur(18px);
@@ -15,6 +15,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 2px;
   padding: 6px 14px;
   border-right: 1px solid oklch(1 0 0 / 0.22);
@@ -26,12 +27,21 @@
   flex: 1.6;
 }
 
+/* A bit wider than postcode — "350,000" needs more room than a compact
+   pound sign + postcode does. */
+.valueField {
+  flex: 1.25;
+}
+
 .divider {
   display: none;
 }
 
 .submit {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .input {

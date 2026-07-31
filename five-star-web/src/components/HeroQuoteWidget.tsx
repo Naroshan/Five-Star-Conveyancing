@@ -71,7 +71,7 @@ export function HeroQuoteWidget() {
           </div>
         </label>
 
-        <label className={styles.field}>
+        <label className={`${styles.field} ${styles.valueField}`}>
           <span style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "oklch(1 0 0 / 0.65)" }}>
             Property value
           </span>
