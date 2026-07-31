@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useQuoteSubmit } from "@/lib/useQuoteSubmit";
 import { getServiceType } from "@/lib/serviceTypes";
 import { TRANSACTION_TYPES, tenureIsFixedLeasehold } from "@/lib/transactionTypes";
@@ -19,6 +19,7 @@ import {
   display,
 } from "@/lib/theme";
 import { UserIcon, MailIcon, PhoneIcon, CheckCircleIcon } from "@/components/icons";
+import { registerQuoteExitGuard, clearQuoteExitGuard } from "@/lib/quoteExitGuard";
 import styles from "./GetAQuoteForm.module.css";
 import type { TransactionType } from "five-star-conveyancing-quote-engine/types";
 
@@ -78,6 +79,35 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
   const availableFlags = flagOptionsFor(transactionType);
   const tenureFixed = tenureIsFixedLeasehold(transactionType);
   const currentStep: StepName = STEPS[stepIndex];
+
+  function resetToStart() {
+    setStepIndex(0);
+    setTransactionType(initialTransactionType);
+    setPostcode("");
+    setPropertyValue("");
+    setFreeholdOrLeasehold(tenureIsFixedLeasehold(initialTransactionType) ? "leasehold" : "freehold");
+    setMortgageInvolved(true);
+    setFlags({});
+    setName("");
+    setEmail("");
+    setPhone("");
+  }
+
+  // Warns before the header's "Get a quote" link resets progress —
+  // registered only once the visitor has moved past the first step, since
+  // that's the point at which navigating away would actually lose something.
+  useEffect(() => {
+    if (stepIndex === 0) {
+      clearQuoteExitGuard();
+      return;
+    }
+    registerQuoteExitGuard({
+      confirmMessage: "You're partway through getting a quote. Are you sure you want to end this and start over?",
+      reset: resetToStart,
+    });
+    return () => clearQuoteExitGuard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stepIndex]);
 
   function toggleFlag(key: string, value: boolean) {
     setFlags((prev) => ({ ...prev, [key]: value }));

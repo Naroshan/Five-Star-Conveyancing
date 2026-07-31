@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Logo } from "./Logo";
 import { CREAM, TEXT_HEADING, GRADIENT_CTA, RADIUS, SHADOW } from "@/lib/theme";
+import { interceptQuoteLinkClick } from "@/lib/quoteExitGuard";
 import styles from "./SiteHeader.module.css";
 
 const NAV_LINKS = [
@@ -95,7 +96,10 @@ export function SiteHeader() {
             whiteSpace: "nowrap",
             textDecoration: "none",
           }}
-          onClick={() => setOpen(false)}
+          onClick={(e) => {
+            if (!interceptQuoteLinkClick()) e.preventDefault();
+            setOpen(false);
+          }}
         >
           Get a quote
         </Link>
