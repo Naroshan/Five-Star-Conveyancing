@@ -4,10 +4,6 @@
   display: flex;
   align-items: stretch;
   gap: 4px;
-  background: oklch(1 0 0 / 0.14);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid oklch(1 0 0 / 0.3);
 }
 
 .field {
@@ -18,7 +14,7 @@
   justify-content: center;
   gap: 2px;
   padding: 6px 14px;
-  border-right: 1px solid oklch(1 0 0 / 0.22);
+  border-right: 1px solid oklch(0.91 0.015 155);
 }
 
 /* Wider than the other two fields: its option labels ("Buying and selling
@@ -49,14 +45,13 @@
   background: transparent;
   border: none;
   outline: none;
-  color: white;
   font-size: 13px;
   font-weight: 700;
   padding: 2px 0;
 }
 
 .input::placeholder {
-  color: oklch(1 0 0 / 0.45);
+  color: oklch(0.58 0.015 155 / 0.6);
   font-weight: 600;
 }
 
@@ -70,7 +65,7 @@
   .field {
     flex: 1 1 45%;
     border-right: none;
-    border-bottom: 1px solid oklch(1 0 0 / 0.22);
+    border-bottom: 1px solid oklch(0.91 0.015 155);
     border-radius: 14px;
   }
 

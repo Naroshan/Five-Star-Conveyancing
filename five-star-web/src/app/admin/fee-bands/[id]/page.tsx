@@ -6,7 +6,7 @@ import { AdminUserBar } from "@/components/AdminUserBar";
 import { AdminNav } from "@/components/AdminNav";
 import { db } from "@/lib/db";
 import { approveFeeValueBand, getFeeValueBandById, rejectFeeValueBand } from "five-star-conveyancing-quote-engine/admin/feeValueBandAdmin";
-import { TEXT_HEADING, TEXT_MUTED, BORDER, ACCENT_BOLD } from "@/lib/theme";
+import { TEXT_HEADING, TEXT_MUTED, BORDER, ACCENT_BOLD, NAVY } from "@/lib/theme";
 import { InvalidStateError } from "five-star-conveyancing-quote-engine/admin/feeRuleAdmin";
 import { ForbiddenError } from "five-star-conveyancing-quote-engine/admin/roles";
 import { listAuditLogForEntity } from "five-star-conveyancing-quote-engine/admin/auditLog";
@@ -107,7 +107,7 @@ export default async function FeeBandDetailPage({
         {canApprove ? (
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <form action={boundApprove}>
-              <button type="submit" style={{ background: ACCENT_BOLD, color: "white", border: "none", borderRadius: 6, padding: "10px 18px", fontSize: 14 }}>
+              <button type="submit" style={{ background: ACCENT_BOLD, color: NAVY, border: "none", borderRadius: 6, padding: "10px 18px", fontSize: 14 }}>
                 Approve
               </button>
             </form>

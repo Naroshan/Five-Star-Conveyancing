@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Logo } from "./Logo";
-import { CREAM, TEXT_HEADING, GRADIENT_CTA, RADIUS, SHADOW } from "@/lib/theme";
+import { NAVY, TEXT_HEADING, GRADIENT_CTA, GRADIENT_TEAL, RADIUS, SHADOW } from "@/lib/theme";
 import { interceptQuoteLinkClick } from "@/lib/quoteExitGuard";
 import styles from "./SiteHeader.module.css";
 
@@ -31,20 +31,38 @@ export function SiteHeader() {
   }, [open]);
 
   return (
-    <header
-      className={styles.header}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "22px 44px",
-        background: CREAM,
-        boxShadow: SHADOW.sm,
-        position: "relative",
-        zIndex: 10,
-        gap: 16,
-      }}
-    >
+    <>
+      <div
+        style={{
+          background: GRADIENT_TEAL,
+          color: "white",
+          textAlign: "center",
+          padding: "10px 16px",
+          fontSize: 13,
+          fontWeight: 600,
+        }}
+      >
+        Every firm on our panel is SRA or CLC checked before it lists.{" "}
+        <Link href="/faq" style={{ color: "white", fontWeight: 800, textDecoration: "underline" }}>
+          See how we verify
+        </Link>
+      </div>
+      <header
+        className={styles.header}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "18px 44px",
+          background: "oklch(1 0 0 / 0.94)",
+          backdropFilter: "blur(16px)",
+          borderBottom: "1px solid oklch(0.91 0.015 155)",
+          position: "sticky",
+          top: 0,
+          zIndex: 10,
+          gap: 16,
+        }}
+      >
       <Link href="/" style={{ textDecoration: "none", display: "flex" }} onClick={() => setOpen(false)}>
         <Logo variant="onLight" size={20} />
       </Link>
@@ -88,7 +106,7 @@ export function SiteHeader() {
           href="/get-a-quote"
           style={{
             fontWeight: 800,
-            color: "white",
+            color: NAVY,
             background: GRADIENT_CTA,
             boxShadow: SHADOW.sm,
             padding: "12px 26px",
@@ -104,6 +122,7 @@ export function SiteHeader() {
           Get a quote
         </Link>
       </nav>
-    </header>
+      </header>
+    </>
   );
 }

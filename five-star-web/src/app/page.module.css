@@ -1,69 +1,47 @@
 /* Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts) */
 
 .hero {
-  padding: 34px 40px 28px;
+  padding: 44px 40px 36px;
 }
 
 .heroInner {
-  max-width: 680px;
+  max-width: 720px;
 }
 
 .heroBarWrap {
-  max-width: 560px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
 .heroHeading {
-  font-size: 34px;
+  font-size: 42px;
+}
+
+.tileRow {
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .sectionPad {
-  padding: 32px 40px;
-}
-
-.compareHeading {
-  font-size: 22px;
-}
-
-.compareGrid {
-  grid-template-columns: 1fr 1.3fr;
-  gap: 32px;
-}
-
-.quoteCards {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.focalValue {
-  font-size: 36px;
-}
-
-.ledgerCheck {
-  flex-shrink: 0;
-  margin-top: 2px;
+  padding: 40px 40px;
 }
 
 .sectionHeading {
-  font-size: 24px;
+  font-size: 26px;
 }
 
 .howGrid {
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
-  position: relative;
 }
 
-.howConnector {
-  position: absolute;
-  top: 26px;
-  left: 8%;
-  right: 8%;
-  height: 2px;
-  background: linear-gradient(90deg, oklch(0.48 0.1 190), oklch(0.5 0.22 350));
-  opacity: 0.3;
-  z-index: 0;
+.aboutGrid {
+  grid-template-columns: 1.1fr 1fr;
+  gap: 40px;
+}
+
+.guidesGrid {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
 }
 
 .testimonialsGrid {
@@ -71,66 +49,64 @@
   gap: 16px;
 }
 
+.locationsGrid {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+
 .ctaHeading {
-  font-size: 26px;
+  font-size: 28px;
 }
 
 @media (max-width: 1024px) {
   .heroHeading {
-    font-size: 30px;
+    font-size: 32px;
   }
 
-  .howGrid,
-  .testimonialsGrid {
+  .tileRow {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .howConnector {
-    display: none;
+  .howGrid,
+  .testimonialsGrid,
+  .locationsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .aboutGrid,
+  .guidesGrid {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 640px) {
   .hero {
-    padding: 30px 20px 26px;
+    padding: 32px 20px 26px;
   }
 
   .heroHeading {
-    font-size: 28px;
+    font-size: 26px;
+  }
+
+  .tileRow {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .sectionPad {
-    padding: 22px 20px;
+    padding: 26px 20px;
   }
 
-  .compareHeading {
-    font-size: 19px;
-  }
-
-  .compareGrid {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
-
-  .focalValue {
-    font-size: 27px;
-  }
-
-  .pillarsGrid,
   .howGrid,
-  .testimonialsGrid {
+  .testimonialsGrid,
+  .locationsGrid {
     grid-template-columns: 1fr;
-  }
-
-  .howConnector {
-    display: none;
   }
 
   .sectionHeading {
-    font-size: 19px;
+    font-size: 20px;
   }
 
   .ctaHeading {
-    font-size: 20px;
+    font-size: 21px;
   }
 }

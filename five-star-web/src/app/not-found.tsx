@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { TEXT_HEADING, TEXT_MUTED, ACCENT_BOLD, RADIUS } from "@/lib/theme";
+import { TEXT_HEADING, TEXT_MUTED, ACCENT_BOLD, RADIUS, NAVY } from "@/lib/theme";
 
 export default function NotFound() {
   return (
@@ -16,7 +16,7 @@ export default function NotFound() {
         </p>
         <Link
           href="/get-a-quote"
-          style={{ display: "inline-block", background: ACCENT_BOLD, color: "white", fontSize: 14, padding: "12px 24px", borderRadius: RADIUS.pill, textDecoration: "none" }}
+          style={{ display: "inline-block", background: ACCENT_BOLD, color: NAVY, fontSize: 14, padding: "12px 24px", borderRadius: RADIUS.pill, textDecoration: "none" }}
         >
           Start a new quote
         </Link>

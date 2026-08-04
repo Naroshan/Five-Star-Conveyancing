@@ -6,6 +6,7 @@ import { getServiceType } from "@/lib/serviceTypes";
 import { TRANSACTION_TYPES, tenureIsFixedLeasehold } from "@/lib/transactionTypes";
 import {
   NAVY,
+  TEAL,
   TEXT_HEADING,
   TEXT_MUTED,
   TEXT_BODY,
@@ -180,8 +181,8 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
                       display: "flex",
                       alignItems: "center",
                       gap: 12,
-                      border: `1.5px solid ${selected ? ACCENT_BOLD : BORDER}`,
-                      background: selected ? "oklch(0.97 0.02 350)" : "white",
+                      border: `1.5px solid ${selected ? TEAL : BORDER}`,
+                      background: selected ? "oklch(0.95 0.03 155)" : "white",
                       borderRadius: RADIUS.md,
                       padding: "10px 14px",
                       cursor: "pointer",
@@ -286,13 +287,13 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
               </p>
             </div>
 
-            <ContactField label="Full name" icon={<UserIcon size={16} color={ACCENT_BOLD} />}>
+            <ContactField label="Full name" icon={<UserIcon size={16} color={TEAL} />}>
               <input required autoComplete="name" placeholder="e.g. Jordan Smith" value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} />
             </ContactField>
-            <ContactField label="Email address" icon={<MailIcon size={16} color={ACCENT_BOLD} />}>
+            <ContactField label="Email address" icon={<MailIcon size={16} color={TEAL} />}>
               <input required type="email" autoComplete="email" placeholder="e.g. jordan@example.com" value={email} onChange={(e) => setEmail(e.target.value)} style={inputStyle} />
             </ContactField>
-            <ContactField label="Phone number" icon={<PhoneIcon size={16} color={ACCENT_BOLD} />}>
+            <ContactField label="Phone number" icon={<PhoneIcon size={16} color={TEAL} />}>
               <input required type="tel" autoComplete="tel" placeholder="e.g. 07700 900123" value={phone} onChange={(e) => setPhone(e.target.value)} style={inputStyle} />
             </ContactField>
 
@@ -332,7 +333,7 @@ function StepIndicator({ steps, activeIndex }: { steps: readonly string[]; activ
                   justifyContent: "center",
                   fontSize: 11,
                   fontWeight: 800,
-                  color: done || active ? "white" : TEXT_MUTED,
+                  color: done ? "white" : active ? NAVY : TEXT_MUTED,
                   background: done ? GRADIENT_TEAL : active ? ACCENT_BOLD : "white",
                   border: done || active ? "none" : `1.5px solid ${BORDER}`,
                 }}
@@ -365,9 +366,9 @@ function ButtonRow({ options, value, onChange }: { options: { value: string; lab
               fontWeight: 700,
               padding: "7px 16px",
               borderRadius: RADIUS.sm,
-              border: `1.5px solid ${selected ? ACCENT_BOLD : BORDER}`,
+              border: `1.5px solid ${selected ? TEAL : BORDER}`,
               background: selected ? ACCENT_BOLD : "white",
-              color: selected ? "white" : TEXT_HEADING,
+              color: selected ? NAVY : TEXT_HEADING,
               cursor: "pointer",
             }}
           >

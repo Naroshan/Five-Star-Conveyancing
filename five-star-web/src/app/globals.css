@@ -9,15 +9,15 @@
 
 body {
   margin: 0;
-  background: oklch(0.97 0.012 80);
-  color: oklch(0.4 0.02 240);
-  font-family: var(--font-manrope), "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: oklch(0.98 0.01 155);
+  color: oklch(0.48 0.02 155);
+  font-family: var(--font-plusjakarta), "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.6;
 }
 
 a {
-  color: oklch(0.45 0.1 190);
+  color: oklch(0.4 0.09 155);
 }
 
 button {
@@ -29,7 +29,7 @@ input, select, textarea {
   font-family: inherit;
   font-size: 14px;
   padding: 10px 12px;
-  border: 1px solid oklch(0.88 0.01 80);
+  border: 1px solid oklch(0.91 0.015 155);
   border-radius: 6px;
   background: white;
 }

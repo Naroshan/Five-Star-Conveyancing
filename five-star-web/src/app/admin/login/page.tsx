@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
-import { TEXT_HEADING, ACCENT_BOLD, ERROR } from "@/lib/theme";
+import { TEXT_HEADING, ACCENT_BOLD, ERROR, NAVY } from "@/lib/theme";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -100,7 +100,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={submitting}
-            style={{ background: ACCENT_BOLD, color: "white", border: "none", borderRadius: 6, padding: "11px 18px", fontSize: 14, opacity: submitting ? 0.7 : 1 }}
+            style={{ background: ACCENT_BOLD, color: NAVY, border: "none", borderRadius: 6, padding: "11px 18px", fontSize: 14, opacity: submitting ? 0.7 : 1 }}
           >
             {submitting ? "Signing in…" : mfaRequired ? "Verify and sign in" : "Sign in"}
           </button>

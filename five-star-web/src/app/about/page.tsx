@@ -83,7 +83,7 @@ export default function AboutPage() {
                 className={styles.introBadgeCircle}
                 style={{
                   background: ACCENT_BOLD,
-                  color: "white",
+                  color: NAVY,
                   borderRadius: "50%",
                   width: 60,
                   height: 60,
@@ -95,9 +95,8 @@ export default function AboutPage() {
                   textAlign: "center",
                 }}
               >
-                <StarIcon size={11} color="white" />
-                <span style={{ fontSize: 10.5, fontWeight: 800, marginTop: 1 }}>4.8/5</span>
-                <span style={{ fontSize: 7, fontWeight: 700 }}>Trustpilot</span>
+                <StarIcon size={13} color={NAVY} />
+                <span style={{ fontSize: 8.5, fontWeight: 800, marginTop: 3, lineHeight: 1.2 }}>Always free to compare</span>
               </div>
             </div>
           </div>
@@ -134,7 +133,7 @@ export default function AboutPage() {
         <section className={contentStyles.ctaSection} style={{ textAlign: "center", paddingTop: 0 }}>
           <Link
             href="/get-a-quote"
-            style={{ display: "inline-block", background: GRADIENT_CTA, boxShadow: SHADOW.md, color: "white", fontWeight: 800, fontSize: 15.5, padding: "17px 34px", borderRadius: RADIUS.pill, textDecoration: "none" }}
+            style={{ display: "inline-block", background: GRADIENT_CTA, boxShadow: SHADOW.md, color: NAVY, fontWeight: 800, fontSize: 15.5, padding: "17px 34px", borderRadius: RADIUS.pill, textDecoration: "none" }}
           >
             Compare quotes →
           </Link>

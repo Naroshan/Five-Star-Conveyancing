@@ -1,13 +1,15 @@
+import { NAVY, TEAL } from "@/lib/theme";
+
 const COLORS = {
   onLight: {
-    five: "oklch(0.2 0.02 240)",
-    star: "oklch(0.5 0.22 350)",
-    conveyancing: "oklch(0.5 0.02 240)",
+    five: NAVY,
+    star: TEAL,
+    conveyancing: "oklch(0.58 0.015 155)",
   },
   onDark: {
     five: "#FFFFFF",
-    star: "oklch(0.5 0.22 350)",
-    conveyancing: "oklch(0.75 0.02 240)",
+    star: TEAL,
+    conveyancing: "oklch(0.78 0.03 155)",
   },
 } as const;
 
@@ -17,19 +19,18 @@ interface LogoProps {
   className?: string;
 }
 
-// Wordmark-only lockup: merged Baloo 2 display-font caps, three-color split
-// (FIVE / STAR / CONVEYANCING). "STAR" is always ACCENT_BOLD (the one
-// magenta used on every CTA/gradient across the site) on both light and
-// dark backgrounds, so the logo always matches the site's actual brand
-// color instead of drifting between different accents depending on where
-// it's rendered.
+// Wordmark-only lockup: Plus Jakarta Sans, three-color split (FIVE / STAR /
+// CONVEYANCING). "STAR" is always TEAL (forest green — the primary accent
+// used for text/icon foregrounds across the site, since the new mint
+// ACCENT_BOLD is a fill-only color with too little contrast for text) on
+// both light and dark backgrounds.
 export function Logo({ variant = "onLight", size = 26, className }: LogoProps) {
   const c = COLORS[variant];
   return (
     <span
       className={className}
       style={{
-        fontFamily: "var(--font-display), 'Baloo 2', sans-serif",
+        fontFamily: "var(--font-plusjakarta), 'Plus Jakarta Sans', sans-serif",
         letterSpacing: "-0.01em",
         fontSize: size,
         lineHeight: 1,

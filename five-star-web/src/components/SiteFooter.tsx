@@ -1,51 +1,80 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
-import { TEXT_ON_NAVY_MUTED, GOLD, TEAL } from "@/lib/theme";
-import { ShieldCheckIcon, StarIcon, PoundCoinIcon } from "./icons";
+import { NAVY, TEAL, TEXT_MUTED, BORDER, CREAM } from "@/lib/theme";
+import { ShieldCheckIcon } from "./icons";
 import styles from "./SiteFooter.module.css";
 
-const TRUST_BADGES = [
-  { icon: ShieldCheckIcon, label: "SRA-regulated firms only", color: TEAL },
-  { icon: StarIcon, label: "4.8/5 on Trustpilot", color: GOLD },
-  { icon: PoundCoinIcon, label: "Free to compare, always", color: "oklch(0.6 0.2 350)" },
+const COMPARE_LINKS = [
+  { href: "/services/purchase", label: "Buying a home" },
+  { href: "/services/sale", label: "Selling a home" },
+  { href: "/services/remortgage", label: "Remortgaging" },
+  { href: "/get-a-quote", label: "See your matches" },
 ];
 
-const FOOTER_LINKS = [
-  { href: "/how-it-works", label: "How it works" },
-  { href: "/services", label: "Services" },
-  { href: "/fees-explained", label: "Fees" },
-  { href: "/guides", label: "Guides" },
-  { href: "/locations", label: "Locations" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+const LEARN_LINKS = [
+  { href: "/fees-explained", label: "Fees explained" },
+  { href: "/guides", label: "All guides" },
+  { href: "/faq", label: "Questions answered" },
+];
+
+const ABOUT_LINKS = [
+  { href: "/about", label: "Who we are" },
+  { href: "/faq", label: "How we verify firms" },
+  { href: "/contact", label: "Contact us" },
+];
+
+const LEGAL_LINKS = [
+  { href: "/contact", label: "Terms & conditions" },
+  { href: "/contact", label: "Privacy policy" },
+  { href: "/contact", label: "Complaints procedure" },
 ];
 
 export function SiteFooter() {
   return (
-    <footer style={{ padding: "40px 48px", background: "oklch(0.15 0.02 240)", marginTop: 40 }}>
-      <div className={styles.trustRow} style={{ display: "flex", gap: 28, flexWrap: "wrap", marginBottom: 28, paddingBottom: 28, borderBottom: "1px solid oklch(0.28 0.02 240)" }}>
-        {TRUST_BADGES.map((b) => (
-          <div key={b.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <b.icon size={18} color={b.color} />
-            <span style={{ fontSize: 12.5, fontWeight: 600, color: TEXT_ON_NAVY_MUTED }}>{b.label}</span>
+    <footer style={{ padding: "48px 48px 32px", background: CREAM, borderTop: `1px solid ${BORDER}`, marginTop: 40 }}>
+      <div className={styles.grid} style={{ display: "grid", gridTemplateColumns: "1.4fr repeat(4, 1fr)", gap: 32, marginBottom: 32 }}>
+        <div>
+          <div style={{ marginBottom: 14 }}>
+            <Logo variant="onLight" size={17} />
           </div>
-        ))}
+          <p style={{ fontSize: 12.5, color: TEXT_MUTED, lineHeight: 1.7, maxWidth: 250, margin: 0 }}>
+            A comparison service for conveyancing. We don&apos;t provide legal services ourselves — we help you
+            compare the firms who do.
+          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: 7, marginTop: 14 }}>
+            <ShieldCheckIcon size={15} color={TEAL} />
+            <span style={{ fontSize: 12, fontWeight: 600, color: TEXT_MUTED }}>SRA and CLC verified firms only</span>
+          </div>
+        </div>
+
+        <FooterColumn heading="Find a solicitor" links={COMPARE_LINKS} />
+        <FooterColumn heading="Guides" links={LEARN_LINKS} />
+        <FooterColumn heading="Find out more" links={ABOUT_LINKS} />
+        <FooterColumn heading="Legal" links={LEGAL_LINKS} />
       </div>
-      <div className={styles.row}>
-        <Logo variant="onDark" size={16} />
-        <nav className={styles.nav} style={{ display: "flex", gap: 20, fontSize: 13, fontWeight: 600, flexWrap: "wrap" }}>
-          {FOOTER_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} style={{ color: TEXT_ON_NAVY_MUTED, textDecoration: "none" }}>
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-      </div>
-      <p style={{ fontSize: 11.5, color: "oklch(0.55 0.02 240)", maxWidth: 600, margin: "20px 0 0" }}>
-        Five Star Conveyancing is a comparison service. Regulatory disclosures, complaints procedure, and firm
-        ownership information: pending final review before publication.
+
+      <p style={{ fontSize: 11.5, color: TEXT_MUTED, maxWidth: 700, margin: "24px 0 0", paddingTop: 24, borderTop: `1px solid ${BORDER}`, lineHeight: 1.7 }}>
+        Registered company details and regulatory disclosures pending final review before publication.
+        Five Star Conveyancing is a comparison service; regulatory disclosures, complaints procedure, and firm
+        ownership information are pending final review. © 2026 Five Star Conveyancing.
       </p>
     </footer>
+  );
+}
+
+function FooterColumn({ heading, links }: { heading: string; links: { href: string; label: string }[] }) {
+  return (
+    <div>
+      <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: NAVY, marginBottom: 14 }}>
+        {heading}
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {links.map((link, i) => (
+          <Link key={`${link.href}-${i}`} href={link.href} style={{ fontSize: 13.5, color: TEXT_MUTED, textDecoration: "none" }}>
+            {link.label}
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }

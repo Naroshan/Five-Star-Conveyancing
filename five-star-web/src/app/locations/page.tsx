@@ -45,7 +45,7 @@ export default function LocationsPage() {
                     width: 40,
                     height: 40,
                     borderRadius: "50%",
-                    background: "oklch(0.95 0.03 190)",
+                    background: "oklch(0.95 0.03 155)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",

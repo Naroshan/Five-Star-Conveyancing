@@ -83,7 +83,7 @@ export default async function ServiceTypePage({ params }: { params: Promise<{ sl
         <section className={contentStyles.ctaSection} style={{ textAlign: "center", paddingTop: 0 }}>
           <Link
             href={`/get-a-quote?type=${service.slug}`}
-            style={{ display: "inline-block", background: GRADIENT_CTA, boxShadow: SHADOW.md, color: "white", fontWeight: 800, fontSize: 15.5, padding: "17px 34px", borderRadius: RADIUS.pill, textDecoration: "none" }}
+            style={{ display: "inline-block", background: GRADIENT_CTA, boxShadow: SHADOW.md, color: NAVY, fontWeight: 800, fontSize: 15.5, padding: "17px 34px", borderRadius: RADIUS.pill, textDecoration: "none" }}
           >
             Get my quote →
           </Link>

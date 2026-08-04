@@ -1,21 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope, Baloo_2 } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const manrope = Manrope({
+// Single family for the whole site, matching every page in the
+// "Five Star - Home.dc.html" Claude Design handoff (Round 7).
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
-  variable: "--font-manrope",
-});
-
-// Bold, rounded, confident display type for headlines and the logo — the
-// direct opposite of a thin editorial serif, chosen to match the bold
-// geometric/rounded headline character of both Konnect You and
-// MoneySuperMarket rather than reading as a generic template.
-const display = Baloo_2({
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
-  variable: "--font-display",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-plusjakarta",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -34,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${manrope.variable} ${display.variable}`}>
+    <html lang="en" className={plusJakarta.variable}>
       <body>{children}</body>
     </html>
   );

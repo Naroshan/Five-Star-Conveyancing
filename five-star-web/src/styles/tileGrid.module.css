@@ -17,7 +17,7 @@
 
 .item:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 32px oklch(0.2 0.02 240 / 0.14), 0 2px 6px oklch(0.2 0.02 240 / 0.08);
+  box-shadow: 0 12px 32px oklch(0.26 0.03 155 / 0.1), 0 2px 6px oklch(0.26 0.03 155 / 0.06);
 }
 
 @media (max-width: 1024px) {

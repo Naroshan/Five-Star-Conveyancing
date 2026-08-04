@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { QuoteResultsList } from "five-star-conveyancing-quote-engine/components/QuoteResults";
 import type { PublicQuoteResult } from "five-star-conveyancing-quote-engine/api/publicResult";
-import { CREAM, BORDER, ACCENT_BOLD, TEXT_HEADING, TEXT_MUTED, GRADIENT_CTA, ERROR, RADIUS, SHADOW } from "@/lib/theme";
+import { CREAM, BORDER, NAVY, TEAL, TEXT_HEADING, TEXT_MUTED, GRADIENT_CTA, ERROR, RADIUS, SHADOW } from "@/lib/theme";
 import { UserIcon, MailIcon, PhoneIcon } from "@/components/icons";
 
 // Formspree form ID for lead notifications — same form used by the Contact
@@ -122,13 +122,13 @@ export function ResultsInteractive({ quoteReference, results }: { quoteReference
             So they can get in touch with you about your enquiry.
           </p>
           <form onSubmit={handleConfirmSelection} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <ContactField icon={<UserIcon size={16} color={ACCENT_BOLD} />}>
+            <ContactField icon={<UserIcon size={16} color={TEAL} />}>
               <input type="text" name="name" required autoComplete="name" placeholder="Full name" style={inputStyle} />
             </ContactField>
-            <ContactField icon={<MailIcon size={16} color={ACCENT_BOLD} />}>
+            <ContactField icon={<MailIcon size={16} color={TEAL} />}>
               <input type="email" name="email" required autoComplete="email" placeholder="Email address" style={inputStyle} />
             </ContactField>
-            <ContactField icon={<PhoneIcon size={16} color={ACCENT_BOLD} />}>
+            <ContactField icon={<PhoneIcon size={16} color={TEAL} />}>
               <input type="tel" name="phone" required autoComplete="tel" placeholder="Phone number" style={inputStyle} />
             </ContactField>
 
@@ -141,7 +141,7 @@ export function ResultsInteractive({ quoteReference, results }: { quoteReference
                 style={{
                   background: GRADIENT_CTA,
                   boxShadow: SHADOW.sm,
-                  color: "white",
+                  color: NAVY,
                   fontWeight: 700,
                   border: "none",
                   borderRadius: RADIUS.pill,

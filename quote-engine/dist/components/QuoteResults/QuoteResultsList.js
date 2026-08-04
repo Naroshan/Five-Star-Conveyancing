@@ -53,7 +53,7 @@ const emptyStateStyle = {
 const adviserButtonStyle = {
     background: theme.gradient.cta,
     boxShadow: theme.shadow.sm,
-    color: 'white',
+    color: theme.color.navy,
     fontWeight: 700,
     border: 'none',
     borderRadius: theme.radius.control,

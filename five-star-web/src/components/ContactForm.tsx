@@ -2,7 +2,7 @@
 
 import type { CSSProperties } from "react";
 import { useForm, ValidationError } from "@formspree/react";
-import { TEXT_HEADING, TEXT_MUTED, BORDER, ACCENT_BOLD, GRADIENT_CTA, RADIUS, SHADOW } from "@/lib/theme";
+import { NAVY, TEAL, TEXT_HEADING, TEXT_MUTED, BORDER, GRADIENT_CTA, RADIUS, SHADOW } from "@/lib/theme";
 import { UserIcon, MailIcon, PhoneIcon } from "@/components/icons";
 import styles from "./ContactForm.module.css";
 
@@ -10,7 +10,7 @@ const FORMSPREE_FORM_ID = "xjgnakev";
 
 const cssVars = {
   "--contact-border": BORDER,
-  "--contact-accent": ACCENT_BOLD,
+  "--contact-accent": TEAL,
   "--contact-text": TEXT_HEADING,
   "--contact-radius": `${RADIUS.sm}px`,
 } as CSSProperties;
@@ -36,7 +36,7 @@ export function ContactForm() {
         Name
         <div className={styles.field} style={{ marginTop: 6 }}>
           <span className={styles.icon}>
-            <UserIcon size={16} color={ACCENT_BOLD} />
+            <UserIcon size={16} color={TEAL} />
           </span>
           <input type="text" name="name" required autoComplete="name" className={styles.input} />
         </div>
@@ -47,7 +47,7 @@ export function ContactForm() {
         Email
         <div className={styles.field} style={{ marginTop: 6 }}>
           <span className={styles.icon}>
-            <MailIcon size={16} color={ACCENT_BOLD} />
+            <MailIcon size={16} color={TEAL} />
           </span>
           <input type="email" name="email" required autoComplete="email" className={styles.input} />
         </div>
@@ -58,7 +58,7 @@ export function ContactForm() {
         Phone number
         <div className={styles.field} style={{ marginTop: 6 }}>
           <span className={styles.icon}>
-            <PhoneIcon size={16} color={ACCENT_BOLD} />
+            <PhoneIcon size={16} color={TEAL} />
           </span>
           <input type="tel" name="phone" required autoComplete="tel" className={styles.input} />
         </div>
@@ -82,7 +82,7 @@ export function ContactForm() {
           alignSelf: "flex-start",
           background: GRADIENT_CTA,
           boxShadow: SHADOW.sm,
-          color: "white",
+          color: NAVY,
           fontWeight: 800,
           border: "none",
           borderRadius: RADIUS.pill,

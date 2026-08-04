@@ -1,26 +1,18 @@
 /* Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts) */
 
-.row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
+.grid {
+  grid-template-columns: 1.4fr repeat(4, 1fr);
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 640px) {
-  .row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .nav {
-    flex-direction: column !important;
-    gap: 12px !important;
-  }
-
-  .trustRow {
-    flex-direction: column !important;
-    gap: 14px !important;
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 24px !important;
   }
 }

@@ -8,7 +8,7 @@ import { AdminNav } from "@/components/AdminNav";
 import { db } from "@/lib/db";
 import { approveFeeRule, getFeeRuleById, rejectFeeRule } from "five-star-conveyancing-quote-engine/admin/feeRuleAdmin";
 import { InvalidStateError } from "five-star-conveyancing-quote-engine/admin/feeRuleAdmin";
-import { TEXT_HEADING, TEXT_MUTED, BORDER, ACCENT_BOLD } from "@/lib/theme";
+import { TEXT_HEADING, TEXT_MUTED, BORDER, ACCENT_BOLD, NAVY } from "@/lib/theme";
 import { ForbiddenError } from "five-star-conveyancing-quote-engine/admin/roles";
 import { listAuditLogForEntity } from "five-star-conveyancing-quote-engine/admin/auditLog";
 
@@ -109,7 +109,7 @@ export default async function FeeRuleDetailPage({
             <form action={boundApprove}>
               <button
                 type="submit"
-                style={{ background: ACCENT_BOLD, color: "white", border: "none", borderRadius: 6, padding: "10px 18px", fontSize: 14 }}
+                style={{ background: ACCENT_BOLD, color: NAVY, border: "none", borderRadius: 6, padding: "10px 18px", fontSize: 14 }}
               >
                 Approve
               </button>

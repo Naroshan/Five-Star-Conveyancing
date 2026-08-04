@@ -132,7 +132,7 @@ export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, o
             alignItems: 'center',
             gap: 4,
             background: theme.gradient.cta,
-            color: 'white',
+            color: theme.color.navy,
             fontSize: 11,
             fontWeight: 800,
             padding: '4px 10px',
@@ -140,7 +140,7 @@ export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, o
             boxShadow: theme.shadow.sm,
           }}
         >
-          <RibbonBadgeIcon size={12} color="white" /> Cheapest
+          <RibbonBadgeIcon size={12} color={theme.color.navy} /> Cheapest
         </span>
       )}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
@@ -202,7 +202,7 @@ export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, o
 const primaryButtonStyle: CSSProperties = {
   background: theme.gradient.cta,
   boxShadow: theme.shadow.sm,
-  color: 'white',
+  color: theme.color.navy,
   fontWeight: 700,
   border: 'none',
   borderRadius: theme.radius.control,

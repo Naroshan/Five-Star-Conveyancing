@@ -15,7 +15,7 @@
   flex-wrap: wrap;
 }
 
-/* Colors below are literal copies of NAVY / CREAM from src/lib/theme.ts —
+/* Colors below are literal copies of CREAM / SHADOW.lg from src/lib/theme.ts —
    CSS Modules can't import JS constants, keep these in sync by hand. */
 @media (max-width: 640px) {
   .hamburger {
@@ -31,8 +31,8 @@
     top: 100%;
     left: 0;
     right: 0;
-    background: oklch(0.97 0.012 80);
-    box-shadow: 0 12px 32px oklch(0.2 0.02 240 / 0.14), 0 2px 6px oklch(0.2 0.02 240 / 0.08);
+    background: oklch(0.98 0.01 155);
+    box-shadow: 0 18px 40px oklch(0.26 0.03 155 / 0.1), 0 2px 6px oklch(0.26 0.03 155 / 0.06);
     padding: 16px 24px 24px;
     z-index: 20;
   }

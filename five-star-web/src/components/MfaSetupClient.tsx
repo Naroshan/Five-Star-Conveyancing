@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CREAM, BORDER, TEXT_BODY, TEXT_MUTED, ACCENT_BOLD, ERROR } from "@/lib/theme";
+import { CREAM, BORDER, TEXT_BODY, TEXT_MUTED, ACCENT_BOLD, ERROR, NAVY } from "@/lib/theme";
 
 export function MfaSetupClient() {
   const router = useRouter();
@@ -46,7 +46,7 @@ export function MfaSetupClient() {
     return (
       <button
         onClick={begin}
-        style={{ background: ACCENT_BOLD, color: "white", border: "none", borderRadius: 6, padding: "11px 18px", fontSize: 14 }}
+        style={{ background: ACCENT_BOLD, color: NAVY, border: "none", borderRadius: 6, padding: "11px 18px", fontSize: 14 }}
       >
         Start MFA setup
       </button>
@@ -81,7 +81,7 @@ export function MfaSetupClient() {
 
       <button
         onClick={confirm}
-        style={{ background: ACCENT_BOLD, color: "white", border: "none", borderRadius: 6, padding: "11px 18px", fontSize: 14 }}
+        style={{ background: ACCENT_BOLD, color: NAVY, border: "none", borderRadius: 6, padding: "11px 18px", fontSize: 14 }}
       >
         Confirm and enable MFA
       </button>
