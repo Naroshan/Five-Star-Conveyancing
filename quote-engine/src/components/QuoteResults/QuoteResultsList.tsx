@@ -63,7 +63,7 @@ export function QuoteResultsList({ results, onSelect, onEmailQuote, onSaveQuote,
           None of our participating firms currently cover this type of transaction. An adviser can help you find the right
           option.
         </p>
-        <button type="button" onClick={() => onSpeakToAdviser('')} style={adviserButtonStyle}>
+        <button type="button" onClick={() => onSpeakToAdviser('')} className="cta-button" style={adviserButtonStyle}>
           Speak to an adviser
         </button>
       </div>

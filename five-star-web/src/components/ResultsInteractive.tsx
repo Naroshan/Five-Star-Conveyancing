@@ -138,6 +138,7 @@ export function ResultsInteractive({ quoteReference, results }: { quoteReference
               <button
                 type="submit"
                 disabled={isSelecting}
+                className="cta-button"
                 style={{
                   background: GRADIENT_CTA,
                   boxShadow: SHADOW.sm,

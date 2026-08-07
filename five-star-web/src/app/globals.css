@@ -33,3 +33,42 @@ input, select, textarea {
   border-radius: 6px;
   background: white;
 }
+
+/* Shared primary-CTA treatment — applied alongside the GRADIENT_CTA
+   background (src/lib/theme.ts) on every main conversion button/link
+   sitewide (not admin, which stays calm/functional per convention). A
+   continuous slow shimmer along the gradient plus a lift-and-glow on
+   hover/focus, so every "Get a quote"-style button reads as one
+   consistent, alive call to action rather than a flat static pill. */
+.cta-button {
+  background-size: 220% 100%;
+  animation: cta-sheen 6s linear infinite;
+  transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.25s ease;
+  will-change: transform;
+}
+
+.cta-button:hover,
+.cta-button:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px oklch(0.4 0.09 292 / 0.28);
+}
+
+.cta-button:active {
+  transform: translateY(-1px);
+}
+
+@keyframes cta-sheen {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-button {
+    animation: none;
+  }
+  .cta-button:hover,
+  .cta-button:focus-visible {
+    transform: none;
+  }
+}

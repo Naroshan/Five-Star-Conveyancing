@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useQuoteSubmit } from "@/lib/useQuoteSubmit";
 import { TRANSACTION_TYPES, tenureIsFixedLeasehold } from "@/lib/transactionTypes";
-import { ERROR, NAVY, TEAL, ACCENT_BOLD, TEXT_MUTED, TEXT_HEADING, BORDER, ICON_BADGE_BG, RADIUS, SHADOW } from "@/lib/theme";
+import { ERROR, NAVY, TEAL, GRADIENT_CTA, TEXT_MUTED, TEXT_HEADING, BORDER, ICON_BADGE_BG, RADIUS, SHADOW } from "@/lib/theme";
 import { SearchPostcodeIcon, ChevronDownIcon } from "./icons";
 import styles from "./HeroQuoteWidget.module.css";
 import type { TransactionType } from "five-star-conveyancing-quote-engine/types";
@@ -145,9 +145,9 @@ export function HeroQuoteWidget() {
         <button
           type="submit"
           disabled={submitting}
-          className={styles.submit}
+          className={`${styles.submit} cta-button`}
           style={{
-            background: ACCENT_BOLD,
+            background: GRADIENT_CTA,
             color: NAVY,
             fontWeight: 800,
             border: "none",

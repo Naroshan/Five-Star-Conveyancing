@@ -185,7 +185,7 @@ export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, o
       </div>
 
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        <button type="button" onClick={() => onSelect(result.firm.firmId)} style={primaryButtonStyle}>
+        <button type="button" onClick={() => onSelect(result.firm.firmId)} className="cta-button" style={primaryButtonStyle}>
           Select this firm
         </button>
         <button type="button" onClick={() => onEmailQuote(result.firm.firmId)} style={secondaryButtonStyle}>

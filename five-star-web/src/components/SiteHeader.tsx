@@ -104,6 +104,7 @@ export function SiteHeader() {
         ))}
         <Link
           href="/get-a-quote"
+          className="cta-button"
           style={{
             fontWeight: 800,
             color: NAVY,

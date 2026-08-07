@@ -78,6 +78,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={state.submitting}
+        className="cta-button"
         style={{
           alignSelf: "flex-start",
           background: GRADIENT_CTA,

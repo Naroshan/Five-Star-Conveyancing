@@ -385,11 +385,12 @@ function StepSubmitButton({ children, disabled }: { children: React.ReactNode; d
     <button
       type="submit"
       disabled={disabled}
+      className="cta-button"
       style={{
         flex: 1,
         background: GRADIENT_CTA,
         boxShadow: SHADOW.md,
-        color: "white",
+        color: NAVY,
         fontWeight: 800,
         border: "none",
         borderRadius: RADIUS.pill,

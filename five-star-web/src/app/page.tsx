@@ -14,8 +14,10 @@ import {
   TEXT_MUTED,
   GRADIENT_HERO,
   GRADIENT_TEAL,
+  GRADIENT_CTA,
   ACCENT_BOLD,
   RADIUS,
+  SHADOW,
   ICON_BADGE_BG,
   ICON_BADGE_BG_GOLD,
   display,
@@ -269,7 +271,8 @@ export default function HomePage() {
           <p style={{ fontSize: 14, color: "oklch(0.9 0.03 292)", margin: "0 0 26px" }}>Free to compare, no obligation, and no sales calls afterwards.</p>
           <Link
             href="/get-a-quote"
-            style={{ display: "inline-block", background: ACCENT_BOLD, color: NAVY, fontWeight: 800, fontSize: 15, padding: "16px 36px", borderRadius: RADIUS.pill, textDecoration: "none" }}
+            className="cta-button"
+            style={{ display: "inline-block", background: GRADIENT_CTA, boxShadow: SHADOW.lg, color: NAVY, fontWeight: 800, fontSize: 15, padding: "16px 36px", borderRadius: RADIUS.pill, textDecoration: "none" }}
           >
             Get my quotes →
           </Link>
