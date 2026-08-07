@@ -26,7 +26,7 @@ import styles from "./page.module.css";
 const HERO_TILES = [
   { type: "purchase", label: "Buying", icon: HomeIcon },
   { type: "sale", label: "Selling", icon: SwapIcon },
-  { type: "sale_and_purchase", label: "Buying & selling", icon: SwapIcon },
+  { type: "sale_and_purchase", label: "Selling and buying", icon: SwapIcon },
   { type: "remortgage", label: "Remortgaging", icon: RefreshIcon },
 ];
 
