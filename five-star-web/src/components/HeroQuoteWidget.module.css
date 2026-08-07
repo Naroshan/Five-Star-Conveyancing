@@ -19,7 +19,7 @@
   justify-content: center;
   gap: 2px;
   padding: 10px 14px;
-  border-right: 1px solid oklch(0.91 0.015 155);
+  border-right: 1px solid oklch(0.91 0.015 292);
 }
 
 .field:last-child {
@@ -55,7 +55,7 @@
 }
 
 .typeButton:hover {
-  background: oklch(0.98 0.01 155);
+  background: oklch(0.98 0.01 292);
 }
 
 .chevronOpen {
@@ -91,7 +91,7 @@
 }
 
 .typeOption:hover {
-  background: oklch(0.95 0.03 155);
+  background: oklch(0.95 0.03 292);
 }
 
 .input {
@@ -105,7 +105,7 @@
 }
 
 .input::placeholder {
-  color: oklch(0.58 0.015 155 / 0.6);
+  color: oklch(0.58 0.015 292 / 0.6);
   font-weight: 600;
 }
 
@@ -117,7 +117,7 @@
   .field {
     flex: 1 1 45%;
     border-right: none;
-    border-bottom: 1px solid oklch(0.91 0.015 155);
+    border-bottom: 1px solid oklch(0.91 0.015 292);
   }
 
   .typeField,

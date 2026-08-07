@@ -266,7 +266,7 @@ export default function HomePage() {
         {/* CTA BAND */}
         <section className={styles.sectionPad} style={{ textAlign: "center", background: GRADIENT_TEAL }}>
           <h2 className={styles.ctaHeading} style={{ ...display, fontWeight: 700, color: "white", margin: "0 0 14px" }}>See your quotes in about a minute</h2>
-          <p style={{ fontSize: 14, color: "oklch(0.9 0.03 155)", margin: "0 0 26px" }}>Free to compare, no obligation, and no sales calls afterwards.</p>
+          <p style={{ fontSize: 14, color: "oklch(0.9 0.03 292)", margin: "0 0 26px" }}>Free to compare, no obligation, and no sales calls afterwards.</p>
           <Link
             href="/get-a-quote"
             style={{ display: "inline-block", background: ACCENT_BOLD, color: NAVY, fontWeight: 800, fontSize: 15, padding: "16px 36px", borderRadius: RADIUS.pill, textDecoration: "none" }}

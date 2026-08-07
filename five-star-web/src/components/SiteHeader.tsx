@@ -56,7 +56,7 @@ export function SiteHeader() {
           padding: "18px 44px",
           background: "oklch(1 0 0 / 0.94)",
           backdropFilter: "blur(16px)",
-          borderBottom: "1px solid oklch(0.91 0.015 155)",
+          borderBottom: "1px solid oklch(0.91 0.015 292)",
           position: "sticky",
           top: 0,
           zIndex: 10,

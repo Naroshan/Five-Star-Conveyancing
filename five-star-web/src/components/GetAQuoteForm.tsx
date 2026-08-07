@@ -182,7 +182,7 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
                       alignItems: "center",
                       gap: 12,
                       border: `1.5px solid ${selected ? TEAL : BORDER}`,
-                      background: selected ? "oklch(0.95 0.03 155)" : "white",
+                      background: selected ? "oklch(0.95 0.03 292)" : "white",
                       borderRadius: RADIUS.md,
                       padding: "10px 14px",
                       cursor: "pointer",
