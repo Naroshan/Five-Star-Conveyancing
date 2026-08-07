@@ -11,7 +11,7 @@ export interface TransactionTypeOption {
 export const TRANSACTION_TYPES: TransactionTypeOption[] = [
   { value: "purchase", label: "Buying a property", noun: "purchase" },
   { value: "sale", label: "Selling a property", noun: "sale" },
-  { value: "sale_and_purchase", label: "Buying and selling a property", noun: "sale and purchase" },
+  { value: "sale_and_purchase", label: "Selling and buying a property", noun: "sale and purchase" },
   { value: "remortgage", label: "Remortgaging a property", noun: "remortgage" },
   { value: "transfer_of_equity", label: "Transferring ownership", noun: "transfer of equity" },
   { value: "lease_extension", label: "Extending a lease", noun: "lease extension" },

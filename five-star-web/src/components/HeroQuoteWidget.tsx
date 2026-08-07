@@ -95,7 +95,7 @@ export function HeroQuoteWidget() {
                         setTypeMenuOpen(false);
                       }}
                       className={styles.typeOption}
-                      style={{ background: active ? ICON_BADGE_BG : "transparent", color: active ? TEAL : TEXT_HEADING }}
+                      style={active ? { background: ICON_BADGE_BG, color: TEAL } : { color: TEXT_HEADING }}
                     >
                       {opt.label}
                     </button>
