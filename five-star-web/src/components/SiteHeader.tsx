@@ -42,7 +42,7 @@ export function SiteHeader() {
           fontWeight: 600,
         }}
       >
-        Every firm on our panel is SRA or CLC checked before it lists.{" "}
+        Buying, selling, remortgaging or extending a lease — every firm on our panel is SRA or CLC checked before it lists.{" "}
         <Link href="/faq" style={{ color: "white", fontWeight: 800, textDecoration: "underline" }}>
           See how we verify
         </Link>

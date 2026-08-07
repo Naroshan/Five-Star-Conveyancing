@@ -1,5 +1,5 @@
 import { HomeIcon, SwapIcon, RefreshIcon, UsersIcon, DocumentExtendIcon, type IconProps } from "@/components/icons";
-import { TEAL, ICON_BADGE_BG, ICON_BADGE_BG_ACCENT, ICON_BADGE_BG_GOLD } from "@/lib/theme";
+import { TEAL, GOLD, ICON_BADGE_BG, ICON_BADGE_BG_ACCENT, ICON_BADGE_BG_GOLD } from "@/lib/theme";
 
 export interface ServiceType {
   slug: string;
@@ -13,8 +13,6 @@ export interface ServiceType {
   whoItsFor: string;
 }
 
-const ACCENT = "oklch(0.5 0.22 350)";
-const GOLD_ICON = "oklch(0.6 0.14 80)";
 
 export const SERVICE_TYPES: ServiceType[] = [
   {
@@ -41,7 +39,7 @@ export const SERVICE_TYPES: ServiceType[] = [
     short: "Selling a property you own.",
     icon: HomeIcon,
     iconBg: ICON_BADGE_BG_ACCENT,
-    iconColor: ACCENT,
+    iconColor: TEAL,
     intro:
       "Selling is generally more paperwork-driven than buying: most of the work is answering the buyer's questions about the property honestly and promptly, since delays in replying to enquiries are one of the most common reasons a sale slows down.",
     whatsInvolved: [
@@ -59,7 +57,7 @@ export const SERVICE_TYPES: ServiceType[] = [
     short: "Selling your current property and buying your next one at the same time.",
     icon: SwapIcon,
     iconBg: ICON_BADGE_BG_GOLD,
-    iconColor: GOLD_ICON,
+    iconColor: GOLD,
     intro:
       "A linked sale and purchase is the most time-sensitive transaction type, because your sale and purchase need to complete on the same day — and every other property in your chain is trying to align its own completion date too.",
     whatsInvolved: [
@@ -94,7 +92,7 @@ export const SERVICE_TYPES: ServiceType[] = [
     short: "Adding or removing a name from the title of a property.",
     icon: UsersIcon,
     iconBg: ICON_BADGE_BG_ACCENT,
-    iconColor: ACCENT,
+    iconColor: TEAL,
     intro:
       "A transfer of equity changes who's on the title without a full sale — commonly after marriage, divorce, separation, or simply changing how ownership shares are split between joint owners. If there's a mortgage on the property, your lender's consent is normally needed as part of the process.",
     whatsInvolved: [
@@ -111,7 +109,7 @@ export const SERVICE_TYPES: ServiceType[] = [
     short: "Extending the remaining term of a leasehold property.",
     icon: DocumentExtendIcon,
     iconBg: ICON_BADGE_BG_GOLD,
-    iconColor: GOLD_ICON,
+    iconColor: GOLD,
     intro:
       "Extending a lease keeps a leasehold property's value up and makes it easier to sell or remortgage later — most lenders are cautious about short leases. You can usually extend informally (negotiating directly with the freeholder) or through the statutory process, which gives qualifying leaseholders a legal right to extend.",
     whatsInvolved: [

@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useQuoteSubmit } from "@/lib/useQuoteSubmit";
 import { TRANSACTION_TYPES, tenureIsFixedLeasehold } from "@/lib/transactionTypes";
-import { ERROR, NAVY, ACCENT_BOLD, TEXT_MUTED, BORDER } from "@/lib/theme";
-import { SearchPostcodeIcon } from "./icons";
+import { ERROR, NAVY, TEAL, ACCENT_BOLD, TEXT_MUTED, TEXT_HEADING, BORDER, ICON_BADGE_BG, RADIUS, SHADOW } from "@/lib/theme";
+import { SearchPostcodeIcon, ChevronDownIcon } from "./icons";
 import styles from "./HeroQuoteWidget.module.css";
 import type { TransactionType } from "five-star-conveyancing-quote-engine/types";
 
-// White bordered search bar sitting on the light hero background (per the
+// White bordered search card sitting on the light hero background (per the
 // "Five Star - Home.dc.html" handoff). Collects the two fields that matter
 // for a rough quote and defaults the rest to match get-a-quote/page.tsx's
 // own initial state, so a widget submission and an untouched full-form
@@ -19,6 +19,26 @@ export function HeroQuoteWidget() {
   const [transactionType, setTransactionType] = useState<TransactionType>("purchase");
   const [postcode, setPostcode] = useState("");
   const [propertyValue, setPropertyValue] = useState("");
+  const [typeMenuOpen, setTypeMenuOpen] = useState(false);
+  const typeFieldRef = useRef<HTMLDivElement>(null);
+
+  const selectedType = TRANSACTION_TYPES.find((opt) => opt.value === transactionType) ?? TRANSACTION_TYPES[0];
+
+  useEffect(() => {
+    if (!typeMenuOpen) return;
+    function onClickOutside(e: MouseEvent) {
+      if (typeFieldRef.current && !typeFieldRef.current.contains(e.target as Node)) setTypeMenuOpen(false);
+    }
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setTypeMenuOpen(false);
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onClickOutside);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [typeMenuOpen]);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -35,60 +55,92 @@ export function HeroQuoteWidget() {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className={styles.bar} style={{ borderRadius: 999, padding: "4px 4px 4px 16px", background: "white", border: `1px solid ${BORDER}` }}>
-        <label className={`${styles.field} ${styles.typeField}`}>
-          <span style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: TEXT_MUTED }}>
-            What are you doing?
-          </span>
-          <select
-            value={transactionType}
-            onChange={(e) => setTransactionType(e.target.value as TransactionType)}
-            className={styles.input}
-            style={{ appearance: "none", cursor: "pointer", fontSize: 12, width: "100%", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", color: NAVY }}
-          >
-            {TRANSACTION_TYPES.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </label>
+      <form
+        onSubmit={handleSubmit}
+        className={styles.card}
+        style={{ borderRadius: RADIUS.lg, padding: 10, background: "white", border: `1px solid ${BORDER}`, boxShadow: SHADOW.md }}
+      >
+        <div className={styles.fieldsRow}>
+          <div ref={typeFieldRef} className={`${styles.field} ${styles.typeField}`} style={{ position: "relative" }}>
+            <button
+              type="button"
+              onClick={() => setTypeMenuOpen((v) => !v)}
+              aria-haspopup="listbox"
+              aria-expanded={typeMenuOpen}
+              className={styles.typeButton}
+            >
+              <span style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: TEXT_MUTED, display: "block" }}>
+                What are you doing?
+              </span>
+              <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6 }}>
+                <span style={{ fontSize: 13, fontWeight: 700, color: NAVY, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {selectedType.label}
+                </span>
+                <ChevronDownIcon size={13} color={TEXT_MUTED} className={typeMenuOpen ? styles.chevronOpen : undefined} />
+              </span>
+            </button>
 
-        <label className={styles.field}>
-          <span style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: TEXT_MUTED }}>
-            Postcode
-          </span>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <SearchPostcodeIcon size={13} color={TEXT_MUTED} />
-            <input
-              required
-              value={postcode}
-              onChange={(e) => setPostcode(e.target.value)}
-              placeholder="SW1A 1AA"
-              className={styles.input}
-              style={{ color: NAVY }}
-            />
+            {typeMenuOpen && (
+              <div role="listbox" className={styles.typeMenu} style={{ borderRadius: RADIUS.md, border: `1px solid ${BORDER}`, boxShadow: SHADOW.lg }}>
+                {TRANSACTION_TYPES.map((opt) => {
+                  const active = opt.value === transactionType;
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      role="option"
+                      aria-selected={active}
+                      onClick={() => {
+                        setTransactionType(opt.value);
+                        setTypeMenuOpen(false);
+                      }}
+                      className={styles.typeOption}
+                      style={{ background: active ? ICON_BADGE_BG : "transparent", color: active ? TEAL : TEXT_HEADING }}
+                    >
+                      {opt.label}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
-        </label>
 
-        <label className={`${styles.field} ${styles.valueField}`}>
-          <span style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: TEXT_MUTED }}>
-            Property value
-          </span>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span style={{ color: TEXT_MUTED, fontWeight: 700, fontSize: 13 }}>£</span>
-            <input
-              required
-              type="number"
-              min={1}
-              value={propertyValue}
-              onChange={(e) => setPropertyValue(e.target.value)}
-              placeholder="350,000"
-              className={styles.input}
-              style={{ color: NAVY }}
-            />
-          </div>
-        </label>
+          <label className={styles.field}>
+            <span style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: TEXT_MUTED }}>
+              Postcode
+            </span>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <SearchPostcodeIcon size={13} color={TEXT_MUTED} />
+              <input
+                required
+                value={postcode}
+                onChange={(e) => setPostcode(e.target.value)}
+                placeholder="SW1A 1AA"
+                className={styles.input}
+                style={{ color: NAVY }}
+              />
+            </div>
+          </label>
+
+          <label className={`${styles.field} ${styles.valueField}`}>
+            <span style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: TEXT_MUTED }}>
+              Property value
+            </span>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ color: TEXT_MUTED, fontWeight: 700, fontSize: 13 }}>£</span>
+              <input
+                required
+                type="number"
+                min={1}
+                value={propertyValue}
+                onChange={(e) => setPropertyValue(e.target.value)}
+                placeholder="350,000"
+                className={styles.input}
+                style={{ color: NAVY }}
+              />
+            </div>
+          </label>
+        </div>
 
         <button
           type="submit"
@@ -99,10 +151,11 @@ export function HeroQuoteWidget() {
             color: NAVY,
             fontWeight: 800,
             border: "none",
-            borderRadius: 999,
-            padding: "11px 20px",
-            fontSize: 13,
-            whiteSpace: "nowrap",
+            borderRadius: RADIUS.md,
+            padding: "14px 20px",
+            fontSize: 14,
+            width: "100%",
+            marginTop: 8,
             opacity: submitting ? 0.7 : 1,
           }}
         >
