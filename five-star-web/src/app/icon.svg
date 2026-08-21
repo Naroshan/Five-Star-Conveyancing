@@ -1,0 +1,13 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="113" fill="#242131" />
+  <text
+    x="50%"
+    y="53%"
+    text-anchor="middle"
+    dominant-baseline="central"
+    font-family="'Plus Jakarta Sans', Arial, sans-serif"
+    font-weight="800"
+    font-size="300"
+    letter-spacing="-6"
+  ><tspan fill="#FFFFFF">F</tspan><tspan fill="#9D7DFF">S</tspan></text>
+</svg>
