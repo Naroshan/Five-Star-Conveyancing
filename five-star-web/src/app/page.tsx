@@ -135,7 +135,7 @@ export default function HomePage() {
         {/* VERIFIED STRIP */}
         <section style={{ background: GRADIENT_TEAL, padding: "14px 24px", textAlign: "center" }}>
           <span style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: "white" }}>
-            Only SRA and CLC verified firms
+            SRA & CLC Regulated Firms Only
           </span>
         </section>
 
