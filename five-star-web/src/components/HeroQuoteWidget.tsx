@@ -124,7 +124,7 @@ export function HeroQuoteWidget() {
 
           <label className={`${styles.field} ${styles.valueField}`}>
             <span style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: TEXT_MUTED }}>
-              Property value
+              {transactionType === "purchase" ? "Purchase Price" : transactionType === "sale" ? "Sale Price" : "Property value"}
             </span>
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <span style={{ color: TEXT_MUTED, fontWeight: 700, fontSize: 13 }}>£</span>
