@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useQuoteSubmit } from "@/lib/useQuoteSubmit";
 import { getServiceType } from "@/lib/serviceTypes";
 import { TRANSACTION_TYPES, tenureIsFixedLeasehold } from "@/lib/transactionTypes";
+import { toDigits, formatThousands } from "@/lib/formatNumber";
 import {
   NAVY,
   TEAL,
@@ -240,22 +241,22 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
                 <Field label="Sale price (£)">
                   <input
                     required
-                    type="number"
-                    min={1}
-                    value={salePropertyValue}
-                    onChange={(e) => setSalePropertyValue(e.target.value)}
-                    placeholder="e.g. 300000"
+                    type="text"
+                    inputMode="numeric"
+                    value={formatThousands(salePropertyValue)}
+                    onChange={(e) => setSalePropertyValue(toDigits(e.target.value))}
+                    placeholder="e.g. 300,000"
                     style={{ width: "100%" }}
                   />
                 </Field>
                 <Field label="Purchase price (£)">
                   <input
                     required
-                    type="number"
-                    min={1}
-                    value={purchasePropertyValue}
-                    onChange={(e) => setPurchasePropertyValue(e.target.value)}
-                    placeholder="e.g. 350000"
+                    type="text"
+                    inputMode="numeric"
+                    value={formatThousands(purchasePropertyValue)}
+                    onChange={(e) => setPurchasePropertyValue(toDigits(e.target.value))}
+                    placeholder="e.g. 350,000"
                     style={{ width: "100%" }}
                   />
                 </Field>
@@ -264,11 +265,11 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
               <Field label="Property value (£)">
                 <input
                   required
-                  type="number"
-                  min={1}
-                  value={propertyValue}
-                  onChange={(e) => setPropertyValue(e.target.value)}
-                  placeholder="e.g. 350000"
+                  type="text"
+                  inputMode="numeric"
+                  value={formatThousands(propertyValue)}
+                  onChange={(e) => setPropertyValue(toDigits(e.target.value))}
+                  placeholder="e.g. 350,000"
                   style={{ width: "100%" }}
                 />
               </Field>

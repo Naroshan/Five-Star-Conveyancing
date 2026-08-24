@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useQuoteSubmit } from "@/lib/useQuoteSubmit";
 import { TRANSACTION_TYPES, tenureIsFixedLeasehold } from "@/lib/transactionTypes";
+import { toDigits, formatThousands } from "@/lib/formatNumber";
 import { ERROR, NAVY, TEAL, GRADIENT_CTA, TEXT_MUTED, TEXT_HEADING, BORDER, ICON_BADGE_BG, RADIUS, SHADOW } from "@/lib/theme";
 import { SearchPostcodeIcon, ChevronDownIcon } from "./icons";
 import styles from "./HeroQuoteWidget.module.css";
@@ -137,10 +138,10 @@ export function HeroQuoteWidget() {
                   <span style={{ color: TEXT_MUTED, fontWeight: 700, fontSize: 13 }}>£</span>
                   <input
                     required
-                    type="number"
-                    min={1}
-                    value={salePropertyValue}
-                    onChange={(e) => setSalePropertyValue(e.target.value)}
+                    type="text"
+                    inputMode="numeric"
+                    value={formatThousands(salePropertyValue)}
+                    onChange={(e) => setSalePropertyValue(toDigits(e.target.value))}
                     placeholder="300,000"
                     className={styles.input}
                     style={{ color: NAVY }}
@@ -155,10 +156,10 @@ export function HeroQuoteWidget() {
                   <span style={{ color: TEXT_MUTED, fontWeight: 700, fontSize: 13 }}>£</span>
                   <input
                     required
-                    type="number"
-                    min={1}
-                    value={purchasePropertyValue}
-                    onChange={(e) => setPurchasePropertyValue(e.target.value)}
+                    type="text"
+                    inputMode="numeric"
+                    value={formatThousands(purchasePropertyValue)}
+                    onChange={(e) => setPurchasePropertyValue(toDigits(e.target.value))}
                     placeholder="350,000"
                     className={styles.input}
                     style={{ color: NAVY }}
@@ -175,10 +176,10 @@ export function HeroQuoteWidget() {
                 <span style={{ color: TEXT_MUTED, fontWeight: 700, fontSize: 13 }}>£</span>
                 <input
                   required
-                  type="number"
-                  min={1}
-                  value={propertyValue}
-                  onChange={(e) => setPropertyValue(e.target.value)}
+                  type="text"
+                  inputMode="numeric"
+                  value={formatThousands(propertyValue)}
+                  onChange={(e) => setPropertyValue(toDigits(e.target.value))}
                   placeholder="350,000"
                   className={styles.input}
                   style={{ color: NAVY }}
