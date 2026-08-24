@@ -260,6 +260,106 @@ describe('SDLT integration', () => {
   });
 });
 
+describe('sale_and_purchase (two property values)', () => {
+  function makeSaleAndPurchaseFirm(overrides: Partial<FirmRuleSet> = {}): FirmRuleSet {
+    const base = makeTestFirm();
+    return makeTestFirm({
+      transactionTypes: [{ firmId: 'test-firm-a', transactionType: 'sale_and_purchase', accepted: true }],
+      feeValueBands: base.feeValueBands.map((b) => ({ ...b, transactionType: 'sale_and_purchase' })),
+      feeRules: base.feeRules.map((r) => ({ ...r, transactionType: 'sale_and_purchase' })),
+      disbursementRules: base.disbursementRules.map((d) => ({ ...d, transactionType: 'sale_and_purchase' })),
+      ...overrides,
+    });
+  }
+
+  // Deliberately distinct values landing in different fee bands (800 for
+  // <=250k, 1000 for >250k) so a summed result of 1,800 can't be a
+  // coincidence of symmetric fixture data.
+  function saleAndPurchaseAnswers(overrides: Partial<ClientAnswers> = {}): ClientAnswers {
+    return makeAnswers({
+      transactionType: 'sale_and_purchase',
+      propertyValue: undefined,
+      salePropertyValue: 200_000, // lower band -> 800
+      purchasePropertyValue: 350_000, // upper band -> 1,000
+      ...overrides,
+    });
+  }
+
+  it('sums two independent base-fee lookups (one per leg) into legalFeeSubtotal', () => {
+    const result = calculateQuoteForFirm(makeSaleAndPurchaseFirm(), saleAndPurchaseAnswers());
+    const baseFeeLines = result.lineItems.filter((l) => l.category === 'legal_fee');
+    expect(baseFeeLines).toHaveLength(2);
+    expect(baseFeeLines.find((l) => l.leg === 'sale')?.amountExVat).toBe(800);
+    expect(baseFeeLines.find((l) => l.leg === 'purchase')?.amountExVat).toBe(1_000);
+    expect(result.legalFeeSubtotal).toBe(1_800);
+  });
+
+  it('tags the matching audit entries with their leg', () => {
+    const result = calculateQuoteForFirm(makeSaleAndPurchaseFirm(), saleAndPurchaseAnswers());
+    const auditEntries = result.calculationAudit.filter((a) => a.step === 'base_fee_lookup');
+    expect(auditEntries).toHaveLength(2);
+    expect(auditEntries.map((a) => a.leg).sort()).toEqual(['purchase', 'sale']);
+  });
+
+  it('calculates SDLT against the purchase value only, never the sale value', () => {
+    const result = calculateQuoteForFirm(makeSaleAndPurchaseFirm(), saleAndPurchaseAnswers(), {
+      sdltBands: PLACEHOLDER_TEST_RATES,
+      jurisdiction: 'england',
+    });
+    // Purchase value 350,000 => £6,500 (same fixture math as the single-value
+    // SDLT test above). Sale value 200,000 would instead give £2,000 — if
+    // this ever regresses to reading the sale value, this assertion fails.
+    expect(result.sdltEstimate).toBe(6_500);
+  });
+
+  it('excludes the firm if no band matches EITHER leg alone', () => {
+    // Bands only cover values >= 250,000; sale value (200,000) falls below
+    // every band's minimum, purchase value (350,000) matches fine.
+    const ruleSet = makeSaleAndPurchaseFirm({
+      feeValueBands: [
+        {
+          bandId: 'band-high-only',
+          firmId: 'test-firm-a',
+          transactionType: 'sale_and_purchase',
+          valueMin: 250_000,
+          valueMax: null,
+          boundaryRule: 'inclusive_lower',
+          baseFee: 1_000,
+          effectiveDate: '2020-01-01',
+          expiryDate: null,
+          approvalStatus: 'approved',
+          createdBy: null,
+          lastModifiedBy: null,
+          supersedesBandId: null,
+        },
+      ],
+    });
+    const result = calculateQuoteForFirm(ruleSet, saleAndPurchaseAnswers());
+    expect(result.eligibilityStatus).toBe('excluded_with_reason');
+    expect(result.exclusionReason).toContain('sale');
+    expect(result.totalEstimate).toBeNull();
+  });
+
+  it('excludes the firm if a property_value restriction fails on either leg', () => {
+    const ruleSet = makeSaleAndPurchaseFirm({
+      restrictions: [
+        {
+          restrictionId: 'r-sp',
+          firmId: 'test-firm-a',
+          transactionType: 'sale_and_purchase',
+          restrictionType: 'property_value',
+          valueMax: 300_000,
+        },
+      ],
+    });
+    // Sale value (200,000) is within the restriction; purchase value
+    // (350,000) exceeds it — the firm must still be excluded.
+    const result = calculateQuoteForFirm(ruleSet, saleAndPurchaseAnswers());
+    expect(result.eligibilityStatus).toBe('excluded_with_reason');
+    expect(result.exclusionReason).toContain('£300,000');
+  });
+});
+
 describe('audit trail', () => {
   it('records the rule id and effective date used for every applied rule', () => {
     const result = calculateQuoteForFirm(makeTestFirm(), makeAnswers({ flags: { leasehold: true } }));

@@ -190,6 +190,75 @@ if (connectionString) {
       expect(row.status).toBe('expired'); // lazy transition persisted
     });
 
+    it('round-trips a sale_and_purchase quote with two leg-tagged base-fee line items', async () => {
+      await db
+        .insertInto('firm_transaction_types')
+        .values([{ firm_id: '11111111-1111-1111-1111-111111111111', transaction_type: 'sale_and_purchase', accepted: true }])
+        .execute();
+      await db
+        .insertInto('fee_value_bands')
+        .values([
+          {
+            firm_id: '11111111-1111-1111-1111-111111111111',
+            transaction_type: 'sale_and_purchase',
+            value_min: 0,
+            value_max: null,
+            boundary_rule: 'inclusive_upper',
+            base_fee: 850,
+            effective_date: '2020-01-01',
+            approval_status: 'approved',
+          },
+        ])
+        .execute();
+      await db
+        .insertInto('fee_rules')
+        .values([
+          {
+            firm_id: '11111111-1111-1111-1111-111111111111',
+            transaction_type: 'sale_and_purchase',
+            charge_name: 'Legal fee',
+            charge_type: 'base_fee',
+            trigger_key: null,
+            calculation_type: 'fixed',
+            vat_treatment: 'standard',
+            is_guaranteed: true,
+            is_estimated: false,
+            effective_date: '2020-01-01',
+            approval_status: 'approved',
+            display_order: 1,
+            client_facing_explanation: 'Base conveyancing fee.',
+          },
+        ])
+        .execute();
+
+      const saleAndPurchaseBody = {
+        transactionType: 'sale_and_purchase',
+        postcode: 'SW1A 1AA',
+        jurisdiction: 'england',
+        salePropertyValue: 200_000,
+        purchasePropertyValue: 300_000,
+        freeholdOrLeasehold: 'freehold',
+        mortgageInvolved: true,
+        flags: {},
+      };
+
+      const createResponse = await createQuoteHandler(postRequest(saleAndPurchaseBody), { db });
+      expect(createResponse.status).toBe(201);
+      const created = await createResponse.json();
+      // Same flat band fee (850) applied to each leg since only one band
+      // covers all values here — proves it ran twice, not once: 850+850.
+      expect(created.results[0].legalFeeSubtotal).toBe(1_700);
+      // SDLT reflects the purchase leg only (300,000 * 1% test rate = 3,000),
+      // never the sale leg (which would give 2,000).
+      expect(created.results[0].sdltEstimate).toBe(3_000);
+
+      const getResponse = await getQuoteHandler(created.quoteReference, db);
+      const fetched = await getResponse.json();
+      const legalFeeLines = fetched.results[0].lineItems.filter((l: { category: string }) => l.category === 'legal_fee');
+      expect(legalFeeLines).toHaveLength(2);
+      expect(legalFeeLines.map((l: { leg?: string }) => l.leg).sort()).toEqual(['purchase', 'sale']);
+    });
+
     function selectRequest(body: unknown): Request {
       return new Request('https://example.invalid/api/quotes/x/select', {
         method: 'POST',

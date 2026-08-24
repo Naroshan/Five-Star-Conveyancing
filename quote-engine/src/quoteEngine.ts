@@ -14,6 +14,8 @@ import type {
   CalculationAuditEntry,
   QuoteResult,
   SdltBand,
+  TransactionType,
+  PropertyLeg,
 } from './types.js';
 import { checkEligibility } from './eligibility.js';
 import { calculateIndicativeTax } from './sdltModule.js';
@@ -66,51 +68,60 @@ export function calculateQuoteForFirm(
   const lineItems: LineItem[] = [];
 
   // 1. Base fee via value band, respecting the explicit inclusive boundary rule.
-  const band = selectValueBand(ruleSet.feeValueBands, ruleSet.firm.firmId, answers, asOfDate);
-  if (!band) {
-    audit.push({
-      step: 'base_fee_lookup',
-      detail: 'No approved, in-date fee band matched this property value — treated as ineligible.',
-    });
-    return {
-      firmId: ruleSet.firm.firmId,
-      eligibilityStatus: 'excluded_with_reason',
-      exclusionReason: 'This firm has no published fee for a property of this value.',
-      lineItems: [],
-      legalFeeSubtotal: 0,
-      vatTotal: 0,
-      disbursementsTotal: 0,
-      sdltEstimate: null,
-      totalEstimate: null,
-      calculationAudit: audit,
-    };
-  }
-  audit.push({
-    step: 'base_fee_lookup',
-    detail: `Matched value band £${band.valueMin}–${band.valueMax ?? '∞'} (${band.boundaryRule}).`,
-    ruleId: band.bandId,
-    effectiveDateUsed: band.effectiveDate,
-  });
+  // sale_and_purchase has two property values (the property being sold and
+  // the property being bought), so the base-fee lookup runs once per leg
+  // against the same sale_and_purchase-scoped bands/rules and the two
+  // results are summed; every other transaction type runs it once, exactly
+  // as before.
+  if (answers.transactionType === 'sale_and_purchase') {
+    const saleResult = computeBaseFee(ruleSet, answers.transactionType, answers.salePropertyValue!, asOfDate, vatRate, 'sale');
+    const purchaseResult = computeBaseFee(ruleSet, answers.transactionType, answers.purchasePropertyValue!, asOfDate, vatRate, 'purchase');
 
-  const baseFeeRule = ruleSet.feeRules.find(
-    (r) =>
-      r.chargeType === 'base_fee' &&
-      r.transactionType === answers.transactionType &&
-      isInDate(r.effectiveDate, r.expiryDate, asOfDate) &&
-      r.approvalStatus === 'approved'
-  );
-  lineItems.push(
-    makeLineItem(
-      baseFeeRule?.chargeName ?? 'Legal fee',
-      'legal_fee',
-      band.baseFee,
-      baseFeeRule?.vatTreatment ?? 'standard',
-      baseFeeRule?.isEstimated ?? false,
-      baseFeeRule?.isGuaranteed ?? true,
-      baseFeeRule?.clientFacingExplanation ?? 'Base conveyancing fee for this transaction type and property value.',
-      vatRate
-    )
-  );
+    if (!saleResult || !purchaseResult) {
+      const missingLeg = !saleResult && !purchaseResult ? 'sale and purchase' : !saleResult ? 'sale' : 'purchase';
+      audit.push({
+        step: 'base_fee_lookup',
+        detail: `No approved, in-date fee band matched the ${missingLeg} value — treated as ineligible.`,
+      });
+      return {
+        firmId: ruleSet.firm.firmId,
+        eligibilityStatus: 'excluded_with_reason',
+        exclusionReason: `This firm has no published fee for a ${missingLeg} of this value.`,
+        lineItems: [],
+        legalFeeSubtotal: 0,
+        vatTotal: 0,
+        disbursementsTotal: 0,
+        sdltEstimate: null,
+        totalEstimate: null,
+        calculationAudit: audit,
+      };
+    }
+
+    audit.push(saleResult.matchedAudit, purchaseResult.matchedAudit);
+    lineItems.push(saleResult.lineItem, purchaseResult.lineItem);
+  } else {
+    const result = computeBaseFee(ruleSet, answers.transactionType, answers.propertyValue!, asOfDate, vatRate);
+    if (!result) {
+      audit.push({
+        step: 'base_fee_lookup',
+        detail: 'No approved, in-date fee band matched this property value — treated as ineligible.',
+      });
+      return {
+        firmId: ruleSet.firm.firmId,
+        eligibilityStatus: 'excluded_with_reason',
+        exclusionReason: 'This firm has no published fee for a property of this value.',
+        lineItems: [],
+        legalFeeSubtotal: 0,
+        vatTotal: 0,
+        disbursementsTotal: 0,
+        sdltEstimate: null,
+        totalEstimate: null,
+        calculationAudit: audit,
+      };
+    }
+    audit.push(result.matchedAudit);
+    lineItems.push(result.lineItem);
+  }
 
   // 2. Supplements — every approved, in-date rule whose trigger_key is true in answers.flags.
   const supplementRules = ruleSet.feeRules.filter(
@@ -178,7 +189,10 @@ export function calculateQuoteForFirm(
   // 4. SDLT/LTT — optional, calculated separately, never merged silently into the fee total.
   let sdltEstimate: number | null = null;
   if (options.sdltBands && options.jurisdiction) {
-    const result = calculateIndicativeTax(answers.propertyValue, options.jurisdiction, options.sdltBands, asOfDate);
+    // SDLT/LTT is a tax on the property being acquired, so for sale_and_purchase
+    // only the purchase leg is taxed — the sale leg never feeds this calculation.
+    const sdltValue = answers.transactionType === 'sale_and_purchase' ? answers.purchasePropertyValue! : answers.propertyValue!;
+    const result = calculateIndicativeTax(sdltValue, options.jurisdiction, options.sdltBands, asOfDate);
     sdltEstimate = result.estimate;
     audit.push({
       step: 'sdlt_calculation',
@@ -219,19 +233,19 @@ export function calculateQuoteForFirm(
 function selectValueBand(
   bands: FeeValueBand[],
   firmId: string,
-  answers: ClientAnswers,
+  transactionType: TransactionType,
+  value: number,
   asOfDate: string
 ): FeeValueBand | null {
   const candidates = bands.filter(
     (b) =>
       b.firmId === firmId &&
-      b.transactionType === answers.transactionType &&
+      b.transactionType === transactionType &&
       b.approvalStatus === 'approved' &&
       isInDate(b.effectiveDate, b.expiryDate, asOfDate)
   );
 
   for (const band of candidates) {
-    const value = answers.propertyValue;
     const aboveMin = band.boundaryRule === 'inclusive_lower' ? value >= band.valueMin : value > band.valueMin;
     const belowMax =
       band.valueMax === null
@@ -242,6 +256,52 @@ function selectValueBand(
     if (aboveMin && belowMax) return band;
   }
   return null;
+}
+
+// Matches a base-fee value band + fee rule for one value, building the
+// resulting LineItem/audit entry — used once per (non sale_and_purchase)
+// transaction, or once per leg for sale_and_purchase (see caller).
+function computeBaseFee(
+  ruleSet: FirmRuleSet,
+  transactionType: TransactionType,
+  value: number,
+  asOfDate: string,
+  vatRate: number,
+  leg?: PropertyLeg
+): { lineItem: LineItem; matchedAudit: CalculationAuditEntry } | null {
+  const band = selectValueBand(ruleSet.feeValueBands, ruleSet.firm.firmId, transactionType, value, asOfDate);
+  if (!band) return null;
+
+  const baseFeeRule = ruleSet.feeRules.find(
+    (r) =>
+      r.chargeType === 'base_fee' &&
+      r.transactionType === transactionType &&
+      isInDate(r.effectiveDate, r.expiryDate, asOfDate) &&
+      r.approvalStatus === 'approved'
+  );
+
+  const legSuffix = leg ? ` (${leg})` : '';
+  const lineItem = makeLineItem(
+    (baseFeeRule?.chargeName ?? 'Legal fee') + legSuffix,
+    'legal_fee',
+    band.baseFee,
+    baseFeeRule?.vatTreatment ?? 'standard',
+    baseFeeRule?.isEstimated ?? false,
+    baseFeeRule?.isGuaranteed ?? true,
+    baseFeeRule?.clientFacingExplanation ?? 'Base conveyancing fee for this transaction type and property value.',
+    vatRate
+  );
+  if (leg) lineItem.leg = leg;
+
+  const matchedAudit: CalculationAuditEntry = {
+    step: 'base_fee_lookup',
+    detail: `Matched value band £${band.valueMin}–${band.valueMax ?? '∞'} (${band.boundaryRule}).`,
+    ruleId: band.bandId,
+    effectiveDateUsed: band.effectiveDate,
+  };
+  if (leg) matchedAudit.leg = leg;
+
+  return { lineItem, matchedAudit };
 }
 
 function isInDate(effectiveDate: string, expiryDate: string | null, asOfDate: string): boolean {

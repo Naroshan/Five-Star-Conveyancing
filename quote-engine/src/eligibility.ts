@@ -34,17 +34,25 @@ export function checkEligibility(
 
     if (restriction.restrictionType === 'property_value') {
       const { valueMin, valueMax } = restriction;
-      if (valueMin !== undefined && answers.propertyValue < valueMin) {
-        return {
-          eligible: false,
-          reason: `This firm's minimum property value for this transaction type is £${valueMin.toLocaleString('en-GB')}.`,
-        };
-      }
-      if (valueMax !== undefined && answers.propertyValue > valueMax) {
-        return {
-          eligible: false,
-          reason: `This firm's maximum property value for this transaction type is £${valueMax.toLocaleString('en-GB')}.`,
-        };
+      // sale_and_purchase has two property values — a restriction excludes
+      // the firm if either leg falls outside it, checked independently.
+      const values =
+        answers.transactionType === 'sale_and_purchase'
+          ? [answers.salePropertyValue!, answers.purchasePropertyValue!]
+          : [answers.propertyValue!];
+      for (const value of values) {
+        if (valueMin !== undefined && value < valueMin) {
+          return {
+            eligible: false,
+            reason: `This firm's minimum property value for this transaction type is £${valueMin.toLocaleString('en-GB')}.`,
+          };
+        }
+        if (valueMax !== undefined && value > valueMax) {
+          return {
+            eligible: false,
+            reason: `This firm's maximum property value for this transaction type is £${valueMax.toLocaleString('en-GB')}.`,
+          };
+        }
       }
     }
 

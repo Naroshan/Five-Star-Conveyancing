@@ -16,11 +16,18 @@ export const transactionTypeSchema = z.enum([
     'transfer_of_equity',
     'lease_extension',
 ]);
-export const clientAnswersSchema = z.object({
+const propertyValueField = z.number().positive().max(50_000_000);
+export const clientAnswersSchema = z
+    .object({
     transactionType: transactionTypeSchema,
     postcode: z.string().trim().regex(UK_POSTCODE_PATTERN, 'Enter a valid UK postcode'),
     jurisdiction: z.enum(['england', 'wales']),
-    propertyValue: z.number().positive().max(50_000_000),
+    // sale_and_purchase uses salePropertyValue/purchasePropertyValue instead
+    // of propertyValue — enforced below, since it has two property values
+    // (the property being sold and the property being bought), not one.
+    propertyValue: propertyValueField.optional(),
+    salePropertyValue: propertyValueField.optional(),
+    purchasePropertyValue: propertyValueField.optional(),
     freeholdOrLeasehold: z.enum(['freehold', 'leasehold']),
     mortgageInvolved: z.boolean(),
     lenderId: z.string().uuid().optional(),
@@ -29,6 +36,27 @@ export const clientAnswersSchema = z.object({
     // against. Unknown keys are harmless (no rule will match them); this schema
     // only guarantees every value is actually a boolean.
     flags: z.record(z.string(), z.boolean()).default({}),
+})
+    .superRefine((data, ctx) => {
+    if (data.transactionType === 'sale_and_purchase') {
+        if (data.salePropertyValue === undefined) {
+            ctx.addIssue({ code: 'custom', path: ['salePropertyValue'], message: 'salePropertyValue is required for sale_and_purchase.' });
+        }
+        if (data.purchasePropertyValue === undefined) {
+            ctx.addIssue({ code: 'custom', path: ['purchasePropertyValue'], message: 'purchasePropertyValue is required for sale_and_purchase.' });
+        }
+        if (data.propertyValue !== undefined) {
+            ctx.addIssue({ code: 'custom', path: ['propertyValue'], message: 'propertyValue must be omitted for sale_and_purchase — use salePropertyValue/purchasePropertyValue instead.' });
+        }
+    }
+    else {
+        if (data.propertyValue === undefined) {
+            ctx.addIssue({ code: 'custom', path: ['propertyValue'], message: 'propertyValue is required.' });
+        }
+        if (data.salePropertyValue !== undefined || data.purchasePropertyValue !== undefined) {
+            ctx.addIssue({ code: 'custom', path: ['salePropertyValue'], message: 'salePropertyValue/purchasePropertyValue are only used for sale_and_purchase.' });
+        }
+    }
 });
 export function validateClientAnswers(body) {
     return clientAnswersSchema.safeParse(body);

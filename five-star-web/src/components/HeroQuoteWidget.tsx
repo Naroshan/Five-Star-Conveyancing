@@ -19,6 +19,9 @@ export function HeroQuoteWidget() {
   const [transactionType, setTransactionType] = useState<TransactionType>("purchase");
   const [postcode, setPostcode] = useState("");
   const [propertyValue, setPropertyValue] = useState("");
+  const [salePropertyValue, setSalePropertyValue] = useState("");
+  const [purchasePropertyValue, setPurchasePropertyValue] = useState("");
+  const isSaleAndPurchase = transactionType === "sale_and_purchase";
   const [typeMenuOpen, setTypeMenuOpen] = useState(false);
   const typeFieldRef = useRef<HTMLDivElement>(null);
 
@@ -46,7 +49,9 @@ export function HeroQuoteWidget() {
       transactionType,
       postcode,
       jurisdiction: "england",
-      propertyValue: Number(propertyValue),
+      ...(isSaleAndPurchase
+        ? { salePropertyValue: Number(salePropertyValue), purchasePropertyValue: Number(purchasePropertyValue) }
+        : { propertyValue: Number(propertyValue) }),
       freeholdOrLeasehold: tenureIsFixedLeasehold(transactionType) ? "leasehold" : "freehold",
       mortgageInvolved: true,
       flags: {},
@@ -122,24 +127,65 @@ export function HeroQuoteWidget() {
             </div>
           </label>
 
-          <label className={`${styles.field} ${styles.valueField}`}>
-            <span style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: TEXT_MUTED }}>
-              {transactionType === "purchase" ? "Purchase Price" : transactionType === "sale" ? "Sale Price" : "Property value"}
-            </span>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ color: TEXT_MUTED, fontWeight: 700, fontSize: 13 }}>£</span>
-              <input
-                required
-                type="number"
-                min={1}
-                value={propertyValue}
-                onChange={(e) => setPropertyValue(e.target.value)}
-                placeholder="350,000"
-                className={styles.input}
-                style={{ color: NAVY }}
-              />
-            </div>
-          </label>
+          {isSaleAndPurchase ? (
+            <>
+              <label className={`${styles.field} ${styles.valueField}`}>
+                <span style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: TEXT_MUTED }}>
+                  Sale Price
+                </span>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ color: TEXT_MUTED, fontWeight: 700, fontSize: 13 }}>£</span>
+                  <input
+                    required
+                    type="number"
+                    min={1}
+                    value={salePropertyValue}
+                    onChange={(e) => setSalePropertyValue(e.target.value)}
+                    placeholder="300,000"
+                    className={styles.input}
+                    style={{ color: NAVY }}
+                  />
+                </div>
+              </label>
+              <label className={`${styles.field} ${styles.valueField}`}>
+                <span style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: TEXT_MUTED }}>
+                  Purchase Price
+                </span>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ color: TEXT_MUTED, fontWeight: 700, fontSize: 13 }}>£</span>
+                  <input
+                    required
+                    type="number"
+                    min={1}
+                    value={purchasePropertyValue}
+                    onChange={(e) => setPurchasePropertyValue(e.target.value)}
+                    placeholder="350,000"
+                    className={styles.input}
+                    style={{ color: NAVY }}
+                  />
+                </div>
+              </label>
+            </>
+          ) : (
+            <label className={`${styles.field} ${styles.valueField}`}>
+              <span style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: TEXT_MUTED }}>
+                {transactionType === "purchase" ? "Purchase Price" : transactionType === "sale" ? "Sale Price" : "Property value"}
+              </span>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ color: TEXT_MUTED, fontWeight: 700, fontSize: 13 }}>£</span>
+                <input
+                  required
+                  type="number"
+                  min={1}
+                  value={propertyValue}
+                  onChange={(e) => setPropertyValue(e.target.value)}
+                  placeholder="350,000"
+                  className={styles.input}
+                  style={{ color: NAVY }}
+                />
+              </div>
+            </label>
+          )}
         </div>
 
         <button

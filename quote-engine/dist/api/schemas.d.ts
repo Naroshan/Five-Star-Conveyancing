@@ -21,7 +21,9 @@ export declare const clientAnswersSchema: z.ZodObject<{
         england: "england";
         wales: "wales";
     }>;
-    propertyValue: z.ZodNumber;
+    propertyValue: z.ZodOptional<z.ZodNumber>;
+    salePropertyValue: z.ZodOptional<z.ZodNumber>;
+    purchasePropertyValue: z.ZodOptional<z.ZodNumber>;
     freeholdOrLeasehold: z.ZodEnum<{
         freehold: "freehold";
         leasehold: "leasehold";
@@ -35,9 +37,11 @@ export declare function validateClientAnswers(body: unknown): z.ZodSafeParseResu
     transactionType: "sale" | "purchase" | "sale_and_purchase" | "remortgage" | "transfer_of_equity" | "lease_extension";
     postcode: string;
     jurisdiction: "england" | "wales";
-    propertyValue: number;
     freeholdOrLeasehold: "freehold" | "leasehold";
     mortgageInvolved: boolean;
     flags: Record<string, boolean>;
+    propertyValue?: number | undefined;
+    salePropertyValue?: number | undefined;
+    purchasePropertyValue?: number | undefined;
     lenderId?: string | undefined;
 }>;

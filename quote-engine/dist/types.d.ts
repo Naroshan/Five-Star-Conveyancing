@@ -2,11 +2,14 @@ export type TransactionType = 'sale' | 'purchase' | 'sale_and_purchase' | 'remor
 export type VatTreatment = 'standard' | 'exempt' | 'outside_scope';
 export type ApprovalStatus = 'draft' | 'pending_review' | 'approved' | 'rejected';
 export type BoundaryRule = 'inclusive_lower' | 'inclusive_upper';
+export type PropertyLeg = 'sale' | 'purchase';
 export interface ClientAnswers {
     transactionType: TransactionType;
     postcode: string;
     jurisdiction: 'england' | 'wales';
-    propertyValue: number;
+    propertyValue?: number;
+    salePropertyValue?: number;
+    purchasePropertyValue?: number;
     freeholdOrLeasehold: 'freehold' | 'leasehold';
     mortgageInvolved: boolean;
     lenderId?: string;
@@ -124,12 +127,14 @@ export interface LineItem {
     isEstimated: boolean;
     isGuaranteed: boolean;
     explanation: string;
+    leg?: PropertyLeg;
 }
 export interface CalculationAuditEntry {
     step: string;
     detail: string;
     ruleId?: string;
     effectiveDateUsed?: string;
+    leg?: PropertyLeg;
 }
 export interface QuoteResult {
     firmId: string;

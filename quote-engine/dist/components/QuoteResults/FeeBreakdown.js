@@ -13,7 +13,9 @@ export function FeeBreakdown({ lineItems, legalFeeSubtotal, vatTotal, disburseme
     const [expanded, setExpanded] = useState(false);
     const supplements = lineItems.filter((l) => l.category === 'supplement');
     const disbursements = lineItems.filter((l) => l.category === 'disbursement');
-    const baseFee = lineItems.find((l) => l.category === 'legal_fee');
+    // Usually one row; sale_and_purchase produces two (sale leg + purchase
+    // leg, distinguished by chargeName already), so this must not assume one.
+    const baseFees = lineItems.filter((l) => l.category === 'legal_fee');
     return (_jsxs("div", { style: { fontSize: 12, color: theme.color.textBody }, children: [_jsxs("div", { style: {
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -33,7 +35,7 @@ export function FeeBreakdown({ lineItems, legalFeeSubtotal, vatTotal, disburseme
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 4,
-                }, children: [baseFee && _jsx(LineItemRow, { item: baseFee }), supplements.map((item) => (_jsx(LineItemRow, { item: item }, item.chargeName))), disbursements.map((item) => (_jsx(LineItemRow, { item: item }, item.chargeName)))] }))] }));
+                }, children: [baseFees.map((item) => (_jsx(LineItemRow, { item: item }, item.chargeName))), supplements.map((item) => (_jsx(LineItemRow, { item: item }, item.chargeName))), disbursements.map((item) => (_jsx(LineItemRow, { item: item }, item.chargeName)))] }))] }));
 }
 function LineItemRow({ item }) {
     return (_jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', gap: 8 }, children: [_jsxs("span", { children: [item.chargeName, item.isEstimated && _jsx("span", { style: { color: theme.color.textSecondary }, children: " (estimated)" })] }), _jsx("span", { children: formatCurrency(item.amountExVat) })] }));

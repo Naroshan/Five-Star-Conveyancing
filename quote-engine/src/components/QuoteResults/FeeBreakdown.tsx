@@ -24,7 +24,9 @@ export function FeeBreakdown({ lineItems, legalFeeSubtotal, vatTotal, disburseme
 
   const supplements = lineItems.filter((l) => l.category === 'supplement');
   const disbursements = lineItems.filter((l) => l.category === 'disbursement');
-  const baseFee = lineItems.find((l) => l.category === 'legal_fee');
+  // Usually one row; sale_and_purchase produces two (sale leg + purchase
+  // leg, distinguished by chargeName already), so this must not assume one.
+  const baseFees = lineItems.filter((l) => l.category === 'legal_fee');
 
   return (
     <div style={{ fontSize: 12, color: theme.color.textBody }}>
@@ -81,7 +83,9 @@ export function FeeBreakdown({ lineItems, legalFeeSubtotal, vatTotal, disburseme
             gap: 4,
           }}
         >
-          {baseFee && <LineItemRow item={baseFee} />}
+          {baseFees.map((item) => (
+            <LineItemRow key={item.chargeName} item={item} />
+          ))}
           {supplements.map((item) => (
             <LineItemRow key={item.chargeName} item={item} />
           ))}

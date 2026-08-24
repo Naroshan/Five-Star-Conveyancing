@@ -68,6 +68,8 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
   const [transactionType, setTransactionType] = useState<TransactionType>(initialTransactionType);
   const [postcode, setPostcode] = useState("");
   const [propertyValue, setPropertyValue] = useState("");
+  const [salePropertyValue, setSalePropertyValue] = useState("");
+  const [purchasePropertyValue, setPurchasePropertyValue] = useState("");
   const [freeholdOrLeasehold, setFreeholdOrLeasehold] = useState<"freehold" | "leasehold">(
     tenureIsFixedLeasehold(initialTransactionType) ? "leasehold" : "freehold"
   );
@@ -86,6 +88,8 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
     setTransactionType(initialTransactionType);
     setPostcode("");
     setPropertyValue("");
+    setSalePropertyValue("");
+    setPurchasePropertyValue("");
     setFreeholdOrLeasehold(tenureIsFixedLeasehold(initialTransactionType) ? "leasehold" : "freehold");
     setMortgageInvolved(true);
     setFlags({});
@@ -127,12 +131,18 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
   async function handleFinalSubmit(e: FormEvent) {
     e.preventDefault();
 
+    const isSaleAndPurchase = transactionType === "sale_and_purchase";
+
     // Best-effort lead notification — doesn't block quote generation below,
     // which is the part that actually has to succeed.
     fetch(`https://formspree.io/f/${LEAD_NOTIFY_FORM_ID}`, {
       method: "POST",
       headers: { "content-type": "application/json", accept: "application/json" },
-      body: JSON.stringify({ name, email, phone, transactionType, postcode, propertyValue }),
+      body: JSON.stringify(
+        isSaleAndPurchase
+          ? { name, email, phone, transactionType, postcode, salePropertyValue, purchasePropertyValue }
+          : { name, email, phone, transactionType, postcode, propertyValue }
+      ),
     }).catch(() => {});
 
     const mortgageFlag = showsMortgageField(transactionType) ? mortgageInvolved : true;
@@ -148,7 +158,9 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
       transactionType,
       postcode,
       jurisdiction: "england",
-      propertyValue: Number(propertyValue),
+      ...(isSaleAndPurchase
+        ? { salePropertyValue: Number(salePropertyValue), purchasePropertyValue: Number(purchasePropertyValue) }
+        : { propertyValue: Number(propertyValue) }),
       freeholdOrLeasehold,
       mortgageInvolved: mortgageFlag,
       flags: submittedFlags,
@@ -223,17 +235,44 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
               />
             </Field>
 
-            <Field label="Property value (£)">
-              <input
-                required
-                type="number"
-                min={1}
-                value={propertyValue}
-                onChange={(e) => setPropertyValue(e.target.value)}
-                placeholder="e.g. 350000"
-                style={{ width: "100%" }}
-              />
-            </Field>
+            {transactionType === "sale_and_purchase" ? (
+              <div style={{ display: "flex", gap: 12 }}>
+                <Field label="Sale price (£)">
+                  <input
+                    required
+                    type="number"
+                    min={1}
+                    value={salePropertyValue}
+                    onChange={(e) => setSalePropertyValue(e.target.value)}
+                    placeholder="e.g. 300000"
+                    style={{ width: "100%" }}
+                  />
+                </Field>
+                <Field label="Purchase price (£)">
+                  <input
+                    required
+                    type="number"
+                    min={1}
+                    value={purchasePropertyValue}
+                    onChange={(e) => setPurchasePropertyValue(e.target.value)}
+                    placeholder="e.g. 350000"
+                    style={{ width: "100%" }}
+                  />
+                </Field>
+              </div>
+            ) : (
+              <Field label="Property value (£)">
+                <input
+                  required
+                  type="number"
+                  min={1}
+                  value={propertyValue}
+                  onChange={(e) => setPropertyValue(e.target.value)}
+                  placeholder="e.g. 350000"
+                  style={{ width: "100%" }}
+                />
+              </Field>
+            )}
 
             {tenureFixed ? (
               <Field label="Tenure">

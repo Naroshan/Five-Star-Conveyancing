@@ -13,11 +13,21 @@ export type VatTreatment = 'standard' | 'exempt' | 'outside_scope';
 export type ApprovalStatus = 'draft' | 'pending_review' | 'approved' | 'rejected';
 export type BoundaryRule = 'inclusive_lower' | 'inclusive_upper';
 
+// Only meaningful for transactionType === 'sale_and_purchase', which has two
+// property values (the property being sold and the property being bought)
+// instead of one. Tags LineItems/audit entries produced for each leg.
+export type PropertyLeg = 'sale' | 'purchase';
+
 export interface ClientAnswers {
   transactionType: TransactionType;
   postcode: string;
   jurisdiction: 'england' | 'wales';
-  propertyValue: number;
+  // Used by every transaction type except 'sale_and_purchase', which uses
+  // salePropertyValue/purchasePropertyValue instead — see schemas.ts for the
+  // mutual-exclusivity rule enforced at the API boundary.
+  propertyValue?: number;
+  salePropertyValue?: number;
+  purchasePropertyValue?: number;
   freeholdOrLeasehold: 'freehold' | 'leasehold';
   mortgageInvolved: boolean;
   lenderId?: string;
@@ -155,6 +165,9 @@ export interface LineItem {
   isEstimated: boolean;
   isGuaranteed: boolean;
   explanation: string;
+  // Only set for sale_and_purchase base-fee line items, which are computed
+  // once per leg (sale value, purchase value) and summed.
+  leg?: PropertyLeg;
 }
 
 export interface CalculationAuditEntry {
@@ -162,6 +175,7 @@ export interface CalculationAuditEntry {
   detail: string;
   ruleId?: string;
   effectiveDateUsed?: string;
+  leg?: PropertyLeg;
 }
 
 export interface QuoteResult {

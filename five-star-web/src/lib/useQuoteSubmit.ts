@@ -8,7 +8,12 @@ export interface QuoteSubmitBody {
   transactionType: TransactionType;
   postcode: string;
   jurisdiction: "england";
-  propertyValue: number;
+  // Every transaction type except sale_and_purchase uses propertyValue;
+  // sale_and_purchase uses the two leg fields instead — mirrors the API's
+  // mutual-exclusivity validation (quote-engine/src/api/schemas.ts).
+  propertyValue?: number;
+  salePropertyValue?: number;
+  purchasePropertyValue?: number;
   freeholdOrLeasehold: "freehold" | "leasehold";
   mortgageInvolved: boolean;
   flags: Record<string, boolean>;

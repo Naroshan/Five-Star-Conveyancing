@@ -92,4 +92,40 @@ describe('validateClientAnswers', () => {
     expect(result.success).toBe(true);
     if (result.success) expect(result.data.flags).toEqual({});
   });
+
+  describe('sale_and_purchase (two property values)', () => {
+    const { propertyValue, ...withoutPropertyValue } = validBody;
+    const validSaleAndPurchaseBody = {
+      ...withoutPropertyValue,
+      transactionType: 'sale_and_purchase',
+      salePropertyValue: 250_000,
+      purchasePropertyValue: 350_000,
+    };
+
+    it('accepts both leg values with propertyValue absent', () => {
+      const result = validateClientAnswers(validSaleAndPurchaseBody);
+      expect(result.success).toBe(true);
+    });
+
+    it('rejects the old single-propertyValue shape', () => {
+      const result = validateClientAnswers({ ...withoutPropertyValue, transactionType: 'sale_and_purchase', propertyValue: 300_000 });
+      expect(result.success).toBe(false);
+    });
+
+    it('rejects propertyValue present alongside the two leg values', () => {
+      const result = validateClientAnswers({ ...validSaleAndPurchaseBody, propertyValue: 300_000 });
+      expect(result.success).toBe(false);
+    });
+
+    it('rejects a missing purchasePropertyValue', () => {
+      const { purchasePropertyValue, ...body } = validSaleAndPurchaseBody;
+      const result = validateClientAnswers(body);
+      expect(result.success).toBe(false);
+    });
+
+    it('rejects non-sale_and_purchase types that send leg values instead of propertyValue', () => {
+      const result = validateClientAnswers({ ...withoutPropertyValue, transactionType: 'purchase', salePropertyValue: 250_000, purchasePropertyValue: 350_000 });
+      expect(result.success).toBe(false);
+    });
+  });
 });
