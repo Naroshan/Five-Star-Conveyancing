@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { NAVY, TEXT_HEADING, GRADIENT_CTA, GRADIENT_TEAL, RADIUS, SHADOW } from "@/lib/theme";
-import { interceptQuoteLinkClick } from "@/lib/quoteExitGuard";
+import { interceptQuoteLinkClick, confirmQuoteExit } from "@/lib/quoteExitGuard";
 import styles from "./SiteHeader.module.css";
 
 const NAV_LINKS = [
@@ -20,6 +21,7 @@ const NAV_LINKS = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!open) return;
@@ -63,7 +65,23 @@ export function SiteHeader() {
           gap: 16,
         }}
       >
-      <Link href="/" style={{ textDecoration: "none", display: "flex" }} onClick={() => setOpen(false)}>
+      <Link
+        href="/"
+        style={{ textDecoration: "none", display: "flex" }}
+        onClick={(e) => {
+          if (!confirmQuoteExit("You're partway through getting a quote. Are you sure you want to go to the home page?")) {
+            e.preventDefault();
+            return;
+          }
+          setOpen(false);
+          // Already home — a same-URL Link click is a no-op navigation, so
+          // scroll to the top ourselves rather than doing nothing.
+          if (pathname === "/") {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        }}
+      >
         <Logo variant="onLight" size={20} />
       </Link>
 
