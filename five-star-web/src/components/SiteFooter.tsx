@@ -43,7 +43,7 @@ export function SiteFooter() {
           </p>
           <div style={{ display: "flex", alignItems: "center", gap: 7, marginTop: 14 }}>
             <ShieldCheckIcon size={15} color={TEAL} />
-            <span style={{ fontSize: 12, fontWeight: 600, color: TEXT_MUTED }}>SRA and CLC verified firms only</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: TEXT_MUTED }}>SRA and CLC Regulated Companies only</span>
           </div>
         </div>
 
@@ -54,7 +54,7 @@ export function SiteFooter() {
       </div>
 
       <p style={{ fontSize: 11.5, color: TEXT_MUTED, maxWidth: 700, margin: "24px 0 0", paddingTop: 24, borderTop: `1px solid ${BORDER}`, lineHeight: 1.7 }}>
-        Registered company details and regulatory disclosures pending final review before publication.
+        Five Star Conveyancing is a trading style of The Lead Gen Co LTD.
         Five Star Conveyancing is a comparison service; regulatory disclosures, complaints procedure, and firm
         ownership information are pending final review. © 2026 Five Star Conveyancing.
       </p>

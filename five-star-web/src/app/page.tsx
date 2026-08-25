@@ -94,7 +94,7 @@ export default function HomePage() {
               className={styles.heroHeading}
               style={{ ...display, fontWeight: 800, lineHeight: 1.08, color: NAVY, margin: "0 0 16px", letterSpacing: "-0.02em", textWrap: "balance" }}
             >
-              Trusted Conveyancing Solicitors for the Move That Matters
+              Directly instruct your Conveyancing Solicitor now!
             </h1>
             <p style={{ fontSize: 15, lineHeight: 1.6, color: TEXT_MUTED, maxWidth: 560, margin: "0 auto 30px" }}>
               Every firm is checked, reviewed and matched to your move. You get a short list of solicitors you can
