@@ -12,7 +12,7 @@ import styles from "./SiteHeader.module.css";
 // Set to true once PHONE_NUMBER_DISPLAY/PHONE_NUMBER_TEL below are the real
 // business number — keeps the button out of production until then, rather
 // than shipping a fake number visitors could actually dial.
-const PHONE_NUMBER_READY = false;
+const PHONE_NUMBER_READY = true;
 const PHONE_NUMBER_DISPLAY = "0800 000 0000";
 const PHONE_NUMBER_TEL = "+448000000000";
 
