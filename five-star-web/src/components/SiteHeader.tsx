@@ -4,9 +4,15 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
-import { NAVY, TEXT_HEADING, GRADIENT_CTA, GRADIENT_TEAL, RADIUS, SHADOW } from "@/lib/theme";
+import { NAVY, TEAL, TEXT_HEADING, GRADIENT_CTA, GRADIENT_TEAL, RADIUS, SHADOW, BORDER } from "@/lib/theme";
 import { interceptQuoteLinkClick, confirmQuoteExit } from "@/lib/quoteExitGuard";
+import { PhoneIcon } from "./icons";
 import styles from "./SiteHeader.module.css";
+
+// TODO: placeholder — replace with the real business phone number before
+// this ships. Keep display text and the tel: digits in sync.
+const PHONE_NUMBER_DISPLAY = "0800 000 0000";
+const PHONE_NUMBER_TEL = "+448000000000";
 
 const NAV_LINKS = [
   { href: "/how-it-works", label: "How it works" },
@@ -120,6 +126,24 @@ export function SiteHeader() {
             {link.label}
           </Link>
         ))}
+        <a
+          href={`tel:${PHONE_NUMBER_TEL}`}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 7,
+            fontWeight: 800,
+            color: TEAL,
+            border: `1.5px solid ${BORDER}`,
+            padding: "10px 18px",
+            borderRadius: RADIUS.pill,
+            whiteSpace: "nowrap",
+            textDecoration: "none",
+          }}
+        >
+          <PhoneIcon size={15} color={TEAL} />
+          {PHONE_NUMBER_DISPLAY}
+        </a>
         <Link
           href="/get-a-quote"
           className="cta-button"
