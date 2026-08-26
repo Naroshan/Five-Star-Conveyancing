@@ -162,6 +162,12 @@ async function main() {
   const db = createDb(connectionString);
   let created = 0;
 
+  // Optional: restrict this run to specific firms by SRA number (comma-separated),
+  // so a firm whose data is already approved in this database (e.g. Ackroyd Legal)
+  // isn't re-imported as duplicate draft rows. Example: ONLY_SRA=567465,566850,499274
+  const onlySra = process.env.ONLY_SRA?.split(',').map((s) => s.trim()).filter(Boolean);
+  const firmsToImport = onlySra ? FIRMS.filter((firm) => onlySra.includes(firm.sraNumber)) : FIRMS;
+
   // --- Import user (fee_administrator — cannot also approve; see roles.ts) ---
   const existingUser = await db.selectFrom('admin_users').selectAll().where('email', '=', 'data-import@fivestarconveyancing.co.uk').executeTakeFirst();
   const importUserId =
@@ -260,7 +266,7 @@ async function main() {
     created++;
   }
 
-  for (const firm of FIRMS) {
+  for (const firm of firmsToImport) {
     // --- Firm record (directly confirmed data, not subject to the draft workflow) ---
     const existingFirm = await db.selectFrom('firms').selectAll().where('sra_number', '=', firm.sraNumber).executeTakeFirst();
     const firmId =
@@ -332,7 +338,7 @@ async function main() {
     console.log(`Imported ${firm.legalEntityName}${firm.tradingName ? ` (t/a ${firm.tradingName})` : ''} — firm_id=${firmId}`);
   }
 
-  console.log(`Import complete. ${created} draft records created across ${FIRMS.length} firms.`);
+  console.log(`Import complete. ${created} draft records created across ${firmsToImport.length} firms.`);
   console.log('All records are in draft status — none are usable by the quote engine until a compliance reviewer approves them.');
 
   await db.destroy();
