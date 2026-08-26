@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import { useState, type CSSProperties, type ReactNode } from 'react';
 import type { PublicFirmSummary, PublicQuoteResult } from '../../api/publicResult.js';
 import { theme } from '../theme.js';
 import { ShieldCheckIcon, MailIcon, BookmarkIcon, PhoneIcon, RibbonBadgeIcon, MapPinIcon } from '../icons.js';
@@ -152,7 +152,7 @@ export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, o
               {result.firm.sraNumber && (
                 <>
                   <ShieldCheckIcon size={13} color={theme.color.teal} />
-                  <span>SRA {result.firm.sraNumber}</span>
+                  <span style={{ fontWeight: 700 }}>SRA {result.firm.sraNumber}</span>
                   <span>·</span>
                 </>
               )}
@@ -186,14 +186,14 @@ export function QuoteResultCard({ result, onSelect, onEmailQuote, onSaveQuote, o
 
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         <button type="button" onClick={() => onSelect(result.firm.firmId)} className="cta-button" style={primaryButtonStyle}>
-          Select this firm
+          Instruct this firm
         </button>
-        <button type="button" onClick={() => onEmailQuote(result.firm.firmId)} style={secondaryButtonStyle}>
+        <HoverableSecondaryButton onClick={() => onEmailQuote(result.firm.firmId)}>
           <MailIcon size={14} /> Email quote
-        </button>
-        <button type="button" onClick={() => onSaveQuote(result.firm.firmId)} style={secondaryButtonStyle}>
+        </HoverableSecondaryButton>
+        <HoverableSecondaryButton onClick={() => onSaveQuote(result.firm.firmId)}>
           <BookmarkIcon size={14} /> Save quote
-        </button>
+        </HoverableSecondaryButton>
       </div>
     </div>
   );
@@ -223,4 +223,27 @@ const secondaryButtonStyle: CSSProperties = {
   fontSize: 13,
   cursor: 'pointer',
   marginTop: 12,
+  transition: 'background 0.15s ease, border-color 0.15s ease',
 };
+
+/** No CSS module in this package (everything is inline styles) — hover state
+ * driven by React state instead of a :hover rule, same pattern as elsewhere
+ * in this codebase where a shared stylesheet isn't available. */
+function HoverableSecondaryButton({ onClick, children }: { onClick: () => void; children: ReactNode }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        ...secondaryButtonStyle,
+        background: hovered ? theme.color.excludedBg : secondaryButtonStyle.background,
+        borderColor: hovered ? theme.color.teal : theme.color.border,
+      }}
+    >
+      {children}
+    </button>
+  );
+}

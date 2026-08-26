@@ -60,7 +60,7 @@ describe('QuoteResultCard — eligible result', () => {
     const onSaveQuote = vi.fn();
     render(<QuoteResultCard result={eligibleResult} onSelect={onSelect} onEmailQuote={onEmailQuote} onSaveQuote={onSaveQuote} onSpeakToAdviser={noop} />);
 
-    await user.click(screen.getByRole('button', { name: 'Select this firm' }));
+    await user.click(screen.getByRole('button', { name: 'Instruct this firm' }));
     await user.click(screen.getByRole('button', { name: 'Email quote' }));
     await user.click(screen.getByRole('button', { name: 'Save quote' }));
 
@@ -77,7 +77,7 @@ describe('QuoteResultCard — excluded result', () => {
     expect(screen.getByText('Test Firm B (fixture)')).toBeInTheDocument();
     expect(screen.getByText(/maximum property value/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Speak to an adviser' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Select this firm' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Instruct this firm' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Email quote' })).not.toBeInTheDocument();
     expect(screen.queryByText('£')).not.toBeInTheDocument(); // never shows a total for an excluded firm
   });

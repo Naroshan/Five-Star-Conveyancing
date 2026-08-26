@@ -20,7 +20,7 @@ export function FeeBreakdown({ lineItems, legalFeeSubtotal, vatTotal, disburseme
                     display: 'flex',
                     justifyContent: 'space-between',
                     padding: '3px 0',
-                }, children: [_jsx("span", { children: "Legal fee" }), _jsx("span", { children: formatCurrency(legalFeeSubtotal) })] }), _jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', padding: '3px 0' }, children: [_jsx("span", { children: "VAT" }), _jsx("span", { children: formatCurrency(vatTotal) })] }), _jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', padding: '3px 0' }, children: [_jsx("span", { children: "Disbursements" }), _jsx("span", { children: formatCurrency(disbursementsTotal) })] }), sdltEstimate !== null && (_jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', padding: '3px 0' }, children: [_jsx("span", { children: "Stamp Duty Land Tax (indicative)" }), _jsx("span", { children: formatCurrency(sdltEstimate) })] })), _jsx("button", { type: "button", onClick: () => setExpanded((v) => !v), "aria-expanded": expanded, style: {
+                }, children: [_jsx("span", { style: { fontWeight: 700, textDecoration: 'underline' }, children: "Legal fee" }), _jsx("span", { children: formatCurrency(legalFeeSubtotal) })] }), _jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', padding: '3px 0' }, children: [_jsx("span", { children: "VAT" }), _jsx("span", { children: formatCurrency(vatTotal) })] }), _jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', padding: '3px 0' }, children: [_jsx("span", { children: "Disbursements" }), _jsx("span", { children: formatCurrency(disbursementsTotal) })] }), sdltEstimate !== null && (_jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', padding: '3px 0' }, children: [_jsx("span", { children: "Stamp Duty Land Tax (indicative)" }), _jsx("span", { children: formatCurrency(sdltEstimate) })] })), _jsx("button", { type: "button", onClick: () => setExpanded((v) => !v), "aria-expanded": expanded, style: {
                     background: 'none',
                     border: 'none',
                     padding: '6px 0 0',
@@ -35,8 +35,8 @@ export function FeeBreakdown({ lineItems, legalFeeSubtotal, vatTotal, disburseme
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 4,
-                }, children: [baseFees.map((item) => (_jsx(LineItemRow, { item: item }, item.chargeName))), supplements.map((item) => (_jsx(LineItemRow, { item: item }, item.chargeName))), disbursements.map((item) => (_jsx(LineItemRow, { item: item }, item.chargeName)))] }))] }));
+                }, children: [baseFees.map((item) => (_jsx(LineItemRow, { item: item, underline: true }, item.chargeName))), supplements.map((item) => (_jsx(LineItemRow, { item: item }, item.chargeName))), disbursements.map((item) => (_jsx(LineItemRow, { item: item }, item.chargeName)))] }))] }));
 }
-function LineItemRow({ item }) {
-    return (_jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', gap: 8 }, children: [_jsxs("span", { children: [item.chargeName, item.isEstimated && _jsx("span", { style: { color: theme.color.textSecondary }, children: " (estimated)" })] }), _jsx("span", { children: formatCurrency(item.amountExVat) })] }));
+function LineItemRow({ item, underline }) {
+    return (_jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', gap: 8 }, children: [_jsxs("span", { style: underline ? { textDecoration: 'underline' } : undefined, children: [item.chargeName, item.isEstimated && _jsx("span", { style: { color: theme.color.textSecondary }, children: " (estimated)" })] }), _jsx("span", { children: formatCurrency(item.amountExVat) })] }));
 }

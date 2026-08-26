@@ -37,7 +37,7 @@ export function FeeBreakdown({ lineItems, legalFeeSubtotal, vatTotal, disburseme
           padding: '3px 0',
         }}
       >
-        <span>Legal fee</span>
+        <span style={{ fontWeight: 700, textDecoration: 'underline' }}>Legal fee</span>
         <span>{formatCurrency(legalFeeSubtotal)}</span>
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: '3px 0' }}>
@@ -84,7 +84,7 @@ export function FeeBreakdown({ lineItems, legalFeeSubtotal, vatTotal, disburseme
           }}
         >
           {baseFees.map((item) => (
-            <LineItemRow key={item.chargeName} item={item} />
+            <LineItemRow key={item.chargeName} item={item} underline />
           ))}
           {supplements.map((item) => (
             <LineItemRow key={item.chargeName} item={item} />
@@ -98,10 +98,10 @@ export function FeeBreakdown({ lineItems, legalFeeSubtotal, vatTotal, disburseme
   );
 }
 
-function LineItemRow({ item }: { item: LineItem }) {
+function LineItemRow({ item, underline }: { item: LineItem; underline?: boolean }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-      <span>
+      <span style={underline ? { textDecoration: 'underline' } : undefined}>
         {item.chargeName}
         {item.isEstimated && <span style={{ color: theme.color.textSecondary }}> (estimated)</span>}
       </span>
