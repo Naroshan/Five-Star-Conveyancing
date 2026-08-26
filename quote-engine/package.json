@@ -42,6 +42,12 @@
     "verify:draft-safety": "tsx scripts/verify-no-real-quotes-yet.ts",
     "submit:ackroyd-legal": "tsx scripts/submit-ackroyd-for-review.ts",
     "approve:ackroyd-legal": "tsx scripts/approve-ackroyd-for-review.ts",
+    "submit:hutchins-law": "tsx scripts/submit-hutchins-for-review.ts",
+    "approve:hutchins-law": "tsx scripts/approve-hutchins-for-review.ts",
+    "submit:guillaumes": "tsx scripts/submit-guillaumes-for-review.ts",
+    "approve:guillaumes": "tsx scripts/approve-guillaumes-for-review.ts",
+    "submit:beechwood": "tsx scripts/submit-beechwood-for-review.ts",
+    "approve:beechwood": "tsx scripts/approve-beechwood-for-review.ts",
     "deactivate:demo-firms": "tsx scripts/deactivate-demo-firms.ts"
   },
   "devDependencies": {
