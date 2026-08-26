@@ -12,9 +12,8 @@
 // two scales don't sit side by side contradicting each other. Do not run
 // `import-ackroyd-legal.ts` again.
 //
-// Beechwood is NOT included yet — its SRA/CLC number and exact legal
-// entity name have not been supplied. Add it to the FIRMS array below once
-// confirmed; everything else in this script is unaffected.
+// Beechwood Solicitors (SRA 499274, legal entity name per the source
+// spreadsheet's own sheet title) is included below.
 //
 // Deliberate omissions (documented, not guessed):
 //   - The "£2,000,000+" tier in the source is a percentage-of-value figure
@@ -105,7 +104,14 @@ const FIRMS: FirmFeeData[] = [
     saleBands: [850, 850, 850, 850, 1_025, 1_150, 1_275, 1_275, 1_325, 1_450, 1_550],
     remortgageBands: [600, 600, 600, 600, 600, 600, 675, 725, 800, 1_100, 1_450],
   },
-  // Beechwood: add here once SRA/CLC number + exact legal entity name are confirmed.
+  {
+    legalEntityName: 'Beechwood Solicitors',
+    tradingName: null,
+    sraNumber: '499274',
+    purchaseBands: [950, 1_050, 1_325, 1_475, 1_550, 1_750, 2_100, 2_100, 2_450, 3_150, 3_500],
+    saleBands: [900, 1_050, 1_050, 1_050, 1_250, 1_400, 1_550, 1_550, 1_600, 1_750, 1_900],
+    remortgageBands: [700, 700, 700, 700, 700, 700, 850, 1_050, 1_050, 1_325, 1_750],
+  },
 ];
 
 // Identical across Purchase and Sale for every firm in the source, except
