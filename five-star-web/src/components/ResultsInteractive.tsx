@@ -19,11 +19,59 @@ export function ResultsInteractive({ quoteReference, results }: { quoteReference
   const [isSelecting, setIsSelecting] = useState(false);
   const [contactError, setContactError] = useState<string | null>(null);
 
-  // Not wired to real functionality yet (no email delivery, no live chat) —
-  // gives visible feedback rather than doing nothing.
+  const [emailQuoteFirmId, setEmailQuoteFirmId] = useState<string | null>(null);
+  const [isSendingEmailQuote, setIsSendingEmailQuote] = useState(false);
+  const [emailQuoteError, setEmailQuoteError] = useState<string | null>(null);
+
+  // Live chat isn't wired up yet — gives visible feedback rather than doing nothing.
   function stubAction(action: string) {
     setActionMessage(`"${action}" isn't wired up yet in this build — see the project README.`);
     setTimeout(() => setActionMessage(null), 4000);
+  }
+
+  function handleSaveQuote(firmId: string) {
+    const url = `/api/quotes/${quoteReference}/pdf?firmId=${encodeURIComponent(firmId)}`;
+    const link = document.createElement("a");
+    link.href = url;
+    link.rel = "noopener";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function handleEmailQuote(firmId: string) {
+    setEmailQuoteError(null);
+    setEmailQuoteFirmId(firmId);
+  }
+
+  async function handleConfirmEmailQuote(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!emailQuoteFirmId || isSendingEmailQuote) return;
+
+    const formData = new FormData(e.currentTarget);
+    const email = String(formData.get("email") ?? "").trim();
+
+    setIsSendingEmailQuote(true);
+    setEmailQuoteError(null);
+    try {
+      const response = await fetch(`/api/quotes/${quoteReference}/email-quote`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ firmId: emailQuoteFirmId, email }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setEmailQuoteError(data.error?.message ?? "Something went wrong sending that email. Please try again.");
+        return;
+      }
+      setEmailQuoteFirmId(null);
+      setActionMessage("Sent — check your inbox for the quote.");
+      setTimeout(() => setActionMessage(null), 4000);
+    } catch {
+      setEmailQuoteError("Something went wrong sending that email. Please try again.");
+    } finally {
+      setIsSendingEmailQuote(false);
+    }
   }
 
   function handleSelect(firmId: string) {
@@ -177,11 +225,76 @@ export function ResultsInteractive({ quoteReference, results }: { quoteReference
         </div>
       )}
 
+      {emailQuoteFirmId && (
+        <div
+          role="dialog"
+          aria-label="Email this quote"
+          style={{
+            background: "white",
+            border: `1px solid ${BORDER}`,
+            borderRadius: RADIUS.md,
+            boxShadow: SHADOW.md,
+            padding: 20,
+            marginBottom: 16,
+          }}
+        >
+          <p style={{ fontSize: 14.5, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 4px" }}>Email this quote to yourself</p>
+          <p style={{ fontSize: 13, color: TEXT_MUTED, margin: "0 0 16px" }}>We&apos;ll send a PDF copy to the address below.</p>
+          <form onSubmit={handleConfirmEmailQuote} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <ContactField icon={<MailIcon size={16} color={TEAL} />}>
+              <input type="email" name="email" required autoComplete="email" placeholder="Email address" style={inputStyle} />
+            </ContactField>
+
+            {emailQuoteError && <p style={{ fontSize: 13, color: ERROR, margin: 0 }}>{emailQuoteError}</p>}
+
+            <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+              <button
+                type="submit"
+                disabled={isSendingEmailQuote}
+                className="cta-button"
+                style={{
+                  background: GRADIENT_CTA,
+                  boxShadow: SHADOW.sm,
+                  color: NAVY,
+                  fontWeight: 700,
+                  border: "none",
+                  borderRadius: RADIUS.pill,
+                  padding: "10px 20px",
+                  fontSize: 13.5,
+                  opacity: isSendingEmailQuote ? 0.7 : 1,
+                }}
+              >
+                {isSendingEmailQuote ? "Sending…" : "Send quote"}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setEmailQuoteFirmId(null);
+                  setEmailQuoteError(null);
+                }}
+                disabled={isSendingEmailQuote}
+                style={{
+                  background: "transparent",
+                  color: TEXT_HEADING,
+                  border: `1px solid ${BORDER}`,
+                  borderRadius: RADIUS.pill,
+                  padding: "10px 18px",
+                  fontSize: 13.5,
+                  cursor: "pointer",
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
       <QuoteResultsList
         results={results}
         onSelect={handleSelect}
-        onEmailQuote={() => stubAction("Email quote")}
-        onSaveQuote={() => stubAction("Save quote")}
+        onEmailQuote={handleEmailQuote}
+        onSaveQuote={handleSaveQuote}
         onSpeakToAdviser={() => stubAction("Speak to an adviser")}
       />
     </>
