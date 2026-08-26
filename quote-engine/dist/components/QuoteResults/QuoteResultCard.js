@@ -99,16 +99,19 @@ const secondaryButtonStyle = {
     fontSize: 13,
     cursor: 'pointer',
     marginTop: 12,
-    transition: 'background 0.15s ease, border-color 0.15s ease',
+    transition: 'background 0.15s ease, border-color 0.15s ease, color 0.15s ease',
 };
 /** No CSS module in this package (everything is inline styles) — hover state
  * driven by React state instead of a :hover rule, same pattern as elsewhere
- * in this codebase where a shared stylesheet isn't available. */
+ * in this codebase where a shared stylesheet isn't available. Icons inherit
+ * via currentColor, so setting the button's text color on hover recolors
+ * them too. */
 function HoverableSecondaryButton({ onClick, children }) {
     const [hovered, setHovered] = useState(false);
     return (_jsx("button", { type: "button", onClick: onClick, onMouseEnter: () => setHovered(true), onMouseLeave: () => setHovered(false), style: {
             ...secondaryButtonStyle,
-            background: hovered ? theme.color.excludedBg : secondaryButtonStyle.background,
+            background: hovered ? theme.color.teal : secondaryButtonStyle.background,
             borderColor: hovered ? theme.color.teal : theme.color.border,
+            color: hovered ? '#FFFFFF' : secondaryButtonStyle.color,
         }, children: children }));
 }
