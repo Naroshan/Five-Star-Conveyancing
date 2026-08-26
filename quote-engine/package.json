@@ -1,6 +1,6 @@
 {
   "name": "five-star-conveyancing-quote-engine",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "Database-driven conveyancing quote calculation engine, repository, API, admin workflow, and results UI (Stage 6, Modules 1-7)",
   "type": "module",
   "main": "./dist/types.js",
@@ -38,6 +38,7 @@
     "test:integration": "vitest run --pool=threads --poolOptions.threads.singleThread tests/repository.integration.test.ts tests/api.integration.test.ts tests/admin.integration.test.ts tests/admin-bands-disbursements.integration.test.ts tests/auth.integration.test.ts",
     "typecheck": "tsc --noEmit",
     "import:ackroyd-legal": "tsx scripts/import-ackroyd-legal.ts",
+    "import:5star-fee-scale": "tsx scripts/import-5star-fee-scale.ts",
     "verify:draft-safety": "tsx scripts/verify-no-real-quotes-yet.ts",
     "submit:ackroyd-legal": "tsx scripts/submit-ackroyd-for-review.ts",
     "approve:ackroyd-legal": "tsx scripts/approve-ackroyd-for-review.ts",

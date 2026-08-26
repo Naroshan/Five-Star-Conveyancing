@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { calculateQuoteForFirm } from '../src/quoteEngine.js';
 import { PLACEHOLDER_TEST_RATES } from '../src/sdltModule.js';
-import type { ClientAnswers, FirmRuleSet } from '../src/types.js';
+import type { ClientAnswers, FirmRuleSet, FeeValueBand, FeeRule } from '../src/types.js';
 
 function makeTestFirm(overrides: Partial<FirmRuleSet> = {}): FirmRuleSet {
   return {
@@ -261,37 +261,55 @@ describe('SDLT integration', () => {
 });
 
 describe('sale_and_purchase (two property values)', () => {
+  // sale_and_purchase has no scale of its own — the sale leg prices off the
+  // firm's own 'sale'-scoped bands/rules and the purchase leg off its
+  // 'purchase'-scoped ones. Deliberately DIFFERENT fee amounts per scope
+  // (sale: 700/900, purchase: 800/1000 — not just different property
+  // values landing in the same shared bands) so a test that accidentally
+  // reads the wrong scope's bands for a leg produces a visibly wrong number
+  // instead of coincidentally matching.
   function makeSaleAndPurchaseFirm(overrides: Partial<FirmRuleSet> = {}): FirmRuleSet {
-    const base = makeTestFirm();
+    const purchaseBase = makeTestFirm();
+    const saleBands: FeeValueBand[] = purchaseBase.feeValueBands.map((b) => ({
+      ...b,
+      bandId: `${b.bandId}-sale`,
+      transactionType: 'sale',
+      baseFee: b.baseFee - 100,
+    }));
+    const saleBaseFeeRules: FeeRule[] = purchaseBase.feeRules
+      .filter((r) => r.chargeType === 'base_fee')
+      .map((r) => ({ ...r, feeRuleId: `${r.feeRuleId}-sale`, transactionType: 'sale' }));
+
     return makeTestFirm({
-      transactionTypes: [{ firmId: 'test-firm-a', transactionType: 'sale_and_purchase', accepted: true }],
-      feeValueBands: base.feeValueBands.map((b) => ({ ...b, transactionType: 'sale_and_purchase' })),
-      feeRules: base.feeRules.map((r) => ({ ...r, transactionType: 'sale_and_purchase' })),
-      disbursementRules: base.disbursementRules.map((d) => ({ ...d, transactionType: 'sale_and_purchase' })),
+      transactionTypes: [
+        { firmId: 'test-firm-a', transactionType: 'purchase', accepted: true },
+        { firmId: 'test-firm-a', transactionType: 'sale', accepted: true },
+      ],
+      feeValueBands: [...purchaseBase.feeValueBands, ...saleBands],
+      feeRules: [...purchaseBase.feeRules, ...saleBaseFeeRules],
       ...overrides,
     });
   }
 
-  // Deliberately distinct values landing in different fee bands (800 for
-  // <=250k, 1000 for >250k) so a summed result of 1,800 can't be a
-  // coincidence of symmetric fixture data.
+  // Distinct values landing in different fee bands (sale: 700 for <=250k;
+  // purchase: 1,000 for >250k) so a summed result can't be a coincidence.
   function saleAndPurchaseAnswers(overrides: Partial<ClientAnswers> = {}): ClientAnswers {
     return makeAnswers({
       transactionType: 'sale_and_purchase',
       propertyValue: undefined,
-      salePropertyValue: 200_000, // lower band -> 800
-      purchasePropertyValue: 350_000, // upper band -> 1,000
+      salePropertyValue: 200_000, // sale's lower band -> 700
+      purchasePropertyValue: 350_000, // purchase's upper band -> 1,000
       ...overrides,
     });
   }
 
-  it('sums two independent base-fee lookups (one per leg) into legalFeeSubtotal', () => {
+  it('sums two independent base-fee lookups (one per leg, its own scope) into legalFeeSubtotal', () => {
     const result = calculateQuoteForFirm(makeSaleAndPurchaseFirm(), saleAndPurchaseAnswers());
     const baseFeeLines = result.lineItems.filter((l) => l.category === 'legal_fee');
     expect(baseFeeLines).toHaveLength(2);
-    expect(baseFeeLines.find((l) => l.leg === 'sale')?.amountExVat).toBe(800);
+    expect(baseFeeLines.find((l) => l.leg === 'sale')?.amountExVat).toBe(700);
     expect(baseFeeLines.find((l) => l.leg === 'purchase')?.amountExVat).toBe(1_000);
-    expect(result.legalFeeSubtotal).toBe(1_800);
+    expect(result.legalFeeSubtotal).toBe(1_700);
   });
 
   it('tags the matching audit entries with their leg', () => {
@@ -313,14 +331,15 @@ describe('sale_and_purchase (two property values)', () => {
   });
 
   it('excludes the firm if no band matches EITHER leg alone', () => {
-    // Bands only cover values >= 250,000; sale value (200,000) falls below
-    // every band's minimum, purchase value (350,000) matches fine.
+    // Only a purchase-scoped band exists (covering >= 250,000) — there's no
+    // sale-scoped band at all, so the sale leg (200,000) can't match
+    // anything while the purchase leg (350,000) matches fine.
     const ruleSet = makeSaleAndPurchaseFirm({
       feeValueBands: [
         {
-          bandId: 'band-high-only',
+          bandId: 'band-purchase-only',
           firmId: 'test-firm-a',
-          transactionType: 'sale_and_purchase',
+          transactionType: 'purchase',
           valueMin: 250_000,
           valueMax: null,
           boundaryRule: 'inclusive_lower',
@@ -340,23 +359,88 @@ describe('sale_and_purchase (two property values)', () => {
     expect(result.totalEstimate).toBeNull();
   });
 
-  it('excludes the firm if a property_value restriction fails on either leg', () => {
+  it('excludes the firm if a property_value restriction fails on its own leg', () => {
     const ruleSet = makeSaleAndPurchaseFirm({
       restrictions: [
         {
-          restrictionId: 'r-sp',
+          restrictionId: 'r-purchase',
           firmId: 'test-firm-a',
-          transactionType: 'sale_and_purchase',
+          transactionType: 'purchase',
           restrictionType: 'property_value',
           valueMax: 300_000,
         },
       ],
     });
-    // Sale value (200,000) is within the restriction; purchase value
-    // (350,000) exceeds it — the firm must still be excluded.
+    // Purchase value (350,000) exceeds this purchase-scoped restriction's max.
     const result = calculateQuoteForFirm(ruleSet, saleAndPurchaseAnswers());
     expect(result.eligibilityStatus).toBe('excluded_with_reason');
     expect(result.exclusionReason).toContain('£300,000');
+  });
+
+  it('does not exclude when a scoped restriction would only fail the OTHER leg\'s value', () => {
+    const ruleSet = makeSaleAndPurchaseFirm({
+      restrictions: [
+        {
+          restrictionId: 'r-sale',
+          firmId: 'test-firm-a',
+          transactionType: 'sale',
+          restrictionType: 'property_value',
+          valueMax: 300_000,
+        },
+      ],
+    });
+    // This restriction is sale-scoped, so only the sale value (200,000,
+    // within the £300,000 max) is checked — the purchase value (350,000,
+    // which WOULD exceed it) is irrelevant to a sale-scoped restriction.
+    // Proves restrictions are scope-precise, not "any leg's value against
+    // any matching restriction" (the old, less precise behavior).
+    const result = calculateQuoteForFirm(ruleSet, saleAndPurchaseAnswers());
+    expect(result.eligibilityStatus).toBe('eligible');
+  });
+
+  it('fires supplements from both scopes independently when the same flag triggers both', () => {
+    // Documented limitation: answers.flags is shared across both legs, so a
+    // triggerKey defined as a supplement under BOTH the purchase and sale
+    // scope fires twice when that flag is set once — correct if both legs
+    // genuinely share the trait, an overcount if only one does. This test
+    // pins down that this is the intended (if imperfect) behavior, not an
+    // accidental regression.
+    const ruleSet = makeSaleAndPurchaseFirm({
+      feeRules: [
+        ...makeTestFirm().feeRules,
+        {
+          feeRuleId: 'rule-leasehold-sale',
+          firmId: 'test-firm-a',
+          transactionType: 'sale',
+          chargeName: 'Leasehold supplement',
+          chargeType: 'supplement',
+          triggerKey: 'leasehold',
+          calculationType: 'fixed',
+          amount: 150,
+          minAmount: null,
+          maxAmount: null,
+          formulaExpression: null,
+          vatTreatment: 'standard',
+          isGuaranteed: true,
+          isEstimated: false,
+          effectiveDate: '2020-01-01',
+          expiryDate: null,
+          approvalStatus: 'approved',
+          displayOrder: 2,
+          clientFacingExplanation: 'Additional work reviewing lease terms and service charge accounts.',
+          createdBy: null,
+          lastModifiedBy: null,
+          supersedesFeeRuleId: null,
+        },
+        ...makeTestFirm().feeRules
+          .filter((r) => r.chargeType === 'base_fee')
+          .map((r) => ({ ...r, feeRuleId: `${r.feeRuleId}-sale`, transactionType: 'sale' as const })),
+      ],
+    });
+    const result = calculateQuoteForFirm(ruleSet, saleAndPurchaseAnswers({ flags: { leasehold: true } }));
+    const supplementLines = result.lineItems.filter((l) => l.category === 'supplement');
+    expect(supplementLines).toHaveLength(2);
+    expect(supplementLines.map((l) => l.leg).sort()).toEqual(['purchase', 'sale']);
   });
 });
 

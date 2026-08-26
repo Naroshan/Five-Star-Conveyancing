@@ -1,4 +1,9 @@
-// Five Star Conveyancing — real-data import: Ackroyd Legal
+// Five Star Conveyancing — real-data import: Ackroyd Legal (SUPERSEDED)
+//
+// SUPERSEDED 2026-08-26 by scripts/import-5star-fee-scale.ts, which loads
+// a newer, banded Purchase/Sale/Remortgage scale for this firm (confirmed
+// with the client) and deletes the flat rows this script creates. Do not
+// run this script again — kept only for history.
 //
 // Source: Fee_Scale_Perfect_Portal_Style.xlsx, supplied by the client
 // 2026-07-28. This REPLACES the earlier banded Ackroyd Legal import (a

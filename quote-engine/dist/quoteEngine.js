@@ -7,6 +7,7 @@
 // nothing is hard-coded here, per the Stage 1/2/4 requirement.
 import { checkEligibility } from './eligibility.js';
 import { calculateIndicativeTax } from './sdltModule.js';
+import { resolveTransactionTypeScopes } from './transactionTypeScopes.js';
 export function calculateQuotesForFirms(ruleSets, answers, options = {}) {
     return ruleSets.map((ruleSet) => calculateQuoteForFirm(ruleSet, answers, options));
 }
@@ -35,14 +36,14 @@ export function calculateQuoteForFirm(ruleSet, answers, options = {}) {
     }
     const lineItems = [];
     // 1. Base fee via value band, respecting the explicit inclusive boundary rule.
-    // sale_and_purchase has two property values (the property being sold and
-    // the property being bought), so the base-fee lookup runs once per leg
-    // against the same sale_and_purchase-scoped bands/rules and the two
-    // results are summed; every other transaction type runs it once, exactly
-    // as before.
+    // sale_and_purchase has no scale of its own — no firm publishes a separate
+    // "combined" scale, only Purchase and Sale — so the sale leg is priced off
+    // the firm's own 'sale'-scoped bands/rules and the purchase leg off its
+    // 'purchase'-scoped ones, and the two results are summed; every other
+    // transaction type runs the lookup once, exactly as before.
     if (answers.transactionType === 'sale_and_purchase') {
-        const saleResult = computeBaseFee(ruleSet, answers.transactionType, answers.salePropertyValue, asOfDate, vatRate, 'sale');
-        const purchaseResult = computeBaseFee(ruleSet, answers.transactionType, answers.purchasePropertyValue, asOfDate, vatRate, 'purchase');
+        const saleResult = computeBaseFee(ruleSet, 'sale', answers.salePropertyValue, asOfDate, vatRate, 'sale');
+        const purchaseResult = computeBaseFee(ruleSet, 'purchase', answers.purchasePropertyValue, asOfDate, vatRate, 'purchase');
         if (!saleResult || !purchaseResult) {
             const missingLeg = !saleResult && !purchaseResult ? 'sale and purchase' : !saleResult ? 'sale' : 'purchase';
             audit.push({
@@ -89,36 +90,57 @@ export function calculateQuoteForFirm(ruleSet, answers, options = {}) {
         lineItems.push(result.lineItem);
     }
     // 2. Supplements — every approved, in-date rule whose trigger_key is true in answers.flags.
+    // For sale_and_purchase, rules from BOTH the firm's purchase-scoped and
+    // sale-scoped rule sets are checked against the same shared answers.flags/
+    // freeholdOrLeasehold — there's no per-leg version of those fields today.
+    // Known limitation: if a firm defines a supplement on the same triggerKey
+    // under both scopes (e.g. a "Leasehold Supplement" on both), setting that
+    // flag once fires BOTH copies — correct if both legs share the trait,
+    // an overcount if only one does. Splitting flags/freeholdOrLeasehold per
+    // leg would fix this properly but is a real feature addition, not done here.
+    const scopes = resolveTransactionTypeScopes(answers.transactionType);
     const supplementRules = ruleSet.feeRules.filter((r) => r.chargeType === 'supplement' &&
-        r.transactionType === answers.transactionType &&
+        scopes.includes(r.transactionType) &&
         isInDate(r.effectiveDate, r.expiryDate, asOfDate) &&
         r.approvalStatus === 'approved' &&
         r.triggerKey !== null &&
         answers.flags[r.triggerKey] === true);
     for (const rule of supplementRules) {
         const amount = rule.amount ?? 0;
-        lineItems.push(makeLineItem(rule.chargeName, 'supplement', amount, rule.vatTreatment, rule.isEstimated, rule.isGuaranteed, rule.clientFacingExplanation, vatRate));
+        const leg = legForScope(answers.transactionType, rule.transactionType);
+        const legSuffix = leg ? ` (${leg})` : '';
+        const lineItem = makeLineItem(rule.chargeName + legSuffix, 'supplement', amount, rule.vatTreatment, rule.isEstimated, rule.isGuaranteed, rule.clientFacingExplanation, vatRate);
+        if (leg)
+            lineItem.leg = leg;
+        lineItems.push(lineItem);
         audit.push({
             step: 'supplement_applied',
             detail: `${rule.chargeName} applied (trigger: ${rule.triggerKey}).`,
             ruleId: rule.feeRuleId,
             effectiveDateUsed: rule.effectiveDate,
+            ...(leg ? { leg } : {}),
         });
     }
     // 3. Disbursements — fixed or estimated-range; excluded ones are omitted entirely.
-    const disbursementRules = ruleSet.disbursementRules.filter((d) => d.transactionType === answers.transactionType &&
+    const disbursementRules = ruleSet.disbursementRules.filter((d) => scopes.includes(d.transactionType) &&
         isInDate(d.effectiveDate, d.expiryDate, asOfDate) &&
         d.approvalStatus === 'approved' &&
         d.amountType !== 'excluded' &&
         (d.conditionalTriggerExpression === null || answers.flags[d.conditionalTriggerExpression] === true));
     for (const rule of disbursementRules) {
         const amount = rule.amountType === 'fixed' ? rule.amount ?? 0 : (rule.minAmount ?? 0 + (rule.maxAmount ?? 0)) / 2;
-        lineItems.push(makeLineItem(rule.chargeName, 'disbursement', amount, rule.vatTreatment, rule.amountType === 'estimated_range', rule.amountType === 'fixed', rule.clientFacingExplanation, vatRate));
+        const leg = legForScope(answers.transactionType, rule.transactionType);
+        const legSuffix = leg ? ` (${leg})` : '';
+        const lineItem = makeLineItem(rule.chargeName + legSuffix, 'disbursement', amount, rule.vatTreatment, rule.amountType === 'estimated_range', rule.amountType === 'fixed', rule.clientFacingExplanation, vatRate);
+        if (leg)
+            lineItem.leg = leg;
+        lineItems.push(lineItem);
         audit.push({
             step: 'disbursement_applied',
             detail: `${rule.chargeName} (${rule.amountType}).`,
             ruleId: rule.disbursementId,
             effectiveDateUsed: rule.effectiveDate,
+            ...(leg ? { leg } : {}),
         });
     }
     // 4. SDLT/LTT — optional, calculated separately, never merged silently into the fee total.
@@ -202,6 +224,17 @@ function computeBaseFee(ruleSet, transactionType, value, asOfDate, vatRate, leg)
     if (leg)
         matchedAudit.leg = leg;
     return { lineItem, matchedAudit };
+}
+// Only meaningful for sale_and_purchase, where a rule's own transactionType
+// (purchase-scoped or sale-scoped) tells us which leg it belongs to.
+function legForScope(answersTransactionType, ruleTransactionType) {
+    if (answersTransactionType !== 'sale_and_purchase')
+        return undefined;
+    if (ruleTransactionType === 'sale')
+        return 'sale';
+    if (ruleTransactionType === 'purchase')
+        return 'purchase';
+    return undefined;
 }
 function isInDate(effectiveDate, expiryDate, asOfDate) {
     return effectiveDate <= asOfDate && (expiryDate === null || expiryDate > asOfDate);

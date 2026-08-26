@@ -191,20 +191,25 @@ if (connectionString) {
     });
 
     it('round-trips a sale_and_purchase quote with two leg-tagged base-fee line items', async () => {
+      // sale_and_purchase has no scale of its own — the purchase leg reuses
+      // the 'purchase'-scoped firm_transaction_types/fee_value_bands/fee_rules
+      // already seeded by beforeEach (base_fee 900) for this test firm; only
+      // a 'sale'-scoped set needs adding here, with a DIFFERENT base_fee
+      // (800) so the summed total can't be a coincidence of shared data.
       await db
         .insertInto('firm_transaction_types')
-        .values([{ firm_id: '11111111-1111-1111-1111-111111111111', transaction_type: 'sale_and_purchase', accepted: true }])
+        .values([{ firm_id: '11111111-1111-1111-1111-111111111111', transaction_type: 'sale', accepted: true }])
         .execute();
       await db
         .insertInto('fee_value_bands')
         .values([
           {
             firm_id: '11111111-1111-1111-1111-111111111111',
-            transaction_type: 'sale_and_purchase',
+            transaction_type: 'sale',
             value_min: 0,
             value_max: null,
             boundary_rule: 'inclusive_upper',
-            base_fee: 850,
+            base_fee: 800,
             effective_date: '2020-01-01',
             approval_status: 'approved',
           },
@@ -215,7 +220,7 @@ if (connectionString) {
         .values([
           {
             firm_id: '11111111-1111-1111-1111-111111111111',
-            transaction_type: 'sale_and_purchase',
+            transaction_type: 'sale',
             charge_name: 'Legal fee',
             charge_type: 'base_fee',
             trigger_key: null,
@@ -245,8 +250,9 @@ if (connectionString) {
       const createResponse = await createQuoteHandler(postRequest(saleAndPurchaseBody), { db });
       expect(createResponse.status).toBe(201);
       const created = await createResponse.json();
-      // Same flat band fee (850) applied to each leg since only one band
-      // covers all values here — proves it ran twice, not once: 850+850.
+      // Sale leg (800, from the 'sale'-scoped band just seeded) + purchase
+      // leg (900, from beforeEach's 'purchase'-scoped band) = 1,700 — proves
+      // each leg reads its OWN scope, not a shared/duplicated one.
       expect(created.results[0].legalFeeSubtotal).toBe(1_700);
       // SDLT reflects the purchase leg only (300,000 * 1% test rate = 3,000),
       // never the sale leg (which would give 2,000).

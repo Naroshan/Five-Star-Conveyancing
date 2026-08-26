@@ -5,6 +5,7 @@
 // left to the calculation engine (it already does this per rule), so the
 // repository's job is simply: fetch everything currently on file for a firm
 // and transaction type, and hand it over.
+import { resolveTransactionTypeScopes } from '../transactionTypeScopes.js';
 function toDateOnlyString(value) {
     return typeof value === 'string' ? value : value.toISOString().slice(0, 10);
 }
@@ -21,31 +22,32 @@ export async function loadFirmRuleSet(db, firmId, transactionType) {
     const firmRow = await db.selectFrom('firms').selectAll().where('firm_id', '=', firmId).executeTakeFirst();
     if (!firmRow)
         return null;
+    const scopes = resolveTransactionTypeScopes(transactionType);
     const [transactionTypeRows, restrictionRows, bandRows, feeRuleRows, disbursementRows] = await Promise.all([
         db.selectFrom('firm_transaction_types').selectAll().where('firm_id', '=', firmId).execute(),
         db
             .selectFrom('firm_restrictions')
             .selectAll()
             .where('firm_id', '=', firmId)
-            .where('transaction_type', '=', transactionType)
+            .where('transaction_type', 'in', scopes)
             .execute(),
         db
             .selectFrom('fee_value_bands')
             .selectAll()
             .where('firm_id', '=', firmId)
-            .where('transaction_type', '=', transactionType)
+            .where('transaction_type', 'in', scopes)
             .execute(),
         db
             .selectFrom('fee_rules')
             .selectAll()
             .where('firm_id', '=', firmId)
-            .where('transaction_type', '=', transactionType)
+            .where('transaction_type', 'in', scopes)
             .execute(),
         db
             .selectFrom('disbursement_rules')
             .selectAll()
             .where('firm_id', '=', firmId)
-            .where('transaction_type', '=', transactionType)
+            .where('transaction_type', 'in', scopes)
             .execute(),
     ]);
     return {
@@ -62,14 +64,30 @@ export async function loadFirmRuleSet(db, firmId, transactionType) {
  * type — the query behind "generate a full comparison result set".
  */
 export async function loadActiveFirmRuleSets(db, transactionType) {
-    const eligibleFirmRows = await db
-        .selectFrom('firms')
-        .innerJoin('firm_transaction_types', 'firm_transaction_types.firm_id', 'firms.firm_id')
-        .selectAll('firms')
-        .where('firms.status', '=', 'active')
-        .where('firm_transaction_types.transaction_type', '=', transactionType)
-        .where('firm_transaction_types.accepted', '=', true)
+    const scopes = resolveTransactionTypeScopes(transactionType);
+    // A firm must accept EVERY scope to qualify — for sale_and_purchase that
+    // means both purchase and sale, not either one alone. Plain JS set-
+    // intersection rather than a SQL aggregate/having query: for a single
+    // scope (every non-combined type) this reduces to exactly the old
+    // single-type behavior.
+    const acceptedRows = await db
+        .selectFrom('firm_transaction_types')
+        .select(['firm_id', 'transaction_type'])
+        .where('transaction_type', 'in', scopes)
+        .where('accepted', '=', true)
         .execute();
+    const acceptedScopesByFirm = new Map();
+    for (const row of acceptedRows) {
+        const set = acceptedScopesByFirm.get(row.firm_id) ?? new Set();
+        set.add(row.transaction_type);
+        acceptedScopesByFirm.set(row.firm_id, set);
+    }
+    const candidateFirmIds = [...acceptedScopesByFirm.entries()]
+        .filter(([, set]) => scopes.every((scope) => set.has(scope)))
+        .map(([firmId]) => firmId);
+    const eligibleFirmRows = candidateFirmIds.length
+        ? await db.selectFrom('firms').selectAll().where('firm_id', 'in', candidateFirmIds).where('status', '=', 'active').execute()
+        : [];
     const firmIds = eligibleFirmRows.map((f) => f.firm_id);
     if (firmIds.length === 0)
         return [];
@@ -79,25 +97,25 @@ export async function loadActiveFirmRuleSets(db, transactionType) {
             .selectFrom('firm_restrictions')
             .selectAll()
             .where('firm_id', 'in', firmIds)
-            .where('transaction_type', '=', transactionType)
+            .where('transaction_type', 'in', scopes)
             .execute(),
         db
             .selectFrom('fee_value_bands')
             .selectAll()
             .where('firm_id', 'in', firmIds)
-            .where('transaction_type', '=', transactionType)
+            .where('transaction_type', 'in', scopes)
             .execute(),
         db
             .selectFrom('fee_rules')
             .selectAll()
             .where('firm_id', 'in', firmIds)
-            .where('transaction_type', '=', transactionType)
+            .where('transaction_type', 'in', scopes)
             .execute(),
         db
             .selectFrom('disbursement_rules')
             .selectAll()
             .where('firm_id', 'in', firmIds)
-            .where('transaction_type', '=', transactionType)
+            .where('transaction_type', 'in', scopes)
             .execute(),
     ]);
     return eligibleFirmRows.map((firmRow) => ({
