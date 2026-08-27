@@ -1,10 +1,10 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { calculateSdlt, type BuyerType, type Jurisdiction, type SdltCalculationResult } from "@/lib/sdlt";
 import { toDigits, formatThousands } from "@/lib/formatNumber";
 import { NAVY, TEAL, ERROR, TEXT_HEADING, TEXT_MUTED, BORDER, ICON_BADGE_BG, RADIUS, SHADOW, GRADIENT_CTA } from "@/lib/theme";
-import { MailIcon } from "@/components/icons";
+import { MailIcon, ChevronDownIcon } from "@/components/icons";
 
 // Same Formspree form used for every other lead notification on the site
 // (see ResultsInteractive.tsx / GetAQuoteForm.tsx) — a real person gets
@@ -23,6 +23,126 @@ function formatMoney(amount: number): string {
 
 function buyerTypeLabel(buyerType: BuyerType): string {
   return BUYER_TYPES.find((b) => b.value === buyerType)?.label ?? "Standard";
+}
+
+// Native <select> option lists can't be styled — this replicates the
+// custom dropdown pattern already used for "What are you doing?" in
+// HeroQuoteWidget.tsx, so the calculator's two dropdowns look intentional
+// instead of falling back to the OS's plain option list.
+function CustomSelect<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: T;
+  options: { value: T; label: string; disabled?: boolean }[];
+  onChange: (value: T) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function onClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onClickOutside);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
+  const selected = options.find((o) => o.value === value);
+
+  return (
+    <div ref={ref} style={{ position: "relative", flex: "1 1 160px", display: "flex", flexDirection: "column", gap: 4 }}>
+      <span style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: TEXT_MUTED }}>{label}</span>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 8,
+          border: `1.5px solid ${BORDER}`,
+          borderRadius: RADIUS.sm,
+          padding: "10px 12px",
+          fontSize: 14,
+          color: NAVY,
+          background: "white",
+          cursor: "pointer",
+          textAlign: "left",
+        }}
+      >
+        <span>{selected?.label}</span>
+        <span style={{ display: "inline-flex", transform: open ? "rotate(180deg)" : "none", transition: "transform 0.15s ease" }}>
+          <ChevronDownIcon size={13} color={TEXT_MUTED} />
+        </span>
+      </button>
+
+      {open && (
+        <div
+          role="listbox"
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: 0,
+            right: 0,
+            marginTop: 6,
+            background: "white",
+            border: `1px solid ${BORDER}`,
+            borderRadius: RADIUS.md,
+            boxShadow: SHADOW.lg,
+            overflow: "hidden",
+            zIndex: 20,
+          }}
+        >
+          {options.map((o) => {
+            const active = o.value === value;
+            return (
+              <button
+                key={o.value}
+                type="button"
+                role="option"
+                aria-selected={active}
+                disabled={o.disabled}
+                onClick={() => {
+                  if (o.disabled) return;
+                  onChange(o.value);
+                  setOpen(false);
+                }}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  textAlign: "left",
+                  border: "none",
+                  padding: "10px 14px",
+                  fontSize: 13.5,
+                  fontWeight: active ? 700 : 500,
+                  background: active ? ICON_BADGE_BG : "white",
+                  color: o.disabled ? TEXT_MUTED : active ? TEAL : TEXT_HEADING,
+                  cursor: o.disabled ? "not-allowed" : "pointer",
+                  opacity: o.disabled ? 0.55 : 1,
+                }}
+              >
+                {o.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
 }
 
 function buildShareText(price: number, jurisdiction: Jurisdiction, buyerType: BuyerType, result: SdltCalculationResult): string {
@@ -123,50 +243,22 @@ export function SdltCalculator({ compact = false }: { compact?: boolean }) {
           </div>
         </label>
 
-        <label style={{ flex: "1 1 140px", display: "flex", flexDirection: "column", gap: 4 }}>
-          <span style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: TEXT_MUTED }}>
-            Where
-          </span>
-          <select
-            value={jurisdiction}
-            onChange={(e) => setJurisdiction(e.target.value as Jurisdiction)}
-            style={{
-              border: `1.5px solid ${BORDER}`,
-              borderRadius: RADIUS.sm,
-              padding: "10px 12px",
-              fontSize: 14,
-              color: NAVY,
-              background: "white",
-            }}
-          >
-            <option value="england">England</option>
-            <option value="wales">Wales</option>
-          </select>
-        </label>
+        <CustomSelect
+          label="Where"
+          value={jurisdiction}
+          onChange={setJurisdiction}
+          options={[
+            { value: "england", label: "England" },
+            { value: "wales", label: "Wales" },
+          ]}
+        />
 
-        <label style={{ flex: "1 1 180px", display: "flex", flexDirection: "column", gap: 4 }}>
-          <span style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: TEXT_MUTED }}>
-            Buyer type
-          </span>
-          <select
-            value={buyerType}
-            onChange={(e) => setBuyerType(e.target.value as BuyerType)}
-            style={{
-              border: `1.5px solid ${BORDER}`,
-              borderRadius: RADIUS.sm,
-              padding: "10px 12px",
-              fontSize: 14,
-              color: NAVY,
-              background: "white",
-            }}
-          >
-            {BUYER_TYPES.map((b) => (
-              <option key={b.value} value={b.value} disabled={jurisdiction === "wales" && b.value === "first_time_buyer"}>
-                {b.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        <CustomSelect
+          label="Buyer type"
+          value={buyerType}
+          onChange={setBuyerType}
+          options={BUYER_TYPES.map((b) => ({ ...b, disabled: jurisdiction === "wales" && b.value === "first_time_buyer" }))}
+        />
       </div>
 
       {jurisdiction === "wales" && buyerType === "first_time_buyer" && (
