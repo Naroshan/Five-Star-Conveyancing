@@ -20,6 +20,7 @@ const NAV_LINKS = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/services", label: "Services" },
   { href: "/fees-explained", label: "Fees" },
+  { href: "/sdlt-calculator", label: "SDLT Calculator" },
   { href: "/guides", label: "Guides" },
   { href: "/locations", label: "Locations" },
   { href: "/faq", label: "FAQ" },
