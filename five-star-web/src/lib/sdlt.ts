@@ -14,7 +14,7 @@
 export type Jurisdiction = "england" | "wales";
 export type BuyerType = "standard" | "first_time_buyer" | "additional_property";
 
-interface Band {
+export interface Band {
   min: number;
   max: number | null; // null = no upper bound
   rate: number; // percentage, e.g. 5 = 5%
@@ -64,6 +64,13 @@ const WALES_ADDITIONAL_PROPERTY: Band[] = [
   { min: 750_000, max: 1_500_000, rate: 15 },
   { min: 1_500_000, max: null, rate: 17 },
 ];
+
+// Exposed (read-only) so other content — e.g. location page copy — can
+// state real threshold figures without hardcoding a second, driftable copy
+// of the same numbers.
+export const ENGLAND_STANDARD_BANDS: ReadonlyArray<Band> = ENGLAND_STANDARD;
+export const ENGLAND_FIRST_TIME_BUYER_NIL_RATE_THRESHOLD = ENGLAND_FIRST_TIME_BUYER[0].max as number;
+export const WALES_STANDARD_BANDS: ReadonlyArray<Band> = WALES_STANDARD;
 
 export interface SdltBandResult {
   min: number;

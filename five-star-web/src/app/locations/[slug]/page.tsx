@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ALL_LOCATIONS, LOCATION_ICONS, getLocation, getNearbyLocations } from "@/lib/locations";
+import { buildExtendedContent } from "@/lib/locationExtendedContent";
 import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, BORDER, GRADIENT_CTA, RADIUS, SHADOW, display } from "@/lib/theme";
 import contentStyles from "@/styles/contentPage.module.css";
 import styles from "@/styles/tileGrid.module.css";
@@ -34,6 +35,9 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
   if (!location) notFound();
 
   const nearby = getNearbyLocations(location);
+  const extendedContent = buildExtendedContent(location.city, location.jurisdiction);
+  const calculatorLabel = location.jurisdiction === "Wales" ? "LTT calculator" : "SDLT calculator";
+  const [beforeCalculatorLink, afterCalculatorLink] = extendedContent.split(calculatorLabel);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -57,6 +61,16 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
             Conveyancing quotes in {location.city}
           </h1>
           <p style={{ fontSize: 14, lineHeight: 1.55, color: TEXT_BODY, maxWidth: 560, margin: 0 }}>{location.intro}</p>
+        </section>
+
+        <section className={contentStyles.ctaSection} style={{ paddingTop: 0 }}>
+          <p style={{ fontSize: 13.5, lineHeight: 1.7, color: TEXT_BODY, maxWidth: 640, margin: 0 }}>
+            {beforeCalculatorLink}
+            <Link href="/sdlt-calculator" style={{ color: TEAL, fontWeight: 700, textDecoration: "none" }}>
+              {calculatorLabel}
+            </Link>
+            {afterCalculatorLink}
+          </p>
         </section>
 
         <section className={styles.gridSection}>
