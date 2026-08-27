@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { HeroQuoteWidget } from "@/components/HeroQuoteWidget";
+import { HeroTabs } from "@/components/HeroTabs";
+import { SdltCalculator } from "@/components/SdltCalculator";
 import { LOCATIONS } from "@/lib/locations";
 import {
   NAVY,
@@ -102,7 +103,7 @@ export default function HomePage() {
             </p>
 
             <div className={styles.heroBarWrap}>
-              <HeroQuoteWidget />
+              <HeroTabs />
             </div>
 
             <div className={styles.tileRow} style={{ display: "grid", gap: 12, maxWidth: 640, margin: "28px auto 0" }}>
@@ -221,6 +222,22 @@ export default function HomePage() {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* SDLT CALCULATOR */}
+        <section className={styles.sectionPad} style={{ background: CREAM }}>
+          <div style={{ maxWidth: 560, margin: "0 auto" }}>
+            <h2 className={styles.sectionHeading} style={{ ...display, fontWeight: 700, color: NAVY, margin: "0 0 10px", textAlign: "center" }}>
+              Stamp Duty &amp; Land Transaction Tax calculator
+            </h2>
+            <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.65, margin: "0 0 26px", textAlign: "center" }}>
+              Work out roughly how much tax you&apos;ll pay on a property in England or Wales, before you compare
+              conveyancing quotes.
+            </p>
+            <div style={{ background: "white", border: `1px solid ${BORDER}`, borderRadius: RADIUS.lg, boxShadow: SHADOW.md, padding: 24 }}>
+              <SdltCalculator />
+            </div>
           </div>
         </section>
 
