@@ -3,22 +3,28 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { LOCATIONS, LOCATION_ICONS, getLocation } from "@/lib/locations";
-import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, GRADIENT_CTA, RADIUS, SHADOW, display } from "@/lib/theme";
+import { ALL_LOCATIONS, LOCATION_ICONS, getLocation, getNearbyLocations } from "@/lib/locations";
+import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, BORDER, GRADIENT_CTA, RADIUS, SHADOW, display } from "@/lib/theme";
 import contentStyles from "@/styles/contentPage.module.css";
 import styles from "@/styles/tileGrid.module.css";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fivestarconveyancing.co.uk";
+
 export function generateStaticParams() {
-  return LOCATIONS.map((l) => ({ slug: l.slug }));
+  return ALL_LOCATIONS.map((l) => ({ slug: l.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const location = getLocation(slug);
   if (!location) return {};
+  const title = `Conveyancing quotes in ${location.city} — Five Star Conveyancing`;
+  const description = `Compare itemised conveyancing quotes from SRA-regulated firms for a move in ${location.city}${location.county ? `, ${location.county}` : ""}.`;
   return {
-    title: `Conveyancing quotes in ${location.city} — Five Star Conveyancing`,
-    description: `Compare itemised conveyancing quotes from SRA-regulated firms for a move in ${location.city}.`,
+    title,
+    description,
+    alternates: { canonical: `${SITE_URL}/locations/${slug}` },
+    openGraph: { title, description, url: `${SITE_URL}/locations/${slug}` },
   };
 }
 
@@ -27,13 +33,25 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
   const location = getLocation(slug);
   if (!location) notFound();
 
+  const nearby = getNearbyLocations(location);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Locations", item: `${SITE_URL}/locations` },
+      { "@type": "ListItem", position: 2, name: location.city, item: `${SITE_URL}/locations/${slug}` },
+    ],
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SiteHeader />
       <div style={{ background: CREAM }}>
         <section className={contentStyles.hero}>
           <div style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: TEAL, marginBottom: 12 }}>
-            {location.jurisdiction}
+            {location.county ? `${location.county}, ${location.jurisdiction}` : location.jurisdiction}
           </div>
           <h1 className={contentStyles.heroHeading} style={{ ...display, fontWeight: 600, lineHeight: 1.1, color: NAVY, margin: "0 0 16px", letterSpacing: "-0.02em" }}>
             Conveyancing quotes in {location.city}
@@ -75,6 +93,33 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
             Get my quote →
           </Link>
         </section>
+
+        {nearby.length > 0 && (
+          <section className={contentStyles.ctaSection} style={{ paddingTop: 0, maxWidth: 640, margin: "0 auto" }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>
+              Other areas in {location.county}
+            </p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {nearby.map((n) => (
+                <Link
+                  key={n.slug}
+                  href={`/locations/${n.slug}`}
+                  style={{
+                    fontSize: 13,
+                    color: TEAL,
+                    textDecoration: "none",
+                    border: `1px solid ${BORDER}`,
+                    borderRadius: RADIUS.pill,
+                    padding: "6px 14px",
+                    background: "white",
+                  }}
+                >
+                  {n.city}
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className={contentStyles.ctaSection} style={{ paddingTop: 0 }}>
           <p style={{ fontSize: 13.5, color: TEXT_BODY, margin: 0 }}>

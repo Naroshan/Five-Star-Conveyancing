@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, RADIUS, SHADOW, display } from "@/lib/theme";
-import { LOCATIONS } from "@/lib/locations";
+import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, BORDER, RADIUS, SHADOW, display } from "@/lib/theme";
+import { LOCATIONS, ALL_LOCATIONS } from "@/lib/locations";
 import { HomeIcon } from "@/components/icons";
 import contentStyles from "@/styles/contentPage.module.css";
 import styles from "@/styles/tileGrid.module.css";
@@ -14,6 +14,15 @@ export const metadata: Metadata = {
 };
 
 export default function LocationsPage() {
+  const byCounty = new Map<string, typeof ALL_LOCATIONS>();
+  for (const l of ALL_LOCATIONS) {
+    const key = l.county ?? l.city;
+    const list = byCounty.get(key) ?? [];
+    list.push(l);
+    byCounty.set(key, list);
+  }
+  const counties = [...byCounty.keys()].sort((a, b) => a.localeCompare(b));
+
   return (
     <>
       <SiteHeader />
@@ -27,7 +36,7 @@ export default function LocationsPage() {
           </h1>
           <p style={{ fontSize: 14, lineHeight: 1.55, color: TEXT_BODY, maxWidth: 520, margin: 0 }}>
             Conveyancing works the same way everywhere in England and Wales — SRA-regulated firms, itemised quotes,
-            no obligation. Here&apos;s what to know for a few specific places.
+            no obligation. Here&apos;s what to know for {ALL_LOCATIONS.length}+ specific towns and cities.
           </p>
         </section>
 
@@ -57,6 +66,31 @@ export default function LocationsPage() {
                 <h2 style={{ fontSize: 15, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 8px" }}>{l.city}</h2>
                 <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.6, margin: 0 }}>{l.jurisdiction} · {l.taxName}</p>
               </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className={contentStyles.ctaSection} style={{ paddingTop: 0 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: NAVY, margin: "0 0 18px" }}>Browse by county</h2>
+          <div style={{ columns: "220px 3", columnGap: 28 }}>
+            {counties.map((county) => (
+              <div key={county} style={{ breakInside: "avoid", marginBottom: 22 }}>
+                <p style={{ fontSize: 13, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 8px", borderBottom: `1px solid ${BORDER}`, paddingBottom: 4 }}>
+                  {county}
+                </p>
+                <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+                  {byCounty
+                    .get(county)!
+                    .sort((a, b) => a.city.localeCompare(b.city))
+                    .map((l) => (
+                      <li key={l.slug} style={{ marginBottom: 4 }}>
+                        <Link href={`/locations/${l.slug}`} style={{ fontSize: 13, color: TEXT_MUTED, textDecoration: "none" }}>
+                          {l.city}
+                        </Link>
+                      </li>
+                    ))}
+                </ul>
+              </div>
             ))}
           </div>
         </section>

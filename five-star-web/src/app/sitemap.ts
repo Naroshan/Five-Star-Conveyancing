@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SERVICE_TYPES } from "@/lib/serviceTypes";
 import { GUIDES } from "@/lib/guides";
-import { LOCATIONS } from "@/lib/locations";
+import { ALL_LOCATIONS } from "@/lib/locations";
 
 // Only genuinely public, indexable, canonical pages belong here. Admin
 // pages are excluded (see robots.ts) and per-quote results pages are
@@ -56,7 +56,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
-    ...LOCATIONS.map((l) => ({
+    ...ALL_LOCATIONS.map((l) => ({
       url: `${SITE_URL}/locations/${l.slug}`,
       changeFrequency: "monthly" as const,
       priority: 0.4,

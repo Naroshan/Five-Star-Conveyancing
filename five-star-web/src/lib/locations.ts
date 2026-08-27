@@ -1,5 +1,7 @@
 import { ShieldCheckIcon, PoundCoinIcon, ClockIcon } from "@/components/icons";
 import { TEAL, ICON_BADGE_BG, ICON_BADGE_BG_ACCENT, ICON_BADGE_BG_GOLD } from "@/lib/theme";
+import { GENERATED_LOCATIONS } from "./locationsGenerated";
+import { COUNTY_BLURBS } from "./countyBlurbs";
 
 export interface Location {
   slug: string;
@@ -7,6 +9,17 @@ export interface Location {
   jurisdiction: "England" | "Wales";
   taxName: string; // "Stamp Duty Land Tax" | "Land Transaction Tax"
   intro: string;
+  county?: string;
+}
+
+// Shape produced by scripts/generate-locations.mjs from the researched
+// real-town CSV — deliberately minimal (no intro yet, that's built below
+// from the county blurb so it isn't 964 copies of the same paragraph).
+export interface GeneratedLocation {
+  slug: string;
+  city: string;
+  county: string;
+  jurisdiction: "England" | "Wales";
 }
 
 const ACCENT = "oklch(0.5 0.22 350)";
@@ -109,6 +122,37 @@ export const LOCATIONS: Location[] = [
   },
 ];
 
+function buildIntro(city: string, county: string, jurisdiction: "England" | "Wales"): string {
+  const taxName = jurisdiction === "Wales" ? "Land Transaction Tax" : "Stamp Duty Land Tax";
+  const countyBlurb = COUNTY_BLURBS[county];
+  const jurisdictionNote =
+    jurisdiction === "Wales"
+      ? ` Property transactions in ${county} are taxed under ${taxName} rather than the Stamp Duty Land Tax charged in England, so make sure any quote you compare reflects that.`
+      : "";
+  return countyBlurb
+    ? `${county} ${countyBlurb} Comparing itemised quotes for a move in ${city} makes it easier to see exactly what a firm is charging for, rather than one bundled figure.${jurisdictionNote}`
+    : `Comparing itemised quotes for a move in ${city} — legal fee, VAT and disbursements shown separately — makes it easier to see exactly what a firm is charging for, rather than one bundled figure.${jurisdictionNote}`;
+}
+
+const GENERATED_WITH_INTRO: Location[] = GENERATED_LOCATIONS.map((g) => ({
+  slug: g.slug,
+  city: g.city,
+  jurisdiction: g.jurisdiction,
+  taxName: g.jurisdiction === "Wales" ? "Land Transaction Tax" : "Stamp Duty Land Tax",
+  county: g.county,
+  intro: buildIntro(g.city, g.county, g.jurisdiction),
+}));
+
+export const ALL_LOCATIONS: Location[] = [...LOCATIONS, ...GENERATED_WITH_INTRO];
+
 export function getLocation(slug: string): Location | undefined {
-  return LOCATIONS.find((l) => l.slug === slug);
+  return ALL_LOCATIONS.find((l) => l.slug === slug);
+}
+
+// Other real towns in the same county, for genuine (not fabricated)
+// internal linking between location pages — capped so the list stays
+// readable rather than dumping dozens of links on one page.
+export function getNearbyLocations(location: Location, limit = 8): Location[] {
+  if (!location.county) return [];
+  return ALL_LOCATIONS.filter((l) => l.county === location.county && l.slug !== location.slug).slice(0, limit);
 }
