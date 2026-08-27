@@ -65,12 +65,22 @@ const WALES_ADDITIONAL_PROPERTY: Band[] = [
   { min: 1_500_000, max: null, rate: 17 },
 ];
 
-// Exposed (read-only) so other content — e.g. location page copy — can
-// state real threshold figures without hardcoding a second, driftable copy
-// of the same numbers.
+// Exposed (read-only) so other content — e.g. location page and guide
+// copy — can state real threshold figures without hardcoding a second,
+// driftable copy of the same numbers.
 export const ENGLAND_STANDARD_BANDS: ReadonlyArray<Band> = ENGLAND_STANDARD;
 export const ENGLAND_FIRST_TIME_BUYER_NIL_RATE_THRESHOLD = ENGLAND_FIRST_TIME_BUYER[0].max as number;
 export const WALES_STANDARD_BANDS: ReadonlyArray<Band> = WALES_STANDARD;
+
+export function formatMoney(n: number): string {
+  return `£${n.toLocaleString("en-GB")}`;
+}
+
+// e.g. "0% up to £125,000, 2% up to £250,000, ..., and 12% above that"
+export function describeBands(bands: ReadonlyArray<Band>): string {
+  const parts = bands.map((b) => (b.max === null ? `${b.rate}% above that` : `${b.rate}% up to ${formatMoney(b.max)}`));
+  return parts.length > 1 ? `${parts.slice(0, -1).join(", ")}, and ${parts[parts.length - 1]}` : parts[0];
+}
 
 export interface SdltBandResult {
   min: number;

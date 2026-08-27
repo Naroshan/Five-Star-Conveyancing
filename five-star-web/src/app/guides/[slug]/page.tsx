@@ -57,12 +57,27 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
         </section>
 
         <div className={contentStyles.list}>
-          {guide.sections.map((s) => (
-            <div key={s.heading} className={contentStyles.itemPad} style={{ background: "white", borderRadius: RADIUS.md, boxShadow: SHADOW.sm }}>
-              <h2 style={{ fontSize: 15, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>{s.heading}</h2>
-              <p style={{ fontSize: 14.5, color: TEXT_MUTED, lineHeight: 1.65, maxWidth: 680, margin: 0 }}>{s.body}</p>
-            </div>
-          ))}
+          {guide.sections.map((s) => {
+            const [beforeLink, afterLink] = s.body.includes("SDLT calculator") ? s.body.split("SDLT calculator") : [s.body, undefined];
+            return (
+              <div key={s.heading} className={contentStyles.itemPad} style={{ background: "white", borderRadius: RADIUS.md, boxShadow: SHADOW.sm }}>
+                <h2 style={{ fontSize: 15, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>{s.heading}</h2>
+                <p style={{ fontSize: 14.5, color: TEXT_MUTED, lineHeight: 1.65, maxWidth: 680, margin: 0 }}>
+                  {afterLink !== undefined ? (
+                    <>
+                      {beforeLink}
+                      <Link href="/sdlt-calculator" style={{ color: TEAL, fontWeight: 700, textDecoration: "none" }}>
+                        SDLT calculator
+                      </Link>
+                      {afterLink}
+                    </>
+                  ) : (
+                    s.body
+                  )}
+                </p>
+              </div>
+            );
+          })}
         </div>
 
         <section className={contentStyles.ctaSection} style={{ textAlign: "center", paddingTop: 0 }}>

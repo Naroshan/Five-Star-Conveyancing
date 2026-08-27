@@ -1,5 +1,6 @@
 import { HomeIcon, DocumentExtendIcon, ReceiptIcon, ClockIcon, type IconProps } from "@/components/icons";
 import { TEAL, ICON_BADGE_BG, ICON_BADGE_BG_ACCENT, ICON_BADGE_BG_GOLD } from "@/lib/theme";
+import { ENGLAND_FIRST_TIME_BUYER_NIL_RATE_THRESHOLD, ENGLAND_STANDARD_BANDS, WALES_STANDARD_BANDS, formatMoney as money, describeBands } from "@/lib/sdlt";
 
 export interface GuideSection {
   heading: string;
@@ -48,6 +49,10 @@ export const GUIDES: Guide[] = [
         heading: "Exchange and completion",
         body: "Exchanging contracts is the point you're legally committed — you'll pay your deposit and agree a completion date. Completion is moving day: the remaining funds transfer, you get the keys, and your conveyancer registers your ownership with HM Land Registry and handles any Stamp Duty Land Tax due.",
       },
+      {
+        heading: "First-time buyer relief on Stamp Duty Land Tax",
+        body: `If this is your first property and it's in England, you may qualify for first-time buyer relief on Stamp Duty Land Tax — currently a nil-rate band on the first ${money(ENGLAND_FIRST_TIME_BUYER_NIL_RATE_THRESHOLD)} of the price, provided the property costs £500,000 or less; above that, standard rates apply to the whole price instead. Wales has no equivalent relief under Land Transaction Tax. Every itemised quote you compare through Five Star shows the legal fee, VAT and disbursements as separate figures, and our free SDLT calculator gives you a rough figure to budget for before you commit to a firm.`,
+      },
     ],
   },
   {
@@ -74,6 +79,10 @@ export const GUIDES: Guide[] = [
         heading: "What your conveyancer checks on a leasehold purchase",
         body: "Beyond the usual searches, a leasehold purchase involves reviewing the lease terms themselves, checking service charge and ground rent history, and raising management-company-specific enquiries — which is generally why leasehold conveyancing takes a bit longer, and sometimes costs a bit more, than an equivalent freehold purchase.",
       },
+      {
+        heading: "How leasehold affects your quote",
+        body: "Because a leasehold purchase involves extra checks — reviewing the lease terms, verifying service charge and ground rent history, and liaising with the management company — many firms charge a separate leasehold supplement on top of their base legal fee, rather than pricing every transaction identically regardless of tenure. On a proper itemised quote, that supplement is shown as its own line item rather than folded into the headline figure, so you can see exactly what the extra leasehold work is costing you before you instruct a firm.",
+      },
     ],
   },
   {
@@ -95,6 +104,10 @@ export const GUIDES: Guide[] = [
       {
         heading: "How it's usually paid",
         body: "Your conveyancer normally calculates the amount due, includes it in your completion statement, and submits the return and payment to HMRC (or the Welsh Revenue Authority) on your behalf shortly after completion — it's one of the disbursements shown separately on a proper conveyancing quote, rather than folded into the legal fee.",
+      },
+      {
+        heading: "Try the SDLT calculator instead of guessing",
+        body: `Rather than leave you without any figures at all, we've built a free SDLT calculator using the bands currently published by HMRC and the Welsh Revenue Authority — kept up to date as those rates change, rather than printed once here and left to go stale. As things stand, the standard England bands run ${describeBands(ENGLAND_STANDARD_BANDS)}, and the standard Wales bands run ${describeBands(WALES_STANDARD_BANDS)}. Enter a property price into the calculator and it works out roughly what you'd owe as a standard buyer, a first-time buyer, or on an additional property.`,
       },
     ],
   },
@@ -121,6 +134,10 @@ export const GUIDES: Guide[] = [
       {
         heading: "Why itemised quotes help here",
         body: "A quote that separates legal fee, VAT, and disbursements doesn't just make costs clearer — it also makes it easier to see exactly which searches and checks are included, so you know what your conveyancer is actually waiting on if things take longer than expected.",
+      },
+      {
+        heading: "Comparing quotes doesn't have to slow you down",
+        body: "Getting a comparison through Five Star takes about a minute and doesn't commit you to anything — you can request quotes from several SRA or CLC regulated firms, see the legal fee, VAT and disbursements broken out for each one, and instruct the firm you choose directly, without a sales call in between. None of that adds time to your actual conveyancing timeline; if anything, comparing properly upfront means you're less likely to switch firms partway through a transaction, which is one of the more common causes of unnecessary delay.",
       },
     ],
   },
