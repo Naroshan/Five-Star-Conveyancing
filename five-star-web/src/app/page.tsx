@@ -99,7 +99,7 @@ export default function HomePage() {
             </h1>
             <p style={{ fontSize: 15, lineHeight: 1.6, color: TEXT_MUTED, maxWidth: 560, margin: "0 auto 30px" }}>
               Every firm is checked, reviewed and matched to your move. You get a short list of solicitors you can
-              trust — with the legal fee, VAT and disbursements itemised, so you can choose with confidence.
+              trust — with the legal fee, VAT and disbursements itemised.
             </p>
 
             <div className={styles.heroBarWrap}>
