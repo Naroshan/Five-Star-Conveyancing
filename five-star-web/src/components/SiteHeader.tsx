@@ -23,9 +23,7 @@ const NAV_LINKS = [
   { href: "/sdlt-calculator", label: "SDLT Calculator" },
   { href: "/guides", label: "Guides" },
   { href: "/locations", label: "Locations" },
-  { href: "/faq", label: "FAQ" },
   { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
 ];
 
 export function SiteHeader() {
