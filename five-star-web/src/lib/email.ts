@@ -1,11 +1,12 @@
-// Five Star Conveyancing — outbound transactional email via SMTP (the
-// client's own Microsoft 365 mailbox, not a third-party email API).
-// Requires SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS set in the host
-// environment — never hard-coded, same convention as DATABASE_URL. For
-// Microsoft 365: host smtp.office365.com, port 587, an app password (SMTP
-// AUTH must be enabled for the mailbox in the M365 admin center first).
-
-import nodemailer from "nodemailer";
+// Five Star Conveyancing — outbound transactional email via the Microsoft
+// Graph API (the client's own Microsoft 365 mailbox, not a third-party email
+// API). SMTP AUTH with an app password isn't available on this tenant (app
+// passwords are disabled), so this authenticates as an Entra app registration
+// via OAuth2 client-credentials and calls Graph's /sendMail endpoint instead.
+// Requires MS_TENANT_ID, MS_CLIENT_ID, MS_CLIENT_SECRET, and MS_SENDER_EMAIL
+// set in the host environment — never hard-coded, same convention as
+// DATABASE_URL. The Entra app needs the Mail.Send *application* permission
+// with admin consent granted, scoped to send as MS_SENDER_EMAIL.
 
 export interface SendEmailInput {
   to: string;
@@ -14,35 +15,75 @@ export interface SendEmailInput {
   attachments?: { filename: string; content: Buffer }[];
 }
 
-let cachedTransporter: ReturnType<typeof nodemailer.createTransport> | null = null;
+interface CachedToken {
+  accessToken: string;
+  expiresAt: number; // epoch ms
+}
 
-function getTransporter() {
-  if (cachedTransporter) return cachedTransporter;
+let cachedToken: CachedToken | null = null;
 
-  const host = process.env.SMTP_HOST;
-  const port = process.env.SMTP_PORT;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-  if (!host || !port || !user || !pass) {
-    throw new Error("SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASS must all be set — email sending is not configured.");
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`${name} must be set — email sending is not configured.`);
+  }
+  return value;
+}
+
+async function getAccessToken(): Promise<string> {
+  if (cachedToken && cachedToken.expiresAt > Date.now() + 60_000) {
+    return cachedToken.accessToken;
   }
 
-  cachedTransporter = nodemailer.createTransport({
-    host,
-    port: Number(port),
-    secure: Number(port) === 465,
-    auth: { user, pass },
+  const tenantId = requireEnv("MS_TENANT_ID");
+  const clientId = requireEnv("MS_CLIENT_ID");
+  const clientSecret = requireEnv("MS_CLIENT_SECRET");
+
+  const response = await fetch(`https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`, {
+    method: "POST",
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      grant_type: "client_credentials",
+      client_id: clientId,
+      client_secret: clientSecret,
+      scope: "https://graph.microsoft.com/.default",
+    }),
   });
-  return cachedTransporter;
+
+  if (!response.ok) {
+    throw new Error(`Failed to obtain Microsoft Graph access token: ${response.status} ${await response.text()}`);
+  }
+
+  const data = (await response.json()) as { access_token: string; expires_in: number };
+  cachedToken = { accessToken: data.access_token, expiresAt: Date.now() + data.expires_in * 1000 };
+  return cachedToken.accessToken;
 }
 
 export async function sendEmail(input: SendEmailInput): Promise<void> {
-  const transporter = getTransporter();
-  await transporter.sendMail({
-    from: process.env.SMTP_FROM ?? process.env.SMTP_USER,
-    to: input.to,
+  const senderEmail = requireEnv("MS_SENDER_EMAIL");
+  const accessToken = await getAccessToken();
+
+  const message = {
     subject: input.subject,
-    html: input.html,
-    attachments: input.attachments,
+    body: { contentType: "HTML", content: input.html },
+    toRecipients: [{ emailAddress: { address: input.to } }],
+    attachments: input.attachments?.map((a) => ({
+      "@odata.type": "#microsoft.graph.fileAttachment",
+      name: a.filename,
+      contentBytes: a.content.toString("base64"),
+    })),
+  };
+
+  const response = await fetch(`https://graph.microsoft.com/v1.0/users/${encodeURIComponent(senderEmail)}/sendMail`, {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${accessToken}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ message, saveToSentItems: true }),
   });
+
+  if (!response.ok) {
+    throw new Error(`Failed to send email via Microsoft Graph: ${response.status} ${await response.text()}`);
+  }
 }
