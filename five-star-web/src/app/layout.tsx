@@ -30,6 +30,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={plusJakarta.variable}>
       <body>
+        {/* Google tag (gtag.js) */}
+        <Script src="https://www.googletagmanager.com/gtag/js?id=GT-5MCNDKRF" strategy="afterInteractive" />
+        <Script id="google-tag-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'GT-5MCNDKRF');`}
+        </Script>
         {children}
         {/* LiveChat widget — license 19914263 */}
         <Script id="livechat-init" strategy="afterInteractive">
