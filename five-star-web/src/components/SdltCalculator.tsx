@@ -4,7 +4,9 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { calculateSdlt, type BuyerType, type Jurisdiction, type SdltCalculationResult } from "@/lib/sdlt";
 import { toDigits, formatThousands } from "@/lib/formatNumber";
 import { NAVY, TEAL, ERROR, TEXT_HEADING, TEXT_MUTED, BORDER, ICON_BADGE_BG, RADIUS, SHADOW, GRADIENT_CTA } from "@/lib/theme";
-import { MailIcon, ChevronDownIcon } from "@/components/icons";
+import { MailIcon, ChevronDownIcon, WhatsAppIcon } from "@/components/icons";
+
+const WHATSAPP_GREEN = "#25D366";
 
 // Same Formspree form used for every other lead notification on the site
 // (see ResultsInteractive.tsx / GetAQuoteForm.tsx) — a real person gets
@@ -331,16 +333,17 @@ export function SdltCalculator({ compact = false }: { compact?: boolean }) {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 8,
-                  background: "transparent",
-                  color: TEAL,
+                  background: WHATSAPP_GREEN,
+                  color: "#ffffff",
                   fontWeight: 700,
-                  border: `1.5px solid ${BORDER}`,
+                  border: "none",
                   borderRadius: RADIUS.pill,
                   padding: "11px 18px",
                   fontSize: 13,
                   cursor: "pointer",
                 }}
               >
+                <WhatsAppIcon size={16} color="#ffffff" />
                 Or click, WhatsApp me the breakdown
               </button>
             </div>
