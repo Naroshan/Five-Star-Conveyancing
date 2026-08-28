@@ -14,7 +14,7 @@
     "@react-pdf/renderer": "^4.8.1",
     "five-star-conveyancing-quote-engine": "file:../quote-engine/five-star-conveyancing-quote-engine-0.10.0.tgz",
     "kysely": "^0.29.4",
-    "next": "16.2.11",
+    "next": "16.3.3",
     "pg": "^8.22.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
