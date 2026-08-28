@@ -5,9 +5,8 @@ const WHATSAPP_GREEN = "#25D366";
 const WHATSAPP_NUMBER = "442077902000";
 const PREFILLED_MESSAGE = "Hi, I'd like some help with my conveyancing quote.";
 
-// Fixed bottom-right, stacked directly above the LiveChat bubble (which
-// docks at the same corner with roughly a 60px-diameter button and a ~20px
-// margin) so the two don't overlap.
+// Fixed bottom-left — the LiveChat widget docks bottom-right, so this sits
+// on the opposite corner rather than stacking above it.
 export function WhatsAppFloatButton() {
   return (
     <a
@@ -17,8 +16,8 @@ export function WhatsAppFloatButton() {
       aria-label="Chat with us on WhatsApp"
       style={{
         position: "fixed",
-        right: 20,
-        bottom: 96,
+        left: 20,
+        bottom: 20,
         width: 56,
         height: 56,
         borderRadius: "50%",
