@@ -13,8 +13,8 @@ import styles from "./SiteHeader.module.css";
 // business number — keeps the button out of production until then, rather
 // than shipping a fake number visitors could actually dial.
 const PHONE_NUMBER_READY = true;
-const PHONE_NUMBER_DISPLAY = "020 7990 2000";
-const PHONE_NUMBER_TEL = "+442079902000";
+const PHONE_NUMBER_DISPLAY = "020 7790 2000";
+const PHONE_NUMBER_TEL = "+442077902000";
 
 const NAV_LINKS = [
   { href: "/how-it-works", label: "How it works" },
