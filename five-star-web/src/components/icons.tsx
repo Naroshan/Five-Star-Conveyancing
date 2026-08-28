@@ -252,18 +252,17 @@ export function PhoneIcon({ size, color = "currentColor", className }: IconProps
   );
 }
 
-export function WhatsAppIcon({ size, color = "currentColor", className }: IconProps) {
+export function WhatsAppIcon({ size, color = "currentColor", className, badgeColor = "#ffffff" }: IconProps & { badgeColor?: string }) {
   return (
     <Svg size={size} className={className}>
+      <circle cx={12} cy={12} r={9.5} fill={badgeColor} />
       <path
-        d="M12 3.5a8.4 8.4 0 0 0-7.2 12.7L3.5 20.5l4.5-1.2A8.4 8.4 0 1 0 12 3.5Z"
-        stroke={color}
-        strokeWidth={STROKE}
-        strokeLinejoin="round"
+        d="M12 6.2a5.9 5.9 0 0 0-5 9c0 .1.1.2 0 .3l-.7 2.6 2.6-.7h.3a5.9 5.9 0 1 0 2.8-11.2Z"
+        fill={color}
       />
       <path
-        d="M9 8.7c.2-.5.4-.5.6-.5h.5c.2 0 .4 0 .5.4.2.5.6 1.5.6 1.6.1.1.1.3 0 .4-.1.2-.2.3-.3.4-.1.1-.3.3-.4.4-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1 .2-.2.4-.2.6-.1l1.5.7c.2.1.4.2.4.3.1.2.1 1-.2 1.4-.3.4-1.5 1.1-2.6.7-1.4-.5-3.6-1.5-5.1-3.4-1.1-1.4-1.6-2.5-1.7-2.9-.1-.4-.5-1.4-.5-2.5Z"
-        fill={color}
+        d="M9.6 9c.1-.3.3-.3.4-.3h.4c.1 0 .3 0 .3.3.1.3.4 1 .4 1.1.1.1.1.2 0 .3l-.2.3-.3.3c-.1.1-.2.2-.1.4.1.2.5.9 1.1 1.4.7.6 1.3.8 1.5 1 .2.1.3.1.4-.1l.5-.6c.1-.1.3-.1.4-.1l1 .5c.1.1.3.1.3.2.1.1.1.6-.1.9-.2.3-1 .7-1.7.5-.9-.3-2.3-1-3.3-2.2-.7-.9-1-1.6-1.1-1.9-.1-.2-.4-.9-.3-1.6Z"
+        fill={badgeColor}
       />
     </Svg>
   );
