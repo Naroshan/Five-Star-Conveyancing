@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import Script from "next/script";
+import { WhatsAppFloatButton } from "@/components/WhatsAppFloatButton";
 import "./globals.css";
 
 // Single family for the whole site, matching every page in the
@@ -39,6 +40,7 @@ gtag('js', new Date());
 gtag('config', 'GT-5MCNDKRF');`}
         </Script>
         {children}
+        <WhatsAppFloatButton />
         {/* LiveChat widget — license 19914263 */}
         <Script id="livechat-init" strategy="afterInteractive">
           {`window.__lc = window.__lc || {};
