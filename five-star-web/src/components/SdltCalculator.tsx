@@ -343,7 +343,7 @@ export function SdltCalculator({ compact = false }: { compact?: boolean }) {
                   cursor: "pointer",
                 }}
               >
-                <WhatsAppIcon size={20} color={WHATSAPP_GREEN} badgeColor="#ffffff" />
+                <WhatsAppIcon size={18} color="#ffffff" />
                 Or click, WhatsApp me the breakdown
               </button>
             </div>
