@@ -31,7 +31,7 @@ import type { Context } from "@netlify/edge-functions";
 const CRAWLER_USER_AGENT_PATTERN =
   /googlebot|bingbot|duckduckbot|slurp|yandexbot|baiduspider|applebot|facebookexternalhit|twitterbot|linkedinbot/i;
 
-export default async (request: Request, context: Context) => {
+async function geoBlock(request: Request, context: Context) {
   const userAgent = request.headers.get("user-agent") ?? "";
   const countryCode = context.geo?.country?.code;
 
@@ -56,4 +56,6 @@ export default async (request: Request, context: Context) => {
     status: 451,
     headers: { "content-type": "text/plain", ...debugHeaders },
   });
-};
+}
+
+export default geoBlock;
