@@ -31,18 +31,30 @@ function getCountryCode(request: NextRequest): string | undefined {
 
 export function middleware(request: NextRequest) {
   const userAgent = request.headers.get("user-agent") ?? "";
+  const countryCode = getCountryCode(request);
+
+  // TEMPORARY diagnostic — visible in browser devtools (Network tab -> any
+  // request -> Response Headers). Lets us confirm what Netlify's edge is
+  // actually detecting without needing server log access, after a report
+  // that a non-UK visitor reached the site despite this middleware. Remove
+  // once confirmed working.
+  const debugHeaders = { "x-debug-geo-country": countryCode ?? "undefined" };
+
   if (CRAWLER_USER_AGENT_PATTERN.test(userAgent)) {
-    return NextResponse.next();
+    const response = NextResponse.next();
+    for (const [k, v] of Object.entries(debugHeaders)) response.headers.set(k, v);
+    return response;
   }
 
-  const countryCode = getCountryCode(request);
   if (!countryCode || countryCode === "GB") {
-    return NextResponse.next();
+    const response = NextResponse.next();
+    for (const [k, v] of Object.entries(debugHeaders)) response.headers.set(k, v);
+    return response;
   }
 
   return new NextResponse("This site is only available to visitors in the United Kingdom.", {
     status: 451,
-    headers: { "content-type": "text/plain" },
+    headers: { "content-type": "text/plain", ...debugHeaders },
   });
 }
 
