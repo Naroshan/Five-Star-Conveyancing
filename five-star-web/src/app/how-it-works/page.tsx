@@ -69,8 +69,8 @@ export default function HowItWorksPage() {
               </div>
               <div>
                 <div style={{ ...display, fontSize: 13, fontWeight: 600, color: TEAL, marginBottom: 4 }}>Step {step.n}</div>
-                <h2 style={{ fontSize: 19, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>{step.title}</h2>
-                <p style={{ fontSize: 15, color: TEXT_MUTED, lineHeight: 1.65, maxWidth: 620, margin: 0 }}>{step.body}</p>
+                <h2 style={{ fontSize: 16, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 8px" }}>{step.title}</h2>
+                <p style={{ fontSize: 13.5, color: TEXT_MUTED, lineHeight: 1.6, maxWidth: 620, margin: 0 }}>{step.body}</p>
               </div>
             </div>
           ))}
@@ -80,7 +80,7 @@ export default function HowItWorksPage() {
           <Link
             href="/get-a-quote"
             className="cta-button"
-            style={{ display: "inline-block", background: GRADIENT_CTA, boxShadow: SHADOW.md, color: NAVY, fontWeight: 800, fontSize: 15.5, padding: "17px 34px", borderRadius: RADIUS.pill, textDecoration: "none" }}
+            style={{ display: "inline-block", background: GRADIENT_CTA, boxShadow: SHADOW.md, color: NAVY, fontWeight: 800, fontSize: 14, padding: "13px 28px", borderRadius: RADIUS.pill, textDecoration: "none" }}
           >
             Get my quote →
           </Link>

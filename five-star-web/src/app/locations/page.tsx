@@ -71,7 +71,7 @@ export default function LocationsPage() {
         </section>
 
         <section className={contentStyles.ctaSection} style={{ paddingTop: 0 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: NAVY, margin: "0 0 18px" }}>Browse by county</h2>
+          <h2 style={{ fontSize: 16, fontWeight: 700, color: NAVY, margin: "0 0 16px" }}>Browse by county</h2>
           <div style={{ columns: "220px 3", columnGap: 28 }}>
             {counties.map((county) => (
               <div key={county} style={{ breakInside: "avoid", marginBottom: 22 }}>

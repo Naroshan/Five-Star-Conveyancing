@@ -5,6 +5,8 @@
   flex-direction: column;
   gap: 16px;
   padding: 0 48px 44px;
+  max-width: 1180px;
+  margin: 0 auto;
 }
 
 .step {

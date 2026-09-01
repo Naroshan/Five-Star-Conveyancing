@@ -89,7 +89,7 @@ export default function FeesExplainedPage() {
                 <t.icon size={20} color={t.iconColor} />
               </div>
               <div>
-                <h2 style={{ fontSize: 18, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>{t.title}</h2>
+                <h2 style={{ fontSize: 16, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 8px" }}>{t.title}</h2>
                 <p style={{ fontSize: 14.5, color: TEXT_MUTED, lineHeight: 1.65, maxWidth: 640, margin: 0 }}>{t.body}</p>
               </div>
             </div>
@@ -100,7 +100,7 @@ export default function FeesExplainedPage() {
           <Link
             href="/get-a-quote"
             className="cta-button"
-            style={{ display: "inline-block", background: GRADIENT_CTA, boxShadow: SHADOW.md, color: NAVY, fontWeight: 800, fontSize: 15.5, padding: "17px 34px", borderRadius: RADIUS.pill, textDecoration: "none" }}
+            style={{ display: "inline-block", background: GRADIENT_CTA, boxShadow: SHADOW.md, color: NAVY, fontWeight: 800, fontSize: 14, padding: "13px 28px", borderRadius: RADIUS.pill, textDecoration: "none" }}
           >
             Get my quote →
           </Link>

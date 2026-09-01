@@ -31,8 +31,8 @@ const LEGAL_LINKS = [
 
 export function SiteFooter() {
   return (
-    <footer style={{ padding: "48px 48px 32px", background: CREAM, borderTop: `1px solid ${BORDER}`, marginTop: 40 }}>
-      <div className={styles.grid} style={{ display: "grid", marginBottom: 32 }}>
+    <footer style={{ padding: "44px 48px 28px", background: CREAM, borderTop: `1px solid ${BORDER}`, marginTop: 40 }}>
+      <div className={styles.grid} style={{ display: "grid", marginBottom: 28, maxWidth: 1180, marginLeft: "auto", marginRight: "auto" }}>
         <div>
           <div style={{ marginBottom: 14 }}>
             <Logo variant="onLight" size={17} />

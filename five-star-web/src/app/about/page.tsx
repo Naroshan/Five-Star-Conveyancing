@@ -40,7 +40,7 @@ export default function AboutPage() {
         <section className={styles.introSection}>
           <div className={styles.introCard} style={{ background: ICON_BADGE_BG_GOLD, borderRadius: RADIUS.lg }}>
             <div>
-              <h2 style={{ ...display, fontSize: 20, fontWeight: 600, color: NAVY, margin: "0 0 12px" }}>
+              <h2 style={{ ...display, fontSize: "clamp(18px, 2vw, 22px)", fontWeight: 600, color: NAVY, margin: "0 0 12px" }}>
                 About Five Star Conveyancing
               </h2>
               <p style={{ fontSize: 13, color: TEXT_BODY, lineHeight: 1.6, margin: "0 0 12px" }}>
@@ -104,7 +104,7 @@ export default function AboutPage() {
 
         <section>
           <div className={styles.sectionLabel}>
-            <h2 style={{ fontSize: 20, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 20px" }}>What we stand for</h2>
+            <h2 style={{ fontSize: "clamp(20px, 2.2vw, 26px)", fontWeight: 700, color: TEXT_HEADING, margin: "0 0 20px" }}>What we stand for</h2>
           </div>
           <div className={styles.principlesGrid} style={{ display: "grid", gap: 20, padding: "0 48px 56px" }}>
             {PRINCIPLES.map((p) => (
@@ -134,7 +134,7 @@ export default function AboutPage() {
           <Link
             href="/get-a-quote"
             className="cta-button"
-            style={{ display: "inline-block", background: GRADIENT_CTA, boxShadow: SHADOW.md, color: NAVY, fontWeight: 800, fontSize: 15.5, padding: "17px 34px", borderRadius: RADIUS.pill, textDecoration: "none" }}
+            style={{ display: "inline-block", background: GRADIENT_CTA, boxShadow: SHADOW.md, color: NAVY, fontWeight: 800, fontSize: 14, padding: "13px 28px", borderRadius: RADIUS.pill, textDecoration: "none" }}
           >
             Compare quotes →
           </Link>
