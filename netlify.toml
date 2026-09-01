@@ -23,6 +23,16 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
+# Geo-restricts the whole site to the United Kingdom — see
+# netlify/edge-functions/geo-block.ts for the full reasoning (deliberately
+# a native Netlify Edge Function reading Context.geo directly, not Next.js
+# middleware/proxy, after an earlier middleware-based version let a real
+# non-UK visitor through). "edge-functions" here is relative to the repo
+# root, not the `base` directory above.
+[[edge_functions]]
+  path = "/*"
+  function = "geo-block"
+
 # DATABASE_URL is deliberately not set here — add it in Netlify's own
 # dashboard (Site configuration → Environment variables), never commit a
 # real connection string into this file or anywhere in the repo.
