@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { QuoteResultsList } from "five-star-conveyancing-quote-engine/components/QuoteResults";
 import type { PublicQuoteResult } from "five-star-conveyancing-quote-engine/api/publicResult";
 import { CREAM, BORDER, NAVY, TEAL, TEXT_HEADING, TEXT_MUTED, GRADIENT_CTA, ERROR, RADIUS, SHADOW } from "@/lib/theme";
@@ -151,16 +151,12 @@ export function ResultsInteractive({ quoteReference, results }: { quoteReference
       )}
 
       {pendingFirmId && (
-        <div
-          role="dialog"
-          aria-label={`Your details for ${pendingFirmName}`}
-          style={{
-            background: "white",
-            border: `1px solid ${BORDER}`,
-            borderRadius: RADIUS.md,
-            boxShadow: SHADOW.md,
-            padding: 20,
-            marginBottom: 16,
+        <Modal
+          ariaLabel={`Your details for ${pendingFirmName}`}
+          onClose={() => {
+            if (isSelecting) return;
+            setPendingFirmId(null);
+            setContactError(null);
           }}
         >
           <p style={{ fontSize: 14.5, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 4px" }}>
@@ -222,20 +218,16 @@ export function ResultsInteractive({ quoteReference, results }: { quoteReference
               </button>
             </div>
           </form>
-        </div>
+        </Modal>
       )}
 
       {emailQuoteFirmId && (
-        <div
-          role="dialog"
-          aria-label="Email this quote"
-          style={{
-            background: "white",
-            border: `1px solid ${BORDER}`,
-            borderRadius: RADIUS.md,
-            boxShadow: SHADOW.md,
-            padding: 20,
-            marginBottom: 16,
+        <Modal
+          ariaLabel="Email this quote"
+          onClose={() => {
+            if (isSendingEmailQuote) return;
+            setEmailQuoteFirmId(null);
+            setEmailQuoteError(null);
           }}
         >
           <p style={{ fontSize: 14.5, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 4px" }}>Email this quote to yourself</p>
@@ -287,7 +279,7 @@ export function ResultsInteractive({ quoteReference, results }: { quoteReference
               </button>
             </div>
           </form>
-        </div>
+        </Modal>
       )}
 
       <QuoteResultsList
@@ -298,6 +290,62 @@ export function ResultsInteractive({ quoteReference, results }: { quoteReference
         onSpeakToAdviser={() => stubAction("Speak to an adviser")}
       />
     </>
+  );
+}
+
+// Fixed-position overlay so a dialog opened from any card in a long results
+// list appears centered in the viewport immediately — previously these
+// rendered inline above the results list, which could be scrolled out of
+// view if the client clicked "Instruct this firm" on a card further down
+// the page, making it look like the click did nothing.
+function Modal({ ariaLabel, onClose, children }: { ariaLabel: string; onClose: () => void; children: ReactNode }) {
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", onKeyDown);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "oklch(0.15 0.02 292 / 0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 20,
+        zIndex: 1000,
+      }}
+    >
+      <div
+        role="dialog"
+        aria-label={ariaLabel}
+        aria-modal="true"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: "white",
+          border: `1px solid ${BORDER}`,
+          borderRadius: RADIUS.md,
+          boxShadow: SHADOW.md,
+          padding: 20,
+          width: "100%",
+          maxWidth: 420,
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
+      >
+        {children}
+      </div>
+    </div>
   );
 }
 
