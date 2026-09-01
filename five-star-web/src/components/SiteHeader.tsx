@@ -62,7 +62,7 @@ export function SiteHeader() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "18px 44px",
+          padding: "13px 32px",
           background: "oklch(1 0 0 / 0.94)",
           backdropFilter: "blur(16px)",
           borderBottom: "1px solid oklch(0.91 0.015 292)",
@@ -89,7 +89,7 @@ export function SiteHeader() {
           }
         }}
       >
-        <Logo variant="onLight" size={20} />
+        <Logo variant="onLight" size={17} />
       </Link>
 
       <button
@@ -116,7 +116,7 @@ export function SiteHeader() {
         <span style={{ width: 22, height: 2, background: TEXT_HEADING, display: "block" }} />
       </button>
 
-      <nav id="mobile-nav" className={styles.nav} data-open={open} style={{ fontSize: 14 }}>
+      <nav id="mobile-nav" className={styles.nav} data-open={open} style={{ fontSize: 13 }}>
         {NAV_LINKS.map((link) => (
           <Link
             key={link.href}
@@ -133,17 +133,17 @@ export function SiteHeader() {
             style={{
               display: "inline-flex",
               alignItems: "center",
-              gap: 7,
+              gap: 6,
               fontWeight: 800,
               color: TEAL,
               border: `1.5px solid ${BORDER}`,
-              padding: "10px 18px",
+              padding: "7px 14px",
               borderRadius: RADIUS.pill,
               whiteSpace: "nowrap",
               textDecoration: "none",
             }}
           >
-            <PhoneIcon size={15} color={TEAL} />
+            <PhoneIcon size={13} color={TEAL} />
             {PHONE_NUMBER_DISPLAY}
           </a>
         )}
@@ -155,7 +155,7 @@ export function SiteHeader() {
             color: NAVY,
             background: GRADIENT_CTA,
             boxShadow: SHADOW.sm,
-            padding: "12px 26px",
+            padding: "9px 20px",
             borderRadius: RADIUS.pill,
             whiteSpace: "nowrap",
             textDecoration: "none",

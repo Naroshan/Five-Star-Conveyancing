@@ -1,15 +1,15 @@
 /* Breakpoints: mobile <=640px, tablet <=1024px (see src/lib/theme.ts) */
 
 .hero {
-  padding: 64px 40px 52px;
+  padding: 56px 40px 44px;
 }
 
 .heroInner {
-  max-width: 760px;
+  max-width: 700px;
 }
 
 .heroBarWrap {
-  max-width: 600px;
+  max-width: 580px;
   margin: 0 auto;
 }
 
@@ -17,12 +17,12 @@
    handful of fixed breakpoint sizes — reads consistently "right-sized" on
    any screen rather than needing a media query for every in-between width. */
 .heroHeading {
-  font-size: clamp(28px, 4vw, 46px);
+  font-size: clamp(26px, 3.5vw, 40px);
 }
 
 .tileRow {
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: 14px;
 }
 
 /* Sections have no overall max-width elsewhere, so a very wide monitor
@@ -30,13 +30,13 @@
    line lengths and card widths comfortable while still filling smaller
    screens edge-to-edge (minus padding). */
 .sectionPad {
-  padding: 72px 40px;
-  max-width: 1240px;
+  padding: 56px 40px;
+  max-width: 1180px;
   margin: 0 auto;
 }
 
 .sectionHeading {
-  font-size: clamp(22px, 2.6vw, 30px);
+  font-size: clamp(20px, 2.2vw, 26px);
 }
 
 .howGrid {
@@ -65,7 +65,7 @@
 }
 
 .ctaHeading {
-  font-size: clamp(22px, 2.8vw, 30px);
+  font-size: clamp(20px, 2.4vw, 26px);
 }
 
 @media (max-width: 1024px) {

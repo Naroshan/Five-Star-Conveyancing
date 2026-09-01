@@ -97,7 +97,7 @@ export default function HomePage() {
             >
               Directly instruct your Conveyancing Solicitor now!
             </h1>
-            <p style={{ fontSize: 17, lineHeight: 1.6, color: TEXT_MUTED, maxWidth: 600, margin: "0 auto 34px" }}>
+            <p style={{ fontSize: 15, lineHeight: 1.6, color: TEXT_MUTED, maxWidth: 560, margin: "0 auto 26px" }}>
               Every firm is checked, reviewed and matched to your move. You get a short list of solicitors you can
               trust — with the legal fee, VAT and disbursements itemised.
             </p>
@@ -119,14 +119,14 @@ export default function HomePage() {
                     background: "white",
                     border: `1px solid ${BORDER}`,
                     borderRadius: RADIUS.lg,
-                    padding: "22px 14px",
+                    padding: "16px 12px",
                     textDecoration: "none",
                   }}
                 >
                   <span style={{ width: 40, height: 40, borderRadius: 12, background: ICON_BADGE_BG, display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <tile.icon size={18} color={TEAL} />
                   </span>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: TEXT_HEADING }}>{tile.label}</span>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: TEXT_HEADING }}>{tile.label}</span>
                 </Link>
               ))}
             </div>
@@ -135,7 +135,7 @@ export default function HomePage() {
 
         {/* VERIFIED STRIP */}
         <section style={{ background: GRADIENT_TEAL, padding: "14px 24px", textAlign: "center" }}>
-          <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: "white" }}>
+          <span style={{ fontSize: 12.5, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: "white" }}>
             SRA & CLC Regulated Firms Only
           </span>
         </section>
@@ -147,7 +147,7 @@ export default function HomePage() {
           </h2>
           <div className={styles.howGrid} style={{ display: "grid" }}>
             {HOW_IT_WORKS.map((s) => (
-              <div key={s.n} style={{ background: CREAM, borderRadius: RADIUS.lg, padding: 28 }}>
+              <div key={s.n} style={{ background: CREAM, borderRadius: RADIUS.lg, padding: 22 }}>
                 <span
                   style={{
                     display: "inline-flex",
@@ -165,8 +165,8 @@ export default function HomePage() {
                 >
                   {s.n}
                 </span>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>{s.title}</h3>
-                <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.6, margin: 0 }}>{s.body}</p>
+                <h3 style={{ fontSize: 15, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 8px" }}>{s.title}</h3>
+                <p style={{ fontSize: 13, color: TEXT_MUTED, lineHeight: 1.55, margin: 0 }}>{s.body}</p>
               </div>
             ))}
           </div>
@@ -177,25 +177,25 @@ export default function HomePage() {
           <div className={styles.aboutGrid} style={{ display: "grid", alignItems: "center" }}>
             <div>
               <h2 className={styles.sectionHeading} style={{ ...display, fontWeight: 700, color: NAVY, margin: "0 0 16px" }}>About Five Star</h2>
-              <p style={{ fontSize: 15, color: TEXT_MUTED, lineHeight: 1.7, margin: "0 0 16px" }}>
+              <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.65, margin: "0 0 12px" }}>
                 Five Star connects movers with conveyancing solicitors we&apos;ve checked ourselves. We started it
                 after buying our own homes and being handed a single number with no explanation of what sat inside
                 it.
               </p>
-              <p style={{ fontSize: 15, color: TEXT_MUTED, lineHeight: 1.7, margin: 0 }}>
+              <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.65, margin: 0 }}>
                 Every firm must meet clear standards for regulation, insurance and complaints history before
                 joining. You get a short, considered list — not an endless directory.
               </p>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {ABOUT_CARDS.map((c) => (
-                <div key={c.title} style={{ display: "flex", alignItems: "center", gap: 16, background: "white", border: `1px solid ${BORDER}`, borderRadius: RADIUS.lg, padding: "20px 22px" }}>
+                <div key={c.title} style={{ display: "flex", alignItems: "center", gap: 14, background: "white", border: `1px solid ${BORDER}`, borderRadius: RADIUS.lg, padding: "16px 18px" }}>
                   <span style={{ width: 42, height: 42, borderRadius: 12, background: c.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     <c.icon size={19} color={TEAL} />
                   </span>
                   <div>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: TEXT_HEADING }}>{c.title}</div>
-                    <div style={{ fontSize: 13, color: TEXT_MUTED, marginTop: 2 }}>{c.body}</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: TEXT_HEADING }}>{c.title}</div>
+                    <div style={{ fontSize: 12.5, color: TEXT_MUTED, marginTop: 2 }}>{c.body}</div>
                   </div>
                 </div>
               ))}
@@ -208,14 +208,14 @@ export default function HomePage() {
           <h2 className={styles.sectionHeading} style={{ ...display, fontWeight: 700, color: NAVY, margin: "0 0 10px" }}>
             Guides &amp; Tools for the Decisions That Matter
           </h2>
-          <p style={{ fontSize: 15, color: TEXT_MUTED, lineHeight: 1.65, maxWidth: 620, margin: "0 0 30px" }}>
+          <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.6, maxWidth: 580, margin: "0 0 22px" }}>
             Plain-English guides to help you understand what things cost and decide without guessing.
           </p>
           <div className={styles.guidesGrid} style={{ display: "grid" }}>
             {GUIDE_COLUMNS.map((col) => (
-              <div key={col.heading} style={{ background: "white", border: `1px solid ${BORDER}`, borderRadius: RADIUS.lg, padding: 28 }}>
-                <h3 style={{ fontSize: 16, fontWeight: 800, color: TEXT_HEADING, margin: "0 0 16px" }}>{col.heading}</h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: 11, fontSize: 14, fontWeight: 600 }}>
+              <div key={col.heading} style={{ background: "white", border: `1px solid ${BORDER}`, borderRadius: RADIUS.lg, padding: 22 }}>
+                <h3 style={{ fontSize: 15, fontWeight: 800, color: TEXT_HEADING, margin: "0 0 12px" }}>{col.heading}</h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: 9, fontSize: 13, fontWeight: 600 }}>
                   {col.links.map((l, i) => (
                     <Link key={i} href={l.href} style={{ color: TEAL, textDecoration: "none" }}>{l.label}</Link>
                   ))}
@@ -231,7 +231,7 @@ export default function HomePage() {
             <h2 className={styles.sectionHeading} style={{ ...display, fontWeight: 700, color: NAVY, margin: "0 0 10px", textAlign: "center" }}>
               Stamp Duty &amp; Land Transaction Tax calculator
             </h2>
-            <p style={{ fontSize: 15, color: TEXT_MUTED, lineHeight: 1.65, margin: "0 0 30px", textAlign: "center" }}>
+            <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.6, margin: "0 0 22px", textAlign: "center" }}>
               Work out roughly how much tax you&apos;ll pay on a property in England or Wales, before you compare
               conveyancing quotes.
             </p>
@@ -246,13 +246,13 @@ export default function HomePage() {
           <h2 className={styles.sectionHeading} style={{ ...display, fontWeight: 700, color: NAVY, margin: "0 0 22px" }}>What movers say</h2>
           <div className={styles.testimonialsGrid} style={{ display: "grid" }}>
             {TESTIMONIALS.map((t) => (
-              <div key={t.author} style={{ background: "white", border: `1px solid ${BORDER}`, borderRadius: RADIUS.lg, padding: 24 }}>
+              <div key={t.author} style={{ background: "white", border: `1px solid ${BORDER}`, borderRadius: RADIUS.lg, padding: 20 }}>
                 <div style={{ display: "flex", gap: 3, marginBottom: 10 }}>
                   {Array.from({ length: 5 }).map((_, i) => (
                     <StarIcon key={i} size={12} color={GOLD} />
                   ))}
                 </div>
-                <p style={{ fontSize: 14, color: TEXT_MUTED, lineHeight: 1.6, margin: "0 0 16px" }}>&quot;{t.quote}&quot;</p>
+                <p style={{ fontSize: 13, color: TEXT_MUTED, lineHeight: 1.55, margin: "0 0 12px" }}>&quot;{t.quote}&quot;</p>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <div style={{ width: 32, height: 32, borderRadius: "50%", background: ICON_BADGE_BG, color: TEAL, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800 }}>
                     {initials(t.author)}
@@ -273,8 +273,8 @@ export default function HomePage() {
           <div className={styles.locationsGrid} style={{ display: "grid" }}>
             {LOCATIONS.map((loc) => (
               <div key={loc.slug}>
-                <div style={{ fontSize: 15, fontWeight: 800, color: TEXT_HEADING, marginBottom: 10 }}>{loc.city}</div>
-                <Link href={`/locations/${loc.slug}`} style={{ display: "block", fontSize: 14, color: TEXT_MUTED, textDecoration: "none" }}>
+                <div style={{ fontSize: 14, fontWeight: 800, color: TEXT_HEADING, marginBottom: 8 }}>{loc.city}</div>
+                <Link href={`/locations/${loc.slug}`} style={{ display: "block", fontSize: 13, color: TEXT_MUTED, textDecoration: "none" }}>
                   Conveyancing solicitors {loc.city}
                 </Link>
               </div>
@@ -285,11 +285,11 @@ export default function HomePage() {
         {/* CTA BAND */}
         <section className={styles.sectionPad} style={{ textAlign: "center", background: GRADIENT_TEAL }}>
           <h2 className={styles.ctaHeading} style={{ ...display, fontWeight: 700, color: "white", margin: "0 0 14px" }}>See your quotes in about a minute</h2>
-          <p style={{ fontSize: 15, color: "oklch(0.9 0.03 292)", margin: "0 0 30px" }}>Free to compare, no obligation, and no sales calls afterwards.</p>
+          <p style={{ fontSize: 14, color: "oklch(0.9 0.03 292)", margin: "0 0 22px" }}>Free to compare, no obligation, and no sales calls afterwards.</p>
           <Link
             href="/get-a-quote"
             className="cta-button"
-            style={{ display: "inline-block", background: GRADIENT_CTA, boxShadow: SHADOW.lg, color: NAVY, fontWeight: 800, fontSize: 15, padding: "16px 36px", borderRadius: RADIUS.pill, textDecoration: "none" }}
+            style={{ display: "inline-block", background: GRADIENT_CTA, boxShadow: SHADOW.lg, color: NAVY, fontWeight: 800, fontSize: 14, padding: "13px 28px", borderRadius: RADIUS.pill, textDecoration: "none" }}
           >
             Get my quotes →
           </Link>
