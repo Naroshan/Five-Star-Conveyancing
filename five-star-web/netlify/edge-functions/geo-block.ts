@@ -1,9 +1,17 @@
-// Five Star Conveyancing — geo-restrict the whole site to the United
-// Kingdom, per explicit client instruction: the business only handles
-// England & Wales conveyancing, so visitors from outside the UK are
-// blocked entirely (Scotland/Northern Ireland are deliberately still
-// allowed even though the service doesn't cover their conveyancing law —
-// confirmed with the client).
+// Five Star Conveyancing — geo-restrict the whole site to England & Wales
+// only, per explicit client instruction: the business only handles
+// England & Wales conveyancing, so visitors from anywhere else — including
+// Scotland, Northern Ireland, and every country outside the UK — are
+// blocked entirely.
+//
+// Country-level geolocation (context.geo.country.code) separates the UK
+// from the rest of the world; a GB visitor is then further checked against
+// context.geo.subdivision.code (ISO 3166-2: ENG/WLS/SCT/NIR) to distinguish
+// England/Wales from Scotland/Northern Ireland. Subdivision data is
+// coarser and less reliable than country-level data, so a GB visitor with
+// no subdivision code at all is allowed through rather than blocked — the
+// fail-open principle below still applies at that finer resolution: only
+// an explicit SCT/NIR reading blocks a GB visitor.
 //
 // This is a native Netlify Edge Function, not Next.js middleware/proxy —
 // deliberately, after a real non-UK visitor (Ghana) reached the site
@@ -31,14 +39,20 @@ import type { Context } from "@netlify/edge-functions";
 const CRAWLER_USER_AGENT_PATTERN =
   /googlebot|bingbot|duckduckbot|slurp|yandexbot|baiduspider|applebot|facebookexternalhit|twitterbot|linkedinbot/i;
 
+const BLOCKED_GB_SUBDIVISIONS = new Set(["SCT", "NIR"]);
+
 async function geoBlock(request: Request, context: Context) {
   const userAgent = request.headers.get("user-agent") ?? "";
   const countryCode = context.geo?.country?.code;
+  const subdivisionCode = context.geo?.subdivision?.code;
 
   // TEMPORARY diagnostic — visible in browser devtools (Network tab -> any
   // request -> Response Headers) — confirms what Netlify's edge is
   // actually detecting for a given request. Remove once confirmed working.
-  const debugHeaders = { "x-debug-geo-country": countryCode ?? "undefined" };
+  const debugHeaders = {
+    "x-debug-geo-country": countryCode ?? "undefined",
+    "x-debug-geo-subdivision": subdivisionCode ?? "undefined",
+  };
 
   if (CRAWLER_USER_AGENT_PATTERN.test(userAgent)) {
     const response = await context.next();
@@ -46,13 +60,17 @@ async function geoBlock(request: Request, context: Context) {
     return response;
   }
 
-  if (!countryCode || countryCode === "GB") {
+  const isOutsideGb = countryCode !== undefined && countryCode !== "GB";
+  const isBlockedGbRegion =
+    countryCode === "GB" && subdivisionCode !== undefined && BLOCKED_GB_SUBDIVISIONS.has(subdivisionCode);
+
+  if (!isOutsideGb && !isBlockedGbRegion) {
     const response = await context.next();
     for (const [k, v] of Object.entries(debugHeaders)) response.headers.set(k, v);
     return response;
   }
 
-  return new Response("This site is only available to visitors in the United Kingdom.", {
+  return new Response("This site is only available to visitors in England and Wales.", {
     status: 451,
     headers: { "content-type": "text/plain", ...debugHeaders },
   });

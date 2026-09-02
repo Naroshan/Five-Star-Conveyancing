@@ -23,7 +23,7 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Geo-restricts the whole site to the United Kingdom — see
+# Geo-restricts the whole site to England & Wales only — see
 # five-star-web/netlify/edge-functions/geo-block.ts for the full reasoning
 # (deliberately a native Netlify Edge Function reading Context.geo
 # directly, not Next.js middleware/proxy, after an earlier middleware-based
