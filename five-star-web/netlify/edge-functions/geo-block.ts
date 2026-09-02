@@ -46,18 +46,8 @@ async function geoBlock(request: Request, context: Context) {
   const countryCode = context.geo?.country?.code;
   const subdivisionCode = context.geo?.subdivision?.code;
 
-  // TEMPORARY diagnostic — visible in browser devtools (Network tab -> any
-  // request -> Response Headers) — confirms what Netlify's edge is
-  // actually detecting for a given request. Remove once confirmed working.
-  const debugHeaders = {
-    "x-debug-geo-country": countryCode ?? "undefined",
-    "x-debug-geo-subdivision": subdivisionCode ?? "undefined",
-  };
-
   if (CRAWLER_USER_AGENT_PATTERN.test(userAgent)) {
-    const response = await context.next();
-    for (const [k, v] of Object.entries(debugHeaders)) response.headers.set(k, v);
-    return response;
+    return context.next();
   }
 
   const isOutsideGb = countryCode !== undefined && countryCode !== "GB";
@@ -65,14 +55,12 @@ async function geoBlock(request: Request, context: Context) {
     countryCode === "GB" && subdivisionCode !== undefined && BLOCKED_GB_SUBDIVISIONS.has(subdivisionCode);
 
   if (!isOutsideGb && !isBlockedGbRegion) {
-    const response = await context.next();
-    for (const [k, v] of Object.entries(debugHeaders)) response.headers.set(k, v);
-    return response;
+    return context.next();
   }
 
   return new Response("This site is only available to visitors in England and Wales.", {
     status: 451,
-    headers: { "content-type": "text/plain", ...debugHeaders },
+    headers: { "content-type": "text/plain" },
   });
 }
 

@@ -36,7 +36,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "test": "vitest run",
-    "test:integration": "vitest run --pool=threads --poolOptions.threads.singleThread tests/repository.integration.test.ts tests/api.integration.test.ts tests/admin.integration.test.ts tests/admin-bands-disbursements.integration.test.ts tests/auth.integration.test.ts",
+    "test:integration": "vitest run --no-file-parallelism tests/repository.integration.test.ts tests/api.integration.test.ts tests/admin.integration.test.ts tests/admin-bands-disbursements.integration.test.ts tests/auth.integration.test.ts",
     "typecheck": "tsc --noEmit",
     "import:ackroyd-legal": "tsx scripts/import-ackroyd-legal.ts",
     "import:5star-fee-scale": "tsx scripts/import-5star-fee-scale.ts",

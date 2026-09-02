@@ -1,9 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { HeroTabs } from "@/components/HeroTabs";
 import { SdltCalculator } from "@/components/SdltCalculator";
 import { LOCATIONS } from "@/lib/locations";
+import { GUIDES } from "@/lib/guides";
 import {
   NAVY,
   TEAL,
@@ -49,25 +51,17 @@ const ABOUT_CARDS = [
 const GUIDE_COLUMNS = [
   {
     heading: "Fees & costs",
-    links: [
-      { href: "/fees-explained", label: "How conveyancing fees work" },
-      { href: "/fees-explained", label: "What are disbursements?" },
-      { href: "/fees-explained", label: "VAT on legal fees" },
-    ],
+    links: [{ href: "/fees-explained", label: "How fees, VAT and disbursements work" }],
   },
   {
-    heading: "Cost guides",
-    links: [
-      { href: "/guides", label: "Conveyancing fees & costs" },
-      { href: "/guides", label: "Solicitor fees when buying" },
-      { href: "/guides", label: "Solicitor fees when selling" },
-    ],
+    heading: "Guides",
+    links: GUIDES.map((g) => ({ href: `/guides/${g.slug}`, label: g.title })),
   },
   {
-    heading: "Other helpful guides",
+    heading: "Other helpful tools",
     links: [
-      { href: "/guides", label: "What is a conveyancing search?" },
-      { href: "/guides", label: "Leasehold vs freehold" },
+      { href: "/sdlt-calculator", label: "Stamp Duty & LTT calculator" },
+      { href: "/faq", label: "Common questions answered" },
       { href: "/how-it-works", label: "How the comparison works" },
     ],
   },
@@ -78,6 +72,12 @@ const TESTIMONIALS = [
   { quote: "Three quotes in two minutes, picked the clearest one. Simple.", author: "David O.", role: "Home mover" },
   { quote: "No sales calls afterwards. Would use again for remortgaging.", author: "Priya K.", role: "Remortgaging" },
 ];
+
+export const metadata: Metadata = {
+  title: "Compare Conveyancing Quotes | Five Star Conveyancing",
+  description:
+    "Compare itemised conveyancing quotes from SRA & CLC regulated solicitors across England and Wales — legal fee, VAT and disbursements shown separately, free and with no obligation.",
+};
 
 function initials(name: string) {
   return name.split(" ").map((part) => part[0]).join("").toUpperCase();

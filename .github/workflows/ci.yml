@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  quote-engine:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: five_star_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    defaults:
+      run:
+        working-directory: quote-engine
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: quote-engine/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - run: npm run typecheck
+      - run: npm test
+      - name: Apply schema
+        run: psql -h localhost -U postgres -d five_star_ci -f schema.sql
+        env:
+          PGPASSWORD: postgres
+      - run: npm run test:integration
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/five_star_ci
+
+  five-star-web:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: five_star_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    defaults:
+      run:
+        working-directory: five-star-web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: five-star-web/package-lock.json
+      # Depends on the committed, pre-built quote-engine tarball, not a
+      # workspace/build step — see CLAUDE.md ("Why the tarball is committed").
+      - run: npm ci
+      - run: npm run lint
+      - run: npx tsc --noEmit
+      - name: Apply schema
+        run: psql -h localhost -U postgres -d five_star_ci -f ../quote-engine/schema.sql
+        env:
+          PGPASSWORD: postgres
+      - run: npm test -- --run
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/five_star_ci
+      - run: npm run build
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/five_star_ci

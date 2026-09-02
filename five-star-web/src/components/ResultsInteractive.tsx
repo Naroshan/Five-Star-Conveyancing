@@ -5,6 +5,7 @@ import { QuoteResultsList } from "five-star-conveyancing-quote-engine/components
 import type { PublicQuoteResult } from "five-star-conveyancing-quote-engine/api/publicResult";
 import { CREAM, BORDER, NAVY, TEAL, TEXT_HEADING, TEXT_MUTED, GRADIENT_CTA, ERROR, RADIUS, SHADOW } from "@/lib/theme";
 import { UserIcon, MailIcon, PhoneIcon } from "@/components/icons";
+import { hasAnalyticsConsent } from "@/components/CookieConsent";
 
 // Formspree form ID for lead notifications — same form used by the Contact
 // page (ContactForm.tsx) and by quote generation (GetAQuoteForm.tsx); all
@@ -23,9 +24,20 @@ export function ResultsInteractive({ quoteReference, results }: { quoteReference
   const [isSendingEmailQuote, setIsSendingEmailQuote] = useState(false);
   const [emailQuoteError, setEmailQuoteError] = useState<string | null>(null);
 
-  // Live chat isn't wired up yet — gives visible feedback rather than doing nothing.
-  function stubAction(action: string) {
-    setActionMessage(`"${action}" isn't wired up yet in this build — see the project README.`);
+  // Opens the LiveChat widget already loaded site-wide (see layout.tsx). The
+  // widget's own script defines window.LiveChatWidget lazily — on the very
+  // rare chance it hasn't finished loading yet, fall back to visible
+  // feedback rather than doing nothing.
+  function handleSpeakToAdviser() {
+    const widget = (window as unknown as { LiveChatWidget?: { call: (method: string) => void } }).LiveChatWidget;
+    if (widget) {
+      widget.call("maximize");
+      return;
+    }
+    const message = hasAnalyticsConsent()
+      ? "Live chat is still loading — please try again in a moment."
+      : "Live chat needs cookies accepted first — use the banner at the bottom of the page, or call us instead.";
+    setActionMessage(message);
     setTimeout(() => setActionMessage(null), 4000);
   }
 
@@ -287,7 +299,7 @@ export function ResultsInteractive({ quoteReference, results }: { quoteReference
         onSelect={handleSelect}
         onEmailQuote={handleEmailQuote}
         onSaveQuote={handleSaveQuote}
-        onSpeakToAdviser={() => stubAction("Speak to an adviser")}
+        onSpeakToAdviser={handleSpeakToAdviser}
       />
     </>
   );
