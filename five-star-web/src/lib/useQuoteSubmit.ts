@@ -17,6 +17,11 @@ export interface QuoteSubmitBody {
   freeholdOrLeasehold: "freehold" | "leasehold";
   mortgageInvolved: boolean;
   flags: Record<string, boolean>;
+  // Optional here — the homepage's condensed widget doesn't collect contact
+  // details up front, only the full get-a-quote form does. Either way this
+  // is what actually persists the lead's contact details in the database
+  // (see quote-engine/src/api/createQuote.ts); it's not just for notification.
+  contact?: { name: string; email: string; phone: string };
 }
 
 // Shared by the full get-a-quote form and the homepage hero widget — both

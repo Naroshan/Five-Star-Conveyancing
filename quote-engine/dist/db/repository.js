@@ -160,6 +160,9 @@ export async function saveQuote(db, params) {
         client_answers: JSON.stringify(params.clientAnswers),
         expiry_at: params.expiryAt,
         status: 'active',
+        client_name: params.contact?.name ?? null,
+        client_email: params.contact?.email ?? null,
+        client_phone: params.contact?.phone ?? null,
     })
         .returning('quote_id')
         .executeTakeFirstOrThrow();
@@ -200,6 +203,9 @@ export async function getQuoteByReference(db, quoteReference) {
         clientAnswers: parseJsonColumn(quoteRow.client_answers),
         expiryAt: quoteRow.expiry_at,
         status: quoteRow.status,
+        contact: quoteRow.client_name && quoteRow.client_email && quoteRow.client_phone
+            ? { name: quoteRow.client_name, email: quoteRow.client_email, phone: quoteRow.client_phone }
+            : null,
         results: resultRows.map((r) => ({
             firmId: r.firm_id,
             eligibilityStatus: r.eligibility_status,
@@ -214,6 +220,29 @@ export async function getQuoteByReference(db, quoteReference) {
         })),
     };
 }
+/**
+ * Quotes that have contact details attached — i.e. actual leads, not just
+ * anonymous quote requests. Ordered newest first. This is the durable record
+ * `lead_management_user` exists to manage (see admin/leadAdmin.ts) — the
+ * Formspree notification is a secondary, best-effort alert, not the record.
+ */
+export async function listRecentLeads(db, limit = 200) {
+    const rows = await db
+        .selectFrom('quotes')
+        .selectAll()
+        .where('client_name', 'is not', null)
+        .orderBy('created_at', 'desc')
+        .limit(limit)
+        .execute();
+    return rows.map((r) => ({
+        quoteReference: r.quote_reference,
+        transactionType: r.transaction_type,
+        status: r.status,
+        contact: { name: r.client_name, email: r.client_email, phone: r.client_phone },
+        selectedFirmId: r.selected_firm_id,
+        createdAt: r.created_at,
+    }));
+}
 export async function markQuoteExpired(db, quoteId) {
     await db.updateTable('quotes').set({ status: 'expired' }).where('quote_id', '=', quoteId).where('status', '=', 'active').execute();
 }
@@ -224,10 +253,20 @@ export async function markQuoteExpired(db, quoteId) {
  * API handler, which already knows the eligibility/expiry rules) can tell
  * "already converted" apart from "not found" apart from "succeeded".
  */
-export async function selectQuoteFirm(db, quoteId, firmId) {
+export async function selectQuoteFirm(db, quoteId, firmId, contact) {
     const result = await db
         .updateTable('quotes')
-        .set({ selected_firm_id: firmId, selected_at: new Date(), status: 'converted' })
+        .set({
+        selected_firm_id: firmId,
+        selected_at: new Date(),
+        status: 'converted',
+        // Overwrites whatever was captured at quote creation (if anything) —
+        // this is the client's most recent, and most deliberate, statement of
+        // their own contact details, so it should win.
+        client_name: contact.name,
+        client_email: contact.email,
+        client_phone: contact.phone,
+    })
         .where('quote_id', '=', quoteId)
         .where('status', '=', 'active')
         .executeTakeFirst();

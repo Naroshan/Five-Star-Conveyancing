@@ -17,6 +17,7 @@ import type {
   FirmRestriction,
   FirmRuleSet,
   FirmTransactionType,
+  QuoteContact,
   QuoteResult,
   TransactionType,
 } from '../types.js';
@@ -192,7 +193,14 @@ export async function loadSdltBands(
 
 export async function saveQuote(
   db: Kysely<Database>,
-  params: { quoteReference: string; transactionType: TransactionType; clientAnswers: ClientAnswers; expiryAt: Date }
+  params: {
+    quoteReference: string;
+    transactionType: TransactionType;
+    clientAnswers: ClientAnswers;
+    expiryAt: Date;
+    /** Only present when collected up front (the full get-a-quote form); the homepage's condensed widget doesn't collect it until firm selection. */
+    contact?: QuoteContact;
+  }
 ): Promise<string> {
   const row = await db
     .insertInto('quotes')
@@ -202,6 +210,9 @@ export async function saveQuote(
       client_answers: JSON.stringify(params.clientAnswers),
       expiry_at: params.expiryAt,
       status: 'active',
+      client_name: params.contact?.name ?? null,
+      client_email: params.contact?.email ?? null,
+      client_phone: params.contact?.phone ?? null,
     })
     .returning('quote_id')
     .executeTakeFirstOrThrow();
@@ -239,6 +250,7 @@ export async function getQuoteByReference(
   clientAnswers: ClientAnswers;
   expiryAt: Date;
   status: 'active' | 'expired' | 'converted';
+  contact: QuoteContact | null;
   results: QuoteResult[];
 } | null> {
   const quoteRow = await db
@@ -256,6 +268,10 @@ export async function getQuoteByReference(
     clientAnswers: parseJsonColumn<ClientAnswers>(quoteRow.client_answers),
     expiryAt: quoteRow.expiry_at,
     status: quoteRow.status,
+    contact:
+      quoteRow.client_name && quoteRow.client_email && quoteRow.client_phone
+        ? { name: quoteRow.client_name, email: quoteRow.client_email, phone: quoteRow.client_phone }
+        : null,
     results: resultRows.map((r) => ({
       firmId: r.firm_id,
       eligibilityStatus: r.eligibility_status,
@@ -271,6 +287,40 @@ export async function getQuoteByReference(
   };
 }
 
+export interface LeadSummary {
+  quoteReference: string;
+  transactionType: TransactionType;
+  status: 'active' | 'expired' | 'converted';
+  contact: QuoteContact;
+  selectedFirmId: string | null;
+  createdAt: Date;
+}
+
+/**
+ * Quotes that have contact details attached — i.e. actual leads, not just
+ * anonymous quote requests. Ordered newest first. This is the durable record
+ * `lead_management_user` exists to manage (see admin/leadAdmin.ts) — the
+ * Formspree notification is a secondary, best-effort alert, not the record.
+ */
+export async function listRecentLeads(db: Kysely<Database>, limit = 200): Promise<LeadSummary[]> {
+  const rows = await db
+    .selectFrom('quotes')
+    .selectAll()
+    .where('client_name', 'is not', null)
+    .orderBy('created_at', 'desc')
+    .limit(limit)
+    .execute();
+
+  return rows.map((r) => ({
+    quoteReference: r.quote_reference,
+    transactionType: r.transaction_type as TransactionType,
+    status: r.status,
+    contact: { name: r.client_name!, email: r.client_email!, phone: r.client_phone! },
+    selectedFirmId: r.selected_firm_id,
+    createdAt: r.created_at as unknown as Date,
+  }));
+}
+
 export async function markQuoteExpired(db: Kysely<Database>, quoteId: string): Promise<void> {
   await db.updateTable('quotes').set({ status: 'expired' }).where('quote_id', '=', quoteId).where('status', '=', 'active').execute();
 }
@@ -282,10 +332,25 @@ export async function markQuoteExpired(db: Kysely<Database>, quoteId: string): P
  * API handler, which already knows the eligibility/expiry rules) can tell
  * "already converted" apart from "not found" apart from "succeeded".
  */
-export async function selectQuoteFirm(db: Kysely<Database>, quoteId: string, firmId: string): Promise<{ updated: boolean }> {
+export async function selectQuoteFirm(
+  db: Kysely<Database>,
+  quoteId: string,
+  firmId: string,
+  contact: QuoteContact
+): Promise<{ updated: boolean }> {
   const result = await db
     .updateTable('quotes')
-    .set({ selected_firm_id: firmId, selected_at: new Date(), status: 'converted' })
+    .set({
+      selected_firm_id: firmId,
+      selected_at: new Date(),
+      status: 'converted',
+      // Overwrites whatever was captured at quote creation (if anything) —
+      // this is the client's most recent, and most deliberate, statement of
+      // their own contact details, so it should win.
+      client_name: contact.name,
+      client_email: contact.email,
+      client_phone: contact.phone,
+    })
     .where('quote_id', '=', quoteId)
     .where('status', '=', 'active')
     .executeTakeFirst();

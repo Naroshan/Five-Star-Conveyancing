@@ -15,6 +15,11 @@ export interface ClientAnswers {
     lenderId?: string;
     flags: Record<string, boolean>;
 }
+export interface QuoteContact {
+    name: string;
+    email: string;
+    phone: string;
+}
 export type AdminRole = 'super_admin' | 'content_editor' | 'fee_administrator' | 'compliance_reviewer' | 'firm_user' | 'lead_management_user' | 'reporting_user';
 export interface AdminUser {
     userId: string;

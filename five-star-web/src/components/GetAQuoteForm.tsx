@@ -165,6 +165,7 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
       freeholdOrLeasehold,
       mortgageInvolved: mortgageFlag,
       flags: submittedFlags,
+      contact: { name, email, phone },
     });
   }
 

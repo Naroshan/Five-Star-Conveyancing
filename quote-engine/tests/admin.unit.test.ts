@@ -52,6 +52,14 @@ describe('hasPermission', () => {
       expect(hasPermission(user, 'fee_rules:create')).toBe(false);
     }
   });
+
+  it('grants leads:view only to super_admin and lead_management_user', () => {
+    expect(hasPermission(makeUser('super_admin'), 'leads:view')).toBe(true);
+    expect(hasPermission(makeUser('lead_management_user'), 'leads:view')).toBe(true);
+    for (const role of ['fee_administrator', 'compliance_reviewer', 'content_editor', 'firm_user', 'reporting_user'] as const) {
+      expect(hasPermission(makeUser(role), 'leads:view')).toBe(false);
+    }
+  });
 });
 
 describe('assertPermission', () => {

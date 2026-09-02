@@ -1,6 +1,6 @@
 {
   "name": "five-star-conveyancing-quote-engine",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Database-driven conveyancing quote calculation engine, repository, API, admin workflow, and results UI (Stage 6, Modules 1-7)",
   "type": "module",
   "main": "./dist/types.js",
@@ -24,6 +24,7 @@
     "./admin/feeRuleAdmin": "./dist/admin/feeRuleAdmin.js",
     "./admin/feeValueBandAdmin": "./dist/admin/feeValueBandAdmin.js",
     "./admin/disbursementRuleAdmin": "./dist/admin/disbursementRuleAdmin.js",
+    "./admin/leadAdmin": "./dist/admin/leadAdmin.js",
     "./auth/password": "./dist/auth/password.js",
     "./auth/totp": "./dist/auth/totp.js",
     "./auth/session": "./dist/auth/session.js",

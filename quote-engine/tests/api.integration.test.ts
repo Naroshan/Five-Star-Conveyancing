@@ -273,40 +273,63 @@ if (connectionString) {
       });
     }
 
+    const validContact = { name: 'Jane Doe', email: 'jane@example.com', phone: '07700 900000' };
+
     describe('selectFirmHandler ("Select this firm" lead handoff)', () => {
-      it('records the selection and flips the quote to converted', async () => {
+      it('records the selection, flips the quote to converted, and persists the contact details', async () => {
         const created = await (await createQuoteHandler(postRequest(validBody), { db })).json();
         const firmId = created.results[0].firm.firmId;
 
-        const response = await selectFirmHandler(created.quoteReference, selectRequest({ firmId }), db);
+        const response = await selectFirmHandler(created.quoteReference, selectRequest({ firmId, contact: validContact }), db);
         expect(response.status).toBe(200);
         const body = await response.json();
         expect(body).toEqual({ quoteReference: created.quoteReference, selectedFirmId: firmId, status: 'converted' });
 
         const row = await db
           .selectFrom('quotes')
-          .select(['status', 'selected_firm_id'])
+          .select(['status', 'selected_firm_id', 'client_name', 'client_email', 'client_phone'])
           .where('quote_reference', '=', created.quoteReference)
           .executeTakeFirstOrThrow();
         expect(row.status).toBe('converted');
         expect(row.selected_firm_id).toBe(firmId);
+        expect(row.client_name).toBe(validContact.name);
+        expect(row.client_email).toBe(validContact.email);
+        expect(row.client_phone).toBe(validContact.phone);
       });
 
       it('returns 404 for an unknown reference', async () => {
-        const response = await selectFirmHandler('FSC-DOES-NOT-EXIST', selectRequest({ firmId: '11111111-1111-1111-1111-111111111111' }), db);
+        const response = await selectFirmHandler(
+          'FSC-DOES-NOT-EXIST',
+          selectRequest({ firmId: '11111111-1111-1111-1111-111111111111', contact: validContact }),
+          db
+        );
         expect(response.status).toBe(404);
       });
 
       it('rejects a firmId that is not an eligible result on this quote', async () => {
         const created = await (await createQuoteHandler(postRequest(validBody), { db })).json();
-        const response = await selectFirmHandler(created.quoteReference, selectRequest({ firmId: '99999999-9999-9999-9999-999999999999' }), db);
+        const response = await selectFirmHandler(
+          created.quoteReference,
+          selectRequest({ firmId: '99999999-9999-9999-9999-999999999999', contact: validContact }),
+          db
+        );
         expect(response.status).toBe(400);
       });
 
       it('rejects a missing or non-string firmId', async () => {
         const created = await (await createQuoteHandler(postRequest(validBody), { db })).json();
-        expect((await selectFirmHandler(created.quoteReference, selectRequest({}), db)).status).toBe(400);
-        expect((await selectFirmHandler(created.quoteReference, selectRequest({ firmId: 42 }), db)).status).toBe(400);
+        expect((await selectFirmHandler(created.quoteReference, selectRequest({ contact: validContact }), db)).status).toBe(400);
+        expect((await selectFirmHandler(created.quoteReference, selectRequest({ firmId: 42, contact: validContact }), db)).status).toBe(400);
+      });
+
+      it('rejects a missing or invalid contact', async () => {
+        const created = await (await createQuoteHandler(postRequest(validBody), { db })).json();
+        const firmId = created.results[0].firm.firmId;
+        expect((await selectFirmHandler(created.quoteReference, selectRequest({ firmId }), db)).status).toBe(400);
+        expect(
+          (await selectFirmHandler(created.quoteReference, selectRequest({ firmId, contact: { name: '', email: 'not-an-email', phone: '' } }), db))
+            .status
+        ).toBe(400);
       });
 
       it('rejects malformed JSON with 400', async () => {
@@ -323,10 +346,10 @@ if (connectionString) {
         const created = await (await createQuoteHandler(postRequest(validBody), { db })).json();
         const firmId = created.results[0].firm.firmId;
 
-        const first = await selectFirmHandler(created.quoteReference, selectRequest({ firmId }), db);
+        const first = await selectFirmHandler(created.quoteReference, selectRequest({ firmId, contact: validContact }), db);
         expect(first.status).toBe(200);
 
-        const second = await selectFirmHandler(created.quoteReference, selectRequest({ firmId }), db);
+        const second = await selectFirmHandler(created.quoteReference, selectRequest({ firmId, contact: validContact }), db);
         expect(second.status).toBe(409);
       });
 
@@ -335,8 +358,37 @@ if (connectionString) {
         const firmId = created.results[0].firm.firmId;
         await sql`update quotes set expiry_at = now() - interval '1 day' where quote_reference = ${created.quoteReference}`.execute(db);
 
-        const response = await selectFirmHandler(created.quoteReference, selectRequest({ firmId }), db);
+        const response = await selectFirmHandler(created.quoteReference, selectRequest({ firmId, contact: validContact }), db);
         expect(response.status).toBe(409);
+      });
+    });
+
+    describe('createQuoteHandler contact details', () => {
+      it('persists contact details when provided at quote creation', async () => {
+        const created = await (
+          await createQuoteHandler(postRequest({ ...validBody, contact: validContact }), { db })
+        ).json();
+        const row = await db
+          .selectFrom('quotes')
+          .select(['client_name', 'client_email', 'client_phone'])
+          .where('quote_reference', '=', created.quoteReference)
+          .executeTakeFirstOrThrow();
+        expect(row.client_name).toBe(validContact.name);
+        expect(row.client_email).toBe(validContact.email);
+        expect(row.client_phone).toBe(validContact.phone);
+      });
+
+      it('allows quote creation without contact details (homepage widget flow)', async () => {
+        const response = await createQuoteHandler(postRequest(validBody), { db });
+        expect(response.status).toBe(201);
+      });
+
+      it('rejects invalid contact details at quote creation', async () => {
+        const response = await createQuoteHandler(
+          postRequest({ ...validBody, contact: { name: '', email: 'not-an-email', phone: '' } }),
+          { db }
+        );
+        expect(response.status).toBe(400);
       });
     });
   });

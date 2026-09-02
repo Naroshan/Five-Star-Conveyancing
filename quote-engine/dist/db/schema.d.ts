@@ -108,6 +108,9 @@ export interface QuotesTable {
     status: 'active' | 'expired' | 'converted';
     selected_firm_id: string | null;
     selected_at: Timestamp | null;
+    client_name: string | null;
+    client_email: string | null;
+    client_phone: string | null;
 }
 export interface QuoteResultsTable {
     result_id: Generated<string>;

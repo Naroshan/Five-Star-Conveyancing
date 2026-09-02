@@ -68,3 +68,20 @@ export type ValidatedClientAnswers = z.infer<typeof clientAnswersSchema>;
 export function validateClientAnswers(body: unknown) {
   return clientAnswersSchema.safeParse(body);
 }
+
+// The client's own contact details — see api/createQuote.ts and
+// api/selectFirm.ts for where this is collected and persisted. Phone
+// validation is deliberately loose (just "long enough to plausibly be a
+// number") rather than a strict UK-format regex, to avoid rejecting real
+// numbers (extensions, spaces, leading +44) over a cosmetic format check.
+export const contactSchema = z.object({
+  name: z.string().trim().min(1, 'Name is required').max(200),
+  email: z.string().trim().email('Enter a valid email address').max(320),
+  phone: z.string().trim().min(5, 'Enter a valid phone number').max(30),
+});
+
+export type ValidatedContact = z.infer<typeof contactSchema>;
+
+export function validateContact(body: unknown) {
+  return contactSchema.safeParse(body);
+}

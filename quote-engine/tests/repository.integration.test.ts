@@ -10,7 +10,15 @@
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 import { sql } from 'kysely';
 import { createDb } from '../src/db/client.js';
-import { getQuoteByReference, loadActiveFirmRuleSets, loadFirmRuleSet, saveQuote, saveQuoteResults } from '../src/db/repository.js';
+import {
+  getQuoteByReference,
+  listRecentLeads,
+  loadActiveFirmRuleSets,
+  loadFirmRuleSet,
+  saveQuote,
+  saveQuoteResults,
+  selectQuoteFirm,
+} from '../src/db/repository.js';
 import { calculateQuoteForFirm } from '../src/quoteEngine.js';
 import type { ClientAnswers } from '../src/types.js';
 
@@ -230,6 +238,68 @@ if (connectionString) {
     expect(retrieved!.results[0].eligibilityStatus).toBe('excluded_with_reason');
     expect(retrieved!.results[0].totalEstimate).toBeNull();
     expect(retrieved!.results[0].exclusionReason).toContain('£500,000');
+  });
+
+  const contactAnswers: ClientAnswers = {
+    transactionType: 'purchase',
+    postcode: 'TE1 1ST',
+    jurisdiction: 'england',
+    propertyValue: 200_000,
+    freeholdOrLeasehold: 'freehold',
+    mortgageInvolved: true,
+    flags: {},
+  };
+
+  it('has no contact by default, and is not picked up by listRecentLeads', async () => {
+    await saveQuote(db, {
+      quoteReference: 'TEST-QUOTE-REF-003',
+      transactionType: 'purchase',
+      clientAnswers: contactAnswers,
+      expiryAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+
+    const retrieved = await getQuoteByReference(db, 'TEST-QUOTE-REF-003');
+    expect(retrieved!.contact).toBeNull();
+
+    const leads = await listRecentLeads(db);
+    expect(leads.find((l) => l.quoteReference === 'TEST-QUOTE-REF-003')).toBeUndefined();
+  });
+
+  it('persists contact details supplied at creation, and surfaces them via getQuoteByReference and listRecentLeads', async () => {
+    const contact = { name: 'Jane Doe', email: 'jane@example.com', phone: '07700 900000' };
+    await saveQuote(db, {
+      quoteReference: 'TEST-QUOTE-REF-004',
+      transactionType: 'purchase',
+      clientAnswers: contactAnswers,
+      expiryAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      contact,
+    });
+
+    const retrieved = await getQuoteByReference(db, 'TEST-QUOTE-REF-004');
+    expect(retrieved!.contact).toEqual(contact);
+
+    const leads = await listRecentLeads(db);
+    const lead = leads.find((l) => l.quoteReference === 'TEST-QUOTE-REF-004');
+    expect(lead?.contact).toEqual(contact);
+    expect(lead?.status).toBe('active');
+  });
+
+  it('selectQuoteFirm records the contact captured at selection time, overwriting any earlier contact', async () => {
+    const quoteId = await saveQuote(db, {
+      quoteReference: 'TEST-QUOTE-REF-005',
+      transactionType: 'purchase',
+      clientAnswers: contactAnswers,
+      expiryAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      contact: { name: 'Old Name', email: 'old@example.com', phone: '07700 000000' },
+    });
+
+    const newContact = { name: 'New Name', email: 'new@example.com', phone: '07700 111111' };
+    const { updated } = await selectQuoteFirm(db, quoteId, '11111111-1111-1111-1111-111111111111', newContact);
+    expect(updated).toBe(true);
+
+    const retrieved = await getQuoteByReference(db, 'TEST-QUOTE-REF-005');
+    expect(retrieved!.contact).toEqual(newContact);
+    expect(retrieved!.status).toBe('converted');
   });
   });
 } else {

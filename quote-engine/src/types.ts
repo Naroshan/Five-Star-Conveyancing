@@ -36,6 +36,16 @@ export interface ClientAnswers {
   flags: Record<string, boolean>;
 }
 
+// The client's own contact details for a quote — kept separate from
+// ClientAnswers (which is only ever the property/eligibility questions) so
+// the calculation engine, which only ever needs ClientAnswers, never has to
+// know contact details exist.
+export interface QuoteContact {
+  name: string;
+  email: string;
+  phone: string;
+}
+
 export type AdminRole =
   | 'super_admin'
   | 'content_editor'

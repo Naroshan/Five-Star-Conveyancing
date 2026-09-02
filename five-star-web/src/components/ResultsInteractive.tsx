@@ -95,7 +95,7 @@ export function ResultsInteractive({ quoteReference, results }: { quoteReference
       const response = await fetch(`/api/quotes/${quoteReference}/select`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ firmId: pendingFirmId }),
+        body: JSON.stringify({ firmId: pendingFirmId, contact: { name, email, phone } }),
       });
       const data = await response.json();
       if (!response.ok) {

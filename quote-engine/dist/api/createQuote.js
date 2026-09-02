@@ -5,7 +5,7 @@
 // Next.js as a package for testing.
 import { loadActiveFirmRuleSets, loadSdltBands, saveQuote, saveQuoteResults } from '../db/repository.js';
 import { calculateQuotesForFirms } from '../quoteEngine.js';
-import { validateClientAnswers } from './schemas.js';
+import { validateClientAnswers, validateContact } from './schemas.js';
 import { generateQuoteReference } from './reference.js';
 import { toPublicResult } from './publicResult.js';
 const DEFAULT_QUOTE_VALIDITY_DAYS = 30;
@@ -37,6 +37,19 @@ export async function createQuoteHandler(request, deps) {
         return jsonResponse({ error: { message: 'Invalid quote request.', details: parsed.error.flatten() } }, 400);
     }
     const answers = parsed.data;
+    // Contact details are optional here — the homepage's condensed quote
+    // widget doesn't collect them until firm selection (see selectFirm.ts) —
+    // but if the caller does send them (the full get-a-quote form always
+    // does), they must be well-formed.
+    const rawContact = body?.contact;
+    let contact;
+    if (rawContact !== undefined) {
+        const parsedContact = validateContact(rawContact);
+        if (!parsedContact.success) {
+            return jsonResponse({ error: { message: 'Invalid contact details.', details: parsedContact.error.flatten() } }, 400);
+        }
+        contact = parsedContact.data;
+    }
     try {
         const ruleSets = await loadActiveFirmRuleSets(deps.db, answers.transactionType);
         const sdltBands = SDLT_APPLICABLE_TRANSACTION_TYPES.has(answers.transactionType)
@@ -57,6 +70,7 @@ export async function createQuoteHandler(request, deps) {
             transactionType: answers.transactionType,
             clientAnswers: answers,
             expiryAt,
+            contact,
         });
         await saveQuoteResults(deps.db, quoteId, results);
         const firmsById = new Map(ruleSets.map((rs) => [rs.firm.firmId, rs.firm]));

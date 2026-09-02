@@ -34,6 +34,15 @@ async function main() {
   console.log(`Expiry:            ${quote.expiryAt.toISOString()}`);
   console.log(`Transaction type:  ${quote.transactionType}`);
   console.log();
+  console.log('--- Client contact ---');
+  if (quote.contact) {
+    console.log(`Name:              ${quote.contact.name}`);
+    console.log(`Email:             ${quote.contact.email}`);
+    console.log(`Phone:             ${quote.contact.phone}`);
+  } else {
+    console.log('(no contact details on file for this quote)');
+  }
+  console.log();
   console.log('--- Client answers ---');
   console.log(JSON.stringify(quote.clientAnswers, null, 2));
   console.log();

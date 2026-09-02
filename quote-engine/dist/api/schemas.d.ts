@@ -45,3 +45,14 @@ export declare function validateClientAnswers(body: unknown): z.ZodSafeParseResu
     purchasePropertyValue?: number | undefined;
     lenderId?: string | undefined;
 }>;
+export declare const contactSchema: z.ZodObject<{
+    name: z.ZodString;
+    email: z.ZodString;
+    phone: z.ZodString;
+}, z.core.$strip>;
+export type ValidatedContact = z.infer<typeof contactSchema>;
+export declare function validateContact(body: unknown): z.ZodSafeParseResult<{
+    name: string;
+    email: string;
+    phone: string;
+}>;

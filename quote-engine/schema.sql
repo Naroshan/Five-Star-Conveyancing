@@ -161,7 +161,17 @@ create table quotes (
   -- Set together with status = 'converted' when the client picks a firm off
   -- their results ("Select this firm"). Null until then.
   selected_firm_id uuid references firms(firm_id),
-  selected_at timestamptz
+  selected_at timestamptz,
+  -- The client's own contact details — the actual record of who this lead
+  -- is. Nullable because the homepage's condensed quote widget doesn't ask
+  -- for contact details up front (only the full get-a-quote form does); when
+  -- collected later, at firm selection, these columns are updated in place.
+  -- This is deliberately the durable, queryable home for lead contact info
+  -- instead of only a best-effort third-party notification — see
+  -- api/createQuote.ts and api/selectFirm.ts.
+  client_name text,
+  client_email text,
+  client_phone text
 );
 
 create table quote_results (

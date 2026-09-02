@@ -20,7 +20,8 @@ export type Permission =
   | 'disbursements:edit'
   | 'disbursements:submit_for_review'
   | 'disbursements:approve'
-  | 'disbursements:view';
+  | 'disbursements:view'
+  | 'leads:view';
 
 const EDITOR_ACTIONS = ['create', 'edit', 'submit_for_review'] as const;
 const RESOURCES = ['fee_rules', 'fee_bands', 'disbursements'] as const;
@@ -30,7 +31,7 @@ function permissionsFor(resource: (typeof RESOURCES)[number], actions: readonly 
 }
 
 const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
-  super_admin: RESOURCES.flatMap((r) => permissionsFor(r, [...EDITOR_ACTIONS, 'approve', 'view'])),
+  super_admin: [...RESOURCES.flatMap((r) => permissionsFor(r, [...EDITOR_ACTIONS, 'approve', 'view'])), 'leads:view'],
   fee_administrator: RESOURCES.flatMap((r) => permissionsFor(r, [...EDITOR_ACTIONS, 'view'])),
   compliance_reviewer: RESOURCES.flatMap((r) => permissionsFor(r, ['approve', 'view'])),
   content_editor: [],
@@ -40,7 +41,8 @@ const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
   // approve its own change. Which *firm's* data a firm_user may touch is
   // enforced separately by assertOwnFirm, not by this permission table.
   firm_user: RESOURCES.flatMap((r) => permissionsFor(r, [...EDITOR_ACTIONS, 'view'])),
-  lead_management_user: [],
+  // The only role whose entire purpose is viewing leads — see admin/leadAdmin.ts.
+  lead_management_user: ['leads:view'],
   reporting_user: RESOURCES.flatMap((r) => permissionsFor(r, ['view'])),
 };
 

@@ -8,7 +8,7 @@ function permissionsFor(resource, actions) {
     return actions.map((action) => `${resource}:${action}`);
 }
 const ROLE_PERMISSIONS = {
-    super_admin: RESOURCES.flatMap((r) => permissionsFor(r, [...EDITOR_ACTIONS, 'approve', 'view'])),
+    super_admin: [...RESOURCES.flatMap((r) => permissionsFor(r, [...EDITOR_ACTIONS, 'approve', 'view'])), 'leads:view'],
     fee_administrator: RESOURCES.flatMap((r) => permissionsFor(r, [...EDITOR_ACTIONS, 'view'])),
     compliance_reviewer: RESOURCES.flatMap((r) => permissionsFor(r, ['approve', 'view'])),
     content_editor: [],
@@ -18,7 +18,8 @@ const ROLE_PERMISSIONS = {
     // approve its own change. Which *firm's* data a firm_user may touch is
     // enforced separately by assertOwnFirm, not by this permission table.
     firm_user: RESOURCES.flatMap((r) => permissionsFor(r, [...EDITOR_ACTIONS, 'view'])),
-    lead_management_user: [],
+    // The only role whose entire purpose is viewing leads — see admin/leadAdmin.ts.
+    lead_management_user: ['leads:view'],
     reporting_user: RESOURCES.flatMap((r) => permissionsFor(r, ['view'])),
 };
 export function hasPermission(user, permission) {

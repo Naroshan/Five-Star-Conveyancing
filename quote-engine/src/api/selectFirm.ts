@@ -5,6 +5,7 @@
 import type { Kysely } from 'kysely';
 import type { Database } from '../db/schema.js';
 import { getQuoteByReference, selectQuoteFirm } from '../db/repository.js';
+import { validateContact } from './schemas.js';
 
 function jsonResponse(body: unknown, status: number): Response {
   return new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
@@ -27,6 +28,17 @@ export async function selectFirmHandler(reference: string, request: Request, db:
     return jsonResponse({ error: { message: 'firmId is required.' } }, 400);
   }
 
+  // Selecting a firm is the client's clearest statement of intent to be
+  // contacted, so — unlike quote creation — contact details are required
+  // here, not optional. This is what actually lands the lead in the
+  // database rather than depending solely on the best-effort Formspree
+  // notification the frontend also sends.
+  const parsedContact = validateContact((body as { contact?: unknown } | null)?.contact);
+  if (!parsedContact.success) {
+    return jsonResponse({ error: { message: 'Valid name, email and phone are required to select a firm.', details: parsedContact.error.flatten() } }, 400);
+  }
+  const contact = parsedContact.data;
+
   try {
     const quote = await getQuoteByReference(db, reference);
     if (!quote) {
@@ -42,7 +54,7 @@ export async function selectFirmHandler(reference: string, request: Request, db:
       return jsonResponse({ error: { message: 'That firm is not an eligible option on this quote.' } }, 400);
     }
 
-    const { updated } = await selectQuoteFirm(db, quote.quoteId, firmId);
+    const { updated } = await selectQuoteFirm(db, quote.quoteId, firmId, contact);
     if (!updated) {
       // Lost a race with another request (e.g. two tabs) between the checks
       // above and the update — same outward meaning as the active-check above.

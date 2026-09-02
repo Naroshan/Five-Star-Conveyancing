@@ -8,7 +8,7 @@ import type { Kysely } from 'kysely';
 import type { Database } from '../db/schema.js';
 import { loadActiveFirmRuleSets, loadSdltBands, saveQuote, saveQuoteResults } from '../db/repository.js';
 import { calculateQuotesForFirms } from '../quoteEngine.js';
-import { validateClientAnswers } from './schemas.js';
+import { validateClientAnswers, validateContact } from './schemas.js';
 import { generateQuoteReference } from './reference.js';
 import type { RateLimiter } from './rateLimiter.js';
 import { toPublicResult } from './publicResult.js';
@@ -52,6 +52,20 @@ export async function createQuoteHandler(request: Request, deps: CreateQuoteDeps
   }
   const answers = parsed.data;
 
+  // Contact details are optional here — the homepage's condensed quote
+  // widget doesn't collect them until firm selection (see selectFirm.ts) —
+  // but if the caller does send them (the full get-a-quote form always
+  // does), they must be well-formed.
+  const rawContact = (body as { contact?: unknown } | null)?.contact;
+  let contact: { name: string; email: string; phone: string } | undefined;
+  if (rawContact !== undefined) {
+    const parsedContact = validateContact(rawContact);
+    if (!parsedContact.success) {
+      return jsonResponse({ error: { message: 'Invalid contact details.', details: parsedContact.error.flatten() } }, 400);
+    }
+    contact = parsedContact.data;
+  }
+
   try {
     const ruleSets = await loadActiveFirmRuleSets(deps.db, answers.transactionType);
 
@@ -77,6 +91,7 @@ export async function createQuoteHandler(request: Request, deps: CreateQuoteDeps
       transactionType: answers.transactionType,
       clientAnswers: answers,
       expiryAt,
+      contact,
     });
     await saveQuoteResults(deps.db, quoteId, results);
 
