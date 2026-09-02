@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { AdminUserBar } from "@/components/AdminUserBar";
 import { AdminNav } from "@/components/AdminNav";
@@ -63,7 +64,9 @@ export default async function LeadsPage() {
                     <td style={{ padding: "8px 10px", color: TEXT_MUTED, whiteSpace: "nowrap" }}>
                       {new Date(lead.createdAt).toLocaleString("en-GB")}
                     </td>
-                    <td style={{ padding: "8px 10px", fontFamily: "monospace", fontSize: 12 }}>{lead.quoteReference}</td>
+                    <td style={{ padding: "8px 10px", fontFamily: "monospace", fontSize: 12 }}>
+                      <Link href={`/admin/leads/${lead.quoteReference}`}>{lead.quoteReference}</Link>
+                    </td>
                     <td style={{ padding: "8px 10px" }}>{lead.transactionType}</td>
                     <td style={{ padding: "8px 10px" }}>{lead.status}</td>
                     <td style={{ padding: "8px 10px" }}>{lead.contact.name}</td>

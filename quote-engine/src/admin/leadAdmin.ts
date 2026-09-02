@@ -7,11 +7,40 @@
 
 import type { Kysely } from 'kysely';
 import type { Database } from '../db/schema.js';
-import type { AdminUser } from '../types.js';
-import { listRecentLeads, type LeadSummary } from '../db/repository.js';
+import type { AdminUser, ClientAnswers, QuoteContact, TransactionType } from '../types.js';
+import { getQuoteByReference, listRecentLeads, loadFirmsByIds, type LeadSummary } from '../db/repository.js';
+import { toPublicResult, type PublicQuoteResult } from '../api/publicResult.js';
 import { assertPermission } from './roles.js';
 
 export async function listLeads(db: Kysely<Database>, user: AdminUser, limit?: number): Promise<LeadSummary[]> {
   assertPermission(user, 'leads:view');
   return listRecentLeads(db, limit);
+}
+
+export interface LeadDetail {
+  quoteReference: string;
+  transactionType: TransactionType;
+  status: 'active' | 'expired' | 'converted';
+  clientAnswers: ClientAnswers;
+  contact: QuoteContact | null;
+  results: PublicQuoteResult[];
+}
+
+/** Full submission detail for one lead — the same information lookup-quote.ts prints, surfaced in the admin UI. */
+export async function getLeadDetail(db: Kysely<Database>, user: AdminUser, quoteReference: string): Promise<LeadDetail | null> {
+  assertPermission(user, 'leads:view');
+
+  const quote = await getQuoteByReference(db, quoteReference);
+  if (!quote) return null;
+
+  const firmsById = await loadFirmsByIds(db, quote.results.map((r) => r.firmId));
+
+  return {
+    quoteReference,
+    transactionType: quote.transactionType,
+    status: quote.status,
+    clientAnswers: quote.clientAnswers,
+    contact: quote.contact,
+    results: quote.results.map((r) => toPublicResult(r, firmsById)),
+  };
 }
