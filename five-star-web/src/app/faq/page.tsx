@@ -58,7 +58,7 @@ const FAQS = [
   },
   {
     q: "What if I have a complaint about a firm I instructed through the site?",
-    a: "Complaints about how a transaction was actually handled are a matter between you and the firm you instructed — they're the ones regulated by the SRA for the work itself, and the SRA's own complaints process applies to them directly. Our own regulatory disclosures and complaints procedure covering the comparison service itself are pending final review before publication; in the meantime, if something's gone wrong, get in touch via our contact page and we'll do what we can to help.",
+    a: "Complaints about how a transaction was actually handled are a matter between you and the firm you instructed — they're the ones regulated by the SRA for the work itself, and the SRA's own complaints process applies to them directly. Our own complaints procedure — for complaints about the comparison service itself — is on our complaints procedure page.",
   },
 ];
 

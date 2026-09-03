@@ -24,9 +24,9 @@ const ABOUT_LINKS = [
 ];
 
 const LEGAL_LINKS = [
-  { href: "/contact", label: "Terms & conditions" },
-  { href: "/contact", label: "Privacy policy" },
-  { href: "/contact", label: "Complaints procedure" },
+  { href: "/terms", label: "Terms & conditions" },
+  { href: "/privacy-policy", label: "Privacy policy" },
+  { href: "/complaints-procedure", label: "Complaints procedure" },
 ];
 
 export function SiteFooter() {
@@ -54,9 +54,20 @@ export function SiteFooter() {
       </div>
 
       <p style={{ fontSize: 11.5, color: TEXT_MUTED, maxWidth: 700, margin: "24px 0 0", paddingTop: 24, borderTop: `1px solid ${BORDER}`, lineHeight: 1.7 }}>
-        Five Star Conveyancing is a trading style of The Lead Gen Co LTD.
-        Five Star Conveyancing is a comparison service; regulatory disclosures, complaints procedure, and firm
-        ownership information are pending final review. © 2026 Five Star Conveyancing.
+        Five Star Conveyancing is a trading style of The Lead Gen Co LTD. Five Star Conveyancing is a comparison
+        service — see our{" "}
+        <Link href="/terms" style={{ color: TEXT_MUTED, textDecoration: "underline" }}>
+          terms
+        </Link>
+        ,{" "}
+        <Link href="/privacy-policy" style={{ color: TEXT_MUTED, textDecoration: "underline" }}>
+          privacy policy
+        </Link>
+        , and{" "}
+        <Link href="/complaints-procedure" style={{ color: TEXT_MUTED, textDecoration: "underline" }}>
+          complaints procedure
+        </Link>
+        . © 2026 Five Star Conveyancing.
       </p>
     </footer>
   );

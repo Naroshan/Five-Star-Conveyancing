@@ -56,9 +56,12 @@ export default function ContactPage() {
           <div className={contentStyles.itemPad} style={{ background: "white", borderRadius: RADIUS.md, boxShadow: SHADOW.sm }}>
             <h2 style={{ fontSize: 15, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>Complaints and regulatory contact</h2>
             <p style={{ fontSize: 14.5, color: TEXT_MUTED, lineHeight: 1.65, maxWidth: 680, margin: 0 }}>
-              Our complaints procedure and regulatory contact details are pending final review before publication.
-              If your complaint concerns a specific firm you instructed, their own complaints procedure — which
-              every SRA-regulated firm must publish — is the right place to start.
+              See our{" "}
+              <Link href="/complaints-procedure" style={{ color: TEAL, fontWeight: 700, textDecoration: "none" }}>
+                complaints procedure
+              </Link>{" "}
+              for how to raise a complaint — whether it&apos;s about this comparison service, or about a firm you
+              instructed through it.
             </p>
           </div>
         </div>

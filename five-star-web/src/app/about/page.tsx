@@ -123,9 +123,20 @@ export default function AboutPage() {
           <div className={contentStyles.itemPad} style={{ background: "white", borderRadius: RADIUS.md, boxShadow: SHADOW.sm }}>
             <h2 style={{ fontSize: 15, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>Regulatory information</h2>
             <p style={{ fontSize: 14.5, color: TEXT_MUTED, lineHeight: 1.65, maxWidth: 680, margin: 0 }}>
-              Full regulatory disclosures, our complaints procedure, and company ownership information are pending
-              final review before publication. In the meantime, every firm shown in a comparison is independently
-              regulated by the Solicitors Regulation Authority.
+              Every firm shown in a comparison is independently regulated by the Solicitors Regulation Authority or
+              the Council for Licensed Conveyancers. See our{" "}
+              <Link href="/privacy-policy" style={{ color: TEAL, fontWeight: 700, textDecoration: "none" }}>
+                privacy policy
+              </Link>
+              ,{" "}
+              <Link href="/terms" style={{ color: TEAL, fontWeight: 700, textDecoration: "none" }}>
+                terms
+              </Link>
+              , and{" "}
+              <Link href="/complaints-procedure" style={{ color: TEAL, fontWeight: 700, textDecoration: "none" }}>
+                complaints procedure
+              </Link>{" "}
+              for how we handle your information, the terms of using this service, and how to raise a concern.
             </p>
           </div>
         </div>
