@@ -1,8 +1,12 @@
-// Five Star Conveyancing — short, factual per-county context used to give
-// each generated location page genuine, non-duplicated substance beyond
-// swapping in a town name. Deliberately avoids numeric claims (average
-// house prices, transaction volumes) that would need a verified dataset
-// this project doesn't have — see CLAUDE.md's data-integrity rule.
+// Five Star Conveyancing — short, factual per-county context. Originally
+// used directly on every location page in a county (which meant every town
+// in, say, Kent shared one identical paragraph); townCharacter.ts now
+// provides a genuinely town-specific sentence for every current town, so
+// this only serves as buildIntro's fallback in locations.ts for a future
+// town added without matching content there. Deliberately avoids numeric
+// claims (average house prices, transaction volumes) that would need a
+// verified dataset this project doesn't have — see CLAUDE.md's
+// data-integrity rule.
 export const COUNTY_BLURBS: Record<string, string> = {
   Bedfordshire: "sits within easy commuting distance of London, so a mix of established towns and newer developments both come up often in searches and enquiries.",
   Berkshire: "covers everything from riverside towns on the Thames to commuter hubs near the M4, which can mean a wider-than-usual range of lease lengths and service charge arrangements on flats.",

@@ -2,6 +2,7 @@ import { ShieldCheckIcon, PoundCoinIcon, ClockIcon } from "@/components/icons";
 import { TEAL, ICON_BADGE_BG, ICON_BADGE_BG_ACCENT, ICON_BADGE_BG_GOLD } from "@/lib/theme";
 import { GENERATED_LOCATIONS } from "./locationsGenerated";
 import { COUNTY_BLURBS } from "./countyBlurbs";
+import { TOWN_CHARACTER } from "./townCharacter";
 
 export interface Location {
   slug: string;
@@ -122,16 +123,27 @@ export const LOCATIONS: Location[] = [
   },
 ];
 
-function buildIntro(city: string, county: string, jurisdiction: "England" | "Wales"): string {
+// Genuinely town-specific content (a real landmark, industry, or history —
+// or an honest general descriptor where no specific fact is confidently
+// known) from townCharacter.ts, one sentence per town. countyBlurbs.ts is
+// kept only as a fallback for a town added later without matching content
+// here — it should never actually fire against the current town list, since
+// every current slug has an entry in TOWN_CHARACTER.
+function buildIntro(slug: string, city: string, county: string, jurisdiction: "England" | "Wales"): string {
   const taxName = jurisdiction === "Wales" ? "Land Transaction Tax" : "Stamp Duty Land Tax";
-  const countyBlurb = COUNTY_BLURBS[county];
   const jurisdictionNote =
     jurisdiction === "Wales"
-      ? ` Property transactions in ${county} are taxed under ${taxName} rather than the Stamp Duty Land Tax charged in England, so make sure any quote you compare reflects that.`
+      ? ` Property transactions in ${city} are taxed under ${taxName} rather than the Stamp Duty Land Tax charged in England, so make sure any quote you compare reflects that.`
       : "";
+  const comparisonSentence = `Comparing itemised quotes for a move in ${city} makes it easier to see exactly what a firm is charging for, rather than one bundled figure.`;
+
+  const character = TOWN_CHARACTER[slug];
+  if (character) return `${character} ${comparisonSentence}${jurisdictionNote}`;
+
+  const countyBlurb = COUNTY_BLURBS[county];
   return countyBlurb
-    ? `${county} ${countyBlurb} Comparing itemised quotes for a move in ${city} makes it easier to see exactly what a firm is charging for, rather than one bundled figure.${jurisdictionNote}`
-    : `Comparing itemised quotes for a move in ${city} — legal fee, VAT and disbursements shown separately — makes it easier to see exactly what a firm is charging for, rather than one bundled figure.${jurisdictionNote}`;
+    ? `${county} ${countyBlurb} ${comparisonSentence}${jurisdictionNote}`
+    : `${comparisonSentence}${jurisdictionNote}`;
 }
 
 const GENERATED_WITH_INTRO: Location[] = GENERATED_LOCATIONS.map((g) => ({
@@ -140,7 +152,7 @@ const GENERATED_WITH_INTRO: Location[] = GENERATED_LOCATIONS.map((g) => ({
   jurisdiction: g.jurisdiction,
   taxName: g.jurisdiction === "Wales" ? "Land Transaction Tax" : "Stamp Duty Land Tax",
   county: g.county,
-  intro: buildIntro(g.city, g.county, g.jurisdiction),
+  intro: buildIntro(g.slug, g.city, g.county, g.jurisdiction),
 }));
 
 export const ALL_LOCATIONS: Location[] = [...LOCATIONS, ...GENERATED_WITH_INTRO];
