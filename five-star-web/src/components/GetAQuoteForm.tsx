@@ -10,7 +10,6 @@ import {
   TEAL,
   TEXT_HEADING,
   TEXT_MUTED,
-  TEXT_BODY,
   ACCENT_BOLD,
   BORDER,
   GRADIENT_CTA,
@@ -20,17 +19,10 @@ import {
   SHADOW,
   display,
 } from "@/lib/theme";
-import { UserIcon, MailIcon, PhoneIcon, CheckCircleIcon } from "@/components/icons";
+import { CheckCircleIcon } from "@/components/icons";
 import { registerQuoteExitGuard, clearQuoteExitGuard } from "@/lib/quoteExitGuard";
 import styles from "./GetAQuoteForm.module.css";
 import type { TransactionType } from "five-star-conveyancing-quote-engine/types";
-
-// Formspree form ID for lead notifications — same form used by the Contact
-// page (ContactForm.tsx) and by firm selection (ResultsInteractive.tsx); all
-// submissions across the site are intentionally consolidated into this one
-// form. Firing it here too, right at quote generation, means a lead is
-// captured even if the visitor never gets as far as selecting a specific firm.
-const LEAD_NOTIFY_FORM_ID = "xjgnakev";
 
 const FLAG_OPTIONS: { key: string; label: string }[] = [
   { key: "buyToLet", label: "Buy-to-let purchase" },
@@ -60,7 +52,14 @@ function mortgageLabelFor(transactionType: TransactionType): string {
   return "Is a mortgage involved?";
 }
 
-const STEPS = ["Service", "Property", "Contact", "Matches"] as const;
+// Only "Service" and "Property" are real form steps — "Matches" is the
+// results redirect, shown in the indicator so the step count reflects
+// where the visitor is headed, not a form rendered by this component.
+// Contact details are deliberately not collected here — the client's
+// clearest statement of intent to be contacted is selecting a firm on the
+// results page (ResultsInteractive.tsx), so that's where they're asked for,
+// matching the homepage's condensed HeroQuoteWidget.
+const STEPS = ["Service", "Property", "Matches"] as const;
 type StepName = (typeof STEPS)[number];
 
 export function GetAQuoteForm({ initialTransactionType }: { initialTransactionType: TransactionType }) {
@@ -76,9 +75,6 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
   );
   const [mortgageInvolved, setMortgageInvolved] = useState(true);
   const [flags, setFlags] = useState<Record<string, boolean>>({});
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
 
   const availableFlags = flagOptionsFor(transactionType);
   const tenureFixed = tenureIsFixedLeasehold(transactionType);
@@ -94,9 +90,6 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
     setFreeholdOrLeasehold(tenureIsFixedLeasehold(initialTransactionType) ? "leasehold" : "freehold");
     setMortgageInvolved(true);
     setFlags({});
-    setName("");
-    setEmail("");
-    setPhone("");
   }
 
   // Warns before the header's "Get a quote" link resets progress —
@@ -133,19 +126,6 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
     e.preventDefault();
 
     const isSaleAndPurchase = transactionType === "sale_and_purchase";
-
-    // Best-effort lead notification — doesn't block quote generation below,
-    // which is the part that actually has to succeed.
-    fetch(`https://formspree.io/f/${LEAD_NOTIFY_FORM_ID}`, {
-      method: "POST",
-      headers: { "content-type": "application/json", accept: "application/json" },
-      body: JSON.stringify(
-        isSaleAndPurchase
-          ? { name, email, phone, transactionType, postcode, salePropertyValue, purchasePropertyValue }
-          : { name, email, phone, transactionType, postcode, propertyValue }
-      ),
-    }).catch(() => {});
-
     const mortgageFlag = showsMortgageField(transactionType) ? mortgageInvolved : true;
     const submittedFlags = { ...flags };
     if (freeholdOrLeasehold === "leasehold") submittedFlags.leasehold = true;
@@ -165,7 +145,6 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
       freeholdOrLeasehold,
       mortgageInvolved: mortgageFlag,
       flags: submittedFlags,
-      contact: { name, email, phone },
     });
   }
 
@@ -222,7 +201,7 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
         )}
 
         {currentStep === "Property" && (
-          <form onSubmit={(e) => goToStep(e, 2)} style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 18 }}>
+          <form onSubmit={handleFinalSubmit} style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 18 }}>
             <h2 style={{ ...display, fontSize: 18, fontWeight: 600, color: NAVY, margin: 0 }}>
               About the property{transactionType === "sale" ? " you're selling" : transactionType === "purchase" ? " you're buying" : ""}
             </h2>
@@ -312,32 +291,6 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
               ))}
             </div>
 
-            <div style={{ display: "flex", gap: 10 }}>
-              <BackButton onClick={() => setStepIndex(0)} />
-              <StepSubmitButton>Continue</StepSubmitButton>
-            </div>
-          </form>
-        )}
-
-        {currentStep === "Contact" && (
-          <form onSubmit={handleFinalSubmit} style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 18 }}>
-            <div>
-              <h2 style={{ ...display, fontSize: 18, fontWeight: 800, color: NAVY, margin: "0 0 6px" }}>Your details</h2>
-              <p style={{ fontSize: 13.5, fontWeight: 700, color: TEXT_HEADING, margin: 0 }}>
-                So we can show you your matches, and firms can get in touch about your enquiry.
-              </p>
-            </div>
-
-            <ContactField label="Full name" icon={<UserIcon size={16} color={TEAL} />}>
-              <input required autoComplete="name" placeholder="e.g. Jordan Smith" value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} />
-            </ContactField>
-            <ContactField label="Email address" icon={<MailIcon size={16} color={TEAL} />}>
-              <input required type="email" autoComplete="email" placeholder="e.g. jordan@example.com" value={email} onChange={(e) => setEmail(e.target.value)} style={inputStyle} />
-            </ContactField>
-            <ContactField label="Phone number" icon={<PhoneIcon size={16} color={TEAL} />}>
-              <input required type="tel" autoComplete="tel" placeholder="e.g. 07700 900123" value={phone} onChange={(e) => setPhone(e.target.value)} style={inputStyle} />
-            </ContactField>
-
             {error && (
               <p style={{ fontSize: 13, color: ERROR, background: "oklch(0.95 0.03 25)", padding: "10px 12px", borderRadius: RADIUS.sm }}>
                 {error}
@@ -345,7 +298,7 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
             )}
 
             <div style={{ display: "flex", gap: 10 }}>
-              <BackButton onClick={() => setStepIndex(1)} disabled={submitting} />
+              <BackButton onClick={() => setStepIndex(0)} disabled={submitting} />
               <StepSubmitButton disabled={submitting}>{submitting ? "Finding your matches…" : "See my matches"}</StepSubmitButton>
             </div>
           </form>
@@ -484,24 +437,3 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function ContactField({ label, icon, children }: { label: string; icon: React.ReactNode; children: React.ReactNode }) {
-  return (
-    <div>
-      <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: TEXT_HEADING, marginBottom: 6 }}>{label}</label>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, border: `1.5px solid ${BORDER}`, borderRadius: RADIUS.sm, padding: "8px 12px" }}>
-        {icon}
-        {children}
-      </div>
-    </div>
-  );
-}
-
-const inputStyle: React.CSSProperties = {
-  flex: 1,
-  minWidth: 0,
-  background: "transparent",
-  border: "none",
-  outline: "none",
-  fontSize: 14,
-  color: TEXT_BODY,
-};

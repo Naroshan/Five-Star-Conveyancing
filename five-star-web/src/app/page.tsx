@@ -9,7 +9,6 @@ import { GUIDES } from "@/lib/guides";
 import {
   NAVY,
   TEAL,
-  GOLD,
   CREAM,
   CREAM_ALT,
   BORDER,
@@ -25,7 +24,7 @@ import {
   ICON_BADGE_BG_GOLD,
   display,
 } from "@/lib/theme";
-import { ShieldCheckIcon, PoundCoinIcon, CheckCircleIcon, StarIcon, HomeIcon, SwapIcon, RefreshIcon } from "@/components/icons";
+import { ShieldCheckIcon, PoundCoinIcon, CheckCircleIcon, HomeIcon, SwapIcon, RefreshIcon } from "@/components/icons";
 import styles from "./page.module.css";
 
 const HERO_TILES = [
@@ -67,21 +66,11 @@ const GUIDE_COLUMNS = [
   },
 ];
 
-const TESTIMONIALS = [
-  { quote: "Finally a site that shows VAT and disbursements upfront. No surprises.", author: "Rachel H.", role: "First-time buyer" },
-  { quote: "Three quotes in two minutes, picked the clearest one. Simple.", author: "David O.", role: "Home mover" },
-  { quote: "No sales calls afterwards. Would use again for remortgaging.", author: "Priya K.", role: "Remortgaging" },
-];
-
 export const metadata: Metadata = {
   title: "Compare Conveyancing Quotes | Five Star Conveyancing",
   description:
     "Compare itemised conveyancing quotes from SRA & CLC regulated solicitors across England and Wales — legal fee, VAT and disbursements shown separately, free and with no obligation.",
 };
-
-function initials(name: string) {
-  return name.split(" ").map((part) => part[0]).join("").toUpperCase();
-}
 
 export default function HomePage() {
   return (
@@ -238,32 +227,6 @@ export default function HomePage() {
             <div style={{ background: "white", border: `1px solid ${BORDER}`, borderRadius: RADIUS.lg, boxShadow: SHADOW.md, padding: 24 }}>
               <SdltCalculator />
             </div>
-          </div>
-        </section>
-
-        {/* TESTIMONIALS */}
-        <section className={styles.sectionPad} style={{ background: CREAM }}>
-          <h2 className={styles.sectionHeading} style={{ ...display, fontWeight: 700, color: NAVY, margin: "0 0 22px" }}>What movers say</h2>
-          <div className={styles.testimonialsGrid} style={{ display: "grid" }}>
-            {TESTIMONIALS.map((t) => (
-              <div key={t.author} style={{ background: "white", border: `1px solid ${BORDER}`, borderRadius: RADIUS.lg, padding: 20 }}>
-                <div style={{ display: "flex", gap: 3, marginBottom: 10 }}>
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <StarIcon key={i} size={12} color={GOLD} />
-                  ))}
-                </div>
-                <p style={{ fontSize: 13, color: TEXT_MUTED, lineHeight: 1.55, margin: "0 0 12px" }}>&quot;{t.quote}&quot;</p>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: "50%", background: ICON_BADGE_BG, color: TEAL, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800 }}>
-                    {initials(t.author)}
-                  </div>
-                  <div>
-                    <p style={{ fontSize: 12, fontWeight: 700, color: TEXT_HEADING, margin: 0 }}>{t.author}</p>
-                    <p style={{ fontSize: 11, color: TEXT_MUTED, margin: 0 }}>{t.role}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
         </section>
 
