@@ -243,6 +243,23 @@ export async function listRecentLeads(db, limit = 200) {
         createdAt: r.created_at,
     }));
 }
+export async function saveSdltCalculatorLead(db, input) {
+    await db
+        .insertInto('sdlt_calculator_leads')
+        .values({ email: input.email, price: input.price, jurisdiction: input.jurisdiction, buyer_type: input.buyerType })
+        .execute();
+}
+export async function listRecentSdltCalculatorLeads(db, limit = 200) {
+    const rows = await db.selectFrom('sdlt_calculator_leads').selectAll().orderBy('created_at', 'desc').limit(limit).execute();
+    return rows.map((r) => ({
+        leadId: r.lead_id,
+        email: r.email,
+        price: r.price,
+        jurisdiction: r.jurisdiction,
+        buyerType: r.buyer_type,
+        createdAt: r.created_at,
+    }));
+}
 export async function markQuoteExpired(db, quoteId) {
     await db.updateTable('quotes').set({ status: 'expired' }).where('quote_id', '=', quoteId).where('status', '=', 'active').execute();
 }

@@ -8,13 +8,26 @@
 import type { Kysely } from 'kysely';
 import type { Database } from '../db/schema.js';
 import type { AdminUser, ClientAnswers, QuoteContact, TransactionType } from '../types.js';
-import { getQuoteByReference, listRecentLeads, loadFirmsByIds, type LeadSummary } from '../db/repository.js';
+import {
+  getQuoteByReference,
+  listRecentLeads,
+  listRecentSdltCalculatorLeads,
+  loadFirmsByIds,
+  type LeadSummary,
+  type SdltCalculatorLeadSummary,
+} from '../db/repository.js';
 import { toPublicResult, type PublicQuoteResult } from '../api/publicResult.js';
 import { assertPermission } from './roles.js';
 
 export async function listLeads(db: Kysely<Database>, user: AdminUser, limit?: number): Promise<LeadSummary[]> {
   assertPermission(user, 'leads:view');
   return listRecentLeads(db, limit);
+}
+
+/** Leads from the standalone SDLT/LTT calculator — not tied to any quote. */
+export async function listSdltCalculatorLeads(db: Kysely<Database>, user: AdminUser, limit?: number): Promise<SdltCalculatorLeadSummary[]> {
+  assertPermission(user, 'leads:view');
+  return listRecentSdltCalculatorLeads(db, limit);
 }
 
 export interface LeadDetail {

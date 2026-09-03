@@ -126,6 +126,14 @@ export interface QuoteResultsTable {
     total_estimate: number | null;
     calculation_audit: unknown;
 }
+export interface SdltCalculatorLeadsTable {
+    lead_id: Generated<string>;
+    email: string;
+    price: number;
+    jurisdiction: 'england' | 'wales';
+    buyer_type: 'standard' | 'first_time_buyer' | 'additional_property';
+    created_at: Generated<Timestamp>;
+}
 export interface AdminUsersTable {
     user_id: Generated<string>;
     name: string;
@@ -172,5 +180,6 @@ export interface Database {
     sdlt_ltt_rate_table: SdltLttRateTable;
     quotes: QuotesTable;
     quote_results: QuoteResultsTable;
+    sdlt_calculator_leads: SdltCalculatorLeadsTable;
 }
 export {};

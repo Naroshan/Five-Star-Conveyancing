@@ -189,6 +189,21 @@ create table quote_results (
   calculation_audit jsonb not null
 );
 
+-- A lead from the standalone SDLT/LTT calculator (not tied to any quote —
+-- someone can use the calculator without ever requesting a comparison).
+-- Previously this only fired a best-effort third-party notification with no
+-- durable record, the same gap the `quotes` table's client_name/email/phone
+-- columns fixed for quote leads — see api/sdlt-calculator/email in
+-- five-star-web for where this is written.
+create table sdlt_calculator_leads (
+  lead_id uuid primary key default gen_random_uuid(),
+  email text not null,
+  price numeric not null,
+  jurisdiction text not null check (jurisdiction in ('england', 'wales')),
+  buyer_type text not null check (buyer_type in ('standard', 'first_time_buyer', 'additional_property')),
+  created_at timestamptz not null default now()
+);
+
 create index idx_fee_value_bands_lookup on fee_value_bands (firm_id, transaction_type, approval_status);
 create index idx_fee_rules_lookup on fee_rules (firm_id, transaction_type, approval_status);
 create index idx_disbursement_rules_lookup on disbursement_rules (firm_id, transaction_type, approval_status);

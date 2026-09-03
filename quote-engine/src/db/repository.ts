@@ -321,6 +321,37 @@ export async function listRecentLeads(db: Kysely<Database>, limit = 200): Promis
   }));
 }
 
+export interface SdltCalculatorLeadInput {
+  email: string;
+  price: number;
+  jurisdiction: 'england' | 'wales';
+  buyerType: 'standard' | 'first_time_buyer' | 'additional_property';
+}
+
+export async function saveSdltCalculatorLead(db: Kysely<Database>, input: SdltCalculatorLeadInput): Promise<void> {
+  await db
+    .insertInto('sdlt_calculator_leads')
+    .values({ email: input.email, price: input.price, jurisdiction: input.jurisdiction, buyer_type: input.buyerType })
+    .execute();
+}
+
+export interface SdltCalculatorLeadSummary extends SdltCalculatorLeadInput {
+  leadId: string;
+  createdAt: Date;
+}
+
+export async function listRecentSdltCalculatorLeads(db: Kysely<Database>, limit = 200): Promise<SdltCalculatorLeadSummary[]> {
+  const rows = await db.selectFrom('sdlt_calculator_leads').selectAll().orderBy('created_at', 'desc').limit(limit).execute();
+  return rows.map((r) => ({
+    leadId: r.lead_id,
+    email: r.email,
+    price: r.price,
+    jurisdiction: r.jurisdiction,
+    buyerType: r.buyer_type,
+    createdAt: r.created_at as unknown as Date,
+  }));
+}
+
 export async function markQuoteExpired(db: Kysely<Database>, quoteId: string): Promise<void> {
   await db.updateTable('quotes').set({ status: 'expired' }).where('quote_id', '=', quoteId).where('status', '=', 'active').execute();
 }

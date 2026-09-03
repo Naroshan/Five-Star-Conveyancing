@@ -5,7 +5,7 @@ import { AdminUserBar } from "@/components/AdminUserBar";
 import { AdminNav } from "@/components/AdminNav";
 import { getCurrentAdminUser, isMfaEnabledFor } from "@/lib/adminSession";
 import { db } from "@/lib/db";
-import { listLeads } from "five-star-conveyancing-quote-engine/admin/leadAdmin";
+import { listLeads, listSdltCalculatorLeads } from "five-star-conveyancing-quote-engine/admin/leadAdmin";
 import { TEXT_HEADING, TEXT_MUTED, BORDER } from "@/lib/theme";
 import { ForbiddenError } from "five-star-conveyancing-quote-engine/admin/roles";
 
@@ -15,9 +15,11 @@ export default async function LeadsPage() {
   if (!(await isMfaEnabledFor(user.userId))) redirect("/admin/mfa-setup");
 
   let leads: Awaited<ReturnType<typeof listLeads>> = [];
+  let sdltLeads: Awaited<ReturnType<typeof listSdltCalculatorLeads>> = [];
   let permissionError: string | null = null;
   try {
     leads = await listLeads(db, user);
+    sdltLeads = await listSdltCalculatorLeads(db, user);
   } catch (err) {
     if (err instanceof ForbiddenError) {
       permissionError = `Your role (${user.role}) doesn't include permission to view leads.`;
@@ -77,6 +79,46 @@ export default async function LeadsPage() {
               </tbody>
             </table>
           </div>
+        )}
+
+        {!permissionError && (
+          <>
+            <h2 style={{ fontSize: 16, fontWeight: 500, color: TEXT_HEADING, margin: "32px 0 4px" }}>SDLT/LTT calculator leads</h2>
+            <p style={{ fontSize: 12.5, color: TEXT_MUTED, margin: "0 0 12px" }}>
+              From the standalone Stamp Duty calculator — not tied to a quote comparison.
+            </p>
+
+            {sdltLeads.length === 0 && <p style={{ fontSize: 14, color: TEXT_MUTED }}>No calculator leads yet.</p>}
+
+            {sdltLeads.length > 0 && (
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                  <thead>
+                    <tr style={{ textAlign: "left", borderBottom: `1px solid ${BORDER}` }}>
+                      <th style={{ padding: "8px 10px" }}>Received</th>
+                      <th style={{ padding: "8px 10px" }}>Email</th>
+                      <th style={{ padding: "8px 10px" }}>Price</th>
+                      <th style={{ padding: "8px 10px" }}>Jurisdiction</th>
+                      <th style={{ padding: "8px 10px" }}>Buyer type</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sdltLeads.map((lead) => (
+                      <tr key={lead.leadId} style={{ borderBottom: `0.5px solid ${BORDER}` }}>
+                        <td style={{ padding: "8px 10px", color: TEXT_MUTED, whiteSpace: "nowrap" }}>
+                          {new Date(lead.createdAt).toLocaleString("en-GB")}
+                        </td>
+                        <td style={{ padding: "8px 10px" }}>{lead.email}</td>
+                        <td style={{ padding: "8px 10px" }}>£{lead.price.toLocaleString("en-GB")}</td>
+                        <td style={{ padding: "8px 10px" }}>{lead.jurisdiction}</td>
+                        <td style={{ padding: "8px 10px" }}>{lead.buyerType}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </>
         )}
       </main>
     </>

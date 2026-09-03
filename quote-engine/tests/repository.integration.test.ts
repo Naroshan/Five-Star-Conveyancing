@@ -13,10 +13,12 @@ import { createDb } from '../src/db/client.js';
 import {
   getQuoteByReference,
   listRecentLeads,
+  listRecentSdltCalculatorLeads,
   loadActiveFirmRuleSets,
   loadFirmRuleSet,
   saveQuote,
   saveQuoteResults,
+  saveSdltCalculatorLead,
   selectQuoteFirm,
 } from '../src/db/repository.js';
 import { calculateQuoteForFirm } from '../src/quoteEngine.js';
@@ -37,7 +39,7 @@ if (connectionString) {
   });
 
   beforeEach(async () => {
-    await sql`truncate table quote_results, quotes, disbursement_rules, fee_rules, fee_value_bands, firm_restrictions, firm_transaction_types, firms restart identity cascade`.execute(
+    await sql`truncate table quote_results, quotes, sdlt_calculator_leads, disbursement_rules, fee_rules, fee_value_bands, firm_restrictions, firm_transaction_types, firms restart identity cascade`.execute(
       db
     );
 
@@ -300,6 +302,16 @@ if (connectionString) {
     const retrieved = await getQuoteByReference(db, 'TEST-QUOTE-REF-005');
     expect(retrieved!.contact).toEqual(newContact);
     expect(retrieved!.status).toBe('converted');
+  });
+
+  it('persists and lists SDLT calculator leads, independent of any quote', async () => {
+    await saveSdltCalculatorLead(db, { email: 'calc@example.com', price: 250_000, jurisdiction: 'england', buyerType: 'first_time_buyer' });
+    await saveSdltCalculatorLead(db, { email: 'calc2@example.com', price: 400_000, jurisdiction: 'wales', buyerType: 'standard' });
+
+    const leads = await listRecentSdltCalculatorLeads(db);
+    expect(leads).toHaveLength(2);
+    expect(leads.map((l) => l.email).sort()).toEqual(['calc2@example.com', 'calc@example.com']);
+    expect(leads[0].createdAt).toBeInstanceOf(Date);
   });
   });
 } else {

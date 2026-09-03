@@ -5,6 +5,8 @@
 import { z } from "zod";
 import { calculateSdlt, type BuyerType, type Jurisdiction } from "@/lib/sdlt";
 import { sendEmail } from "@/lib/email";
+import { db } from "@/lib/db";
+import { saveSdltCalculatorLead } from "five-star-conveyancing-quote-engine/db/repository";
 
 const bodySchema = z.object({
   email: z.string().email(),
@@ -57,6 +59,21 @@ export async function POST(request: Request): Promise<Response> {
     body = bodySchema.parse(await request.json());
   } catch {
     return Response.json({ error: { message: "A valid email, price, jurisdiction and buyer type are required." } }, { status: 400 });
+  }
+
+  // Saved before the email send attempt below, deliberately — this is the
+  // durable lead record, and it shouldn't depend on the email provider being
+  // up. A visitor who typed in a real email is a lead worth having even if
+  // the email itself transiently fails to send.
+  try {
+    await saveSdltCalculatorLead(db, {
+      email: body.email,
+      price: body.price,
+      jurisdiction: body.jurisdiction,
+      buyerType: body.buyerType,
+    });
+  } catch (err) {
+    console.error("saving sdlt-calculator lead failed", err);
   }
 
   try {

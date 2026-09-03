@@ -51,6 +51,18 @@ export interface LeadSummary {
  * Formspree notification is a secondary, best-effort alert, not the record.
  */
 export declare function listRecentLeads(db: Kysely<Database>, limit?: number): Promise<LeadSummary[]>;
+export interface SdltCalculatorLeadInput {
+    email: string;
+    price: number;
+    jurisdiction: 'england' | 'wales';
+    buyerType: 'standard' | 'first_time_buyer' | 'additional_property';
+}
+export declare function saveSdltCalculatorLead(db: Kysely<Database>, input: SdltCalculatorLeadInput): Promise<void>;
+export interface SdltCalculatorLeadSummary extends SdltCalculatorLeadInput {
+    leadId: string;
+    createdAt: Date;
+}
+export declare function listRecentSdltCalculatorLeads(db: Kysely<Database>, limit?: number): Promise<SdltCalculatorLeadSummary[]>;
 export declare function markQuoteExpired(db: Kysely<Database>, quoteId: string): Promise<void>;
 /**
  * Records the client's "Select this firm" choice. Only transitions a quote
