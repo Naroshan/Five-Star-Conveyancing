@@ -20,6 +20,7 @@ import {
   saveQuoteResults,
   saveSdltCalculatorLead,
   selectQuoteFirm,
+  setRecoveryEmailIfMissing,
 } from '../src/db/repository.js';
 import { calculateQuoteForFirm } from '../src/quoteEngine.js';
 import type { ClientAnswers } from '../src/types.js';
@@ -312,6 +313,29 @@ if (connectionString) {
     expect(leads).toHaveLength(2);
     expect(leads.map((l) => l.email).sort()).toEqual(['calc2@example.com', 'calc@example.com']);
     expect(leads[0].createdAt).toBeInstanceOf(Date);
+  });
+
+  it('setRecoveryEmailIfMissing sets the email only when none is on file, and never overwrites an existing one', async () => {
+    const quoteId = await saveQuote(db, {
+      quoteReference: 'TEST-QUOTE-REF-006',
+      transactionType: 'purchase',
+      clientAnswers: contactAnswers,
+      expiryAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+
+    async function readClientEmail() {
+      const row = await db.selectFrom('quotes').select('client_email').where('quote_id', '=', quoteId).executeTakeFirstOrThrow();
+      return row.client_email;
+    }
+
+    expect(await readClientEmail()).toBeNull();
+
+    await setRecoveryEmailIfMissing(db, quoteId, 'recovery@example.com');
+    expect(await readClientEmail()).toBe('recovery@example.com');
+
+    // A second call shouldn't overwrite it with a different address.
+    await setRecoveryEmailIfMissing(db, quoteId, 'someone-else@example.com');
+    expect(await readClientEmail()).toBe('recovery@example.com');
   });
   });
 } else {

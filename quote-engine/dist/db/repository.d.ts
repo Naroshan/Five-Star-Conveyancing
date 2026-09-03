@@ -74,6 +74,15 @@ export declare function markQuoteExpired(db: Kysely<Database>, quoteId: string):
 export declare function selectQuoteFirm(db: Kysely<Database>, quoteId: string, firmId: string, contact: QuoteContact): Promise<{
     updated: boolean;
 }>;
+/**
+ * Records an email-only "send me a link to these quotes" recovery address —
+ * distinct from the full name+email+phone contact captured at quote creation
+ * or firm selection. Never overwrites a contact already on file (from either
+ * of those), since a real lead's details shouldn't be clobbered by someone
+ * later reusing the same still-active quote reference to request the
+ * recovery link again with a different email.
+ */
+export declare function setRecoveryEmailIfMissing(db: Kysely<Database>, quoteId: string, email: string): Promise<void>;
 export declare function mapFirm(row: Selectable<Database['firms']>): Firm;
 export declare function mapFeeValueBand(row: Selectable<Database['fee_value_bands']>): FeeValueBand;
 export declare function mapFeeRule(row: Selectable<Database['fee_rules']>): FeeRule;

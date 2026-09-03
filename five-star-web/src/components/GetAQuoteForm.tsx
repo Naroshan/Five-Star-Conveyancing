@@ -75,6 +75,12 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
   );
   const [mortgageInvolved, setMortgageInvolved] = useState(true);
   const [flags, setFlags] = useState<Record<string, boolean>>({});
+  // Optional, and deliberately separate from the full name+email+phone
+  // contact captured at firm selection — a low-friction safety net so a
+  // visitor who gets interrupted before picking a firm still has a way back
+  // to their comparison, without reintroducing the upfront contact ask this
+  // form was changed to remove.
+  const [recoveryEmail, setRecoveryEmail] = useState("");
 
   const availableFlags = flagOptionsFor(transactionType);
   const tenureFixed = tenureIsFixedLeasehold(transactionType);
@@ -90,6 +96,7 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
     setFreeholdOrLeasehold(tenureIsFixedLeasehold(initialTransactionType) ? "leasehold" : "freehold");
     setMortgageInvolved(true);
     setFlags({});
+    setRecoveryEmail("");
   }
 
   // Warns before the header's "Get a quote" link resets progress —
@@ -145,7 +152,7 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
       freeholdOrLeasehold,
       mortgageInvolved: mortgageFlag,
       flags: submittedFlags,
-    });
+    }, recoveryEmail.trim() || undefined);
   }
 
   return (
@@ -290,6 +297,17 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
                 </CompactToggleField>
               ))}
             </div>
+
+            <Field label="Email (optional)">
+              <input
+                type="email"
+                autoComplete="email"
+                placeholder="So we can send you a link back to your quotes"
+                value={recoveryEmail}
+                onChange={(e) => setRecoveryEmail(e.target.value)}
+                style={{ width: "100%" }}
+              />
+            </Field>
 
             {error && (
               <p style={{ fontSize: 13, color: ERROR, background: "oklch(0.95 0.03 25)", padding: "10px 12px", borderRadius: RADIUS.sm }}>

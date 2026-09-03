@@ -32,7 +32,12 @@ export function useQuoteSubmit() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function submit(body: QuoteSubmitBody) {
+  // recoveryEmail is deliberately separate from `contact` on QuoteSubmitBody
+  // — that's a name+email+phone lead, required all together. This is an
+  // optional, email-only "send me a link to these quotes" convenience,
+  // handled by its own endpoint rather than createQuote's contact
+  // validation (which would reject an email with no name/phone).
+  async function submit(body: QuoteSubmitBody, recoveryEmail?: string) {
     setError(null);
     setSubmitting(true);
 
@@ -47,6 +52,13 @@ export function useQuoteSubmit() {
         setError(data.error?.message ?? "Something went wrong. Please check your answers and try again.");
         setSubmitting(false);
         return;
+      }
+      if (recoveryEmail) {
+        fetch(`/api/quotes/${data.quoteReference}/email-results`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ email: recoveryEmail }),
+        }).catch(() => {});
       }
       router.push(`/quote/results/${data.quoteReference}`);
     } catch {

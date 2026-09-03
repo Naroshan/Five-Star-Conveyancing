@@ -289,6 +289,17 @@ export async function selectQuoteFirm(db, quoteId, firmId, contact) {
         .executeTakeFirst();
     return { updated: Number(result.numUpdatedRows) > 0 };
 }
+/**
+ * Records an email-only "send me a link to these quotes" recovery address —
+ * distinct from the full name+email+phone contact captured at quote creation
+ * or firm selection. Never overwrites a contact already on file (from either
+ * of those), since a real lead's details shouldn't be clobbered by someone
+ * later reusing the same still-active quote reference to request the
+ * recovery link again with a different email.
+ */
+export async function setRecoveryEmailIfMissing(db, quoteId, email) {
+    await db.updateTable('quotes').set({ client_email: email }).where('quote_id', '=', quoteId).where('client_email', 'is', null).execute();
+}
 function parseJsonColumn(value) {
     return typeof value === 'string' ? JSON.parse(value) : value;
 }

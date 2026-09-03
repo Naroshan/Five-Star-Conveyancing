@@ -388,6 +388,18 @@ export async function selectQuoteFirm(
   return { updated: Number(result.numUpdatedRows) > 0 };
 }
 
+/**
+ * Records an email-only "send me a link to these quotes" recovery address —
+ * distinct from the full name+email+phone contact captured at quote creation
+ * or firm selection. Never overwrites a contact already on file (from either
+ * of those), since a real lead's details shouldn't be clobbered by someone
+ * later reusing the same still-active quote reference to request the
+ * recovery link again with a different email.
+ */
+export async function setRecoveryEmailIfMissing(db: Kysely<Database>, quoteId: string, email: string): Promise<void> {
+  await db.updateTable('quotes').set({ client_email: email }).where('quote_id', '=', quoteId).where('client_email', 'is', null).execute();
+}
+
 function parseJsonColumn<T>(value: unknown): T {
   return typeof value === 'string' ? (JSON.parse(value) as T) : (value as T);
 }
