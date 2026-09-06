@@ -204,6 +204,22 @@ create table sdlt_calculator_leads (
   created_at timestamptz not null default now()
 );
 
+-- A conveyancing firm applying to join the panel, via the "join our panel"
+-- page — a two-sided-marketplace lead distinct from the client-side leads
+-- above. Saved directly (no third-party notification step to fail
+-- silently), same principle as sdlt_calculator_leads.
+create table firm_recruitment_leads (
+  lead_id uuid primary key default gen_random_uuid(),
+  contact_name text not null,
+  firm_name text not null,
+  sra_or_clc_number text,
+  email text not null,
+  phone text not null,
+  coverage_area text not null,
+  message text,
+  created_at timestamptz not null default now()
+);
+
 create index idx_fee_value_bands_lookup on fee_value_bands (firm_id, transaction_type, approval_status);
 create index idx_fee_rules_lookup on fee_rules (firm_id, transaction_type, approval_status);
 create index idx_disbursement_rules_lookup on disbursement_rules (firm_id, transaction_type, approval_status);

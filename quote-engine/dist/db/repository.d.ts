@@ -63,6 +63,21 @@ export interface SdltCalculatorLeadSummary extends SdltCalculatorLeadInput {
     createdAt: Date;
 }
 export declare function listRecentSdltCalculatorLeads(db: Kysely<Database>, limit?: number): Promise<SdltCalculatorLeadSummary[]>;
+export interface FirmRecruitmentLeadInput {
+    contactName: string;
+    firmName: string;
+    sraOrClcNumber?: string;
+    email: string;
+    phone: string;
+    coverageArea: string;
+    message?: string;
+}
+export declare function saveFirmRecruitmentLead(db: Kysely<Database>, input: FirmRecruitmentLeadInput): Promise<void>;
+export interface FirmRecruitmentLeadSummary extends FirmRecruitmentLeadInput {
+    leadId: string;
+    createdAt: Date;
+}
+export declare function listRecentFirmRecruitmentLeads(db: Kysely<Database>, limit?: number): Promise<FirmRecruitmentLeadSummary[]>;
 export declare function markQuoteExpired(db: Kysely<Database>, quoteId: string): Promise<void>;
 /**
  * Records the client's "Select this firm" choice. Only transitions a quote

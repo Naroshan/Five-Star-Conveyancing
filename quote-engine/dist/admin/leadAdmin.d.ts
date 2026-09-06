@@ -1,11 +1,13 @@
 import type { Kysely } from 'kysely';
 import type { Database } from '../db/schema.js';
 import type { AdminUser, ClientAnswers, QuoteContact, TransactionType } from '../types.js';
-import { type LeadSummary, type SdltCalculatorLeadSummary } from '../db/repository.js';
+import { type LeadSummary, type SdltCalculatorLeadSummary, type FirmRecruitmentLeadSummary } from '../db/repository.js';
 import { type PublicQuoteResult } from '../api/publicResult.js';
 export declare function listLeads(db: Kysely<Database>, user: AdminUser, limit?: number): Promise<LeadSummary[]>;
 /** Leads from the standalone SDLT/LTT calculator — not tied to any quote. */
 export declare function listSdltCalculatorLeads(db: Kysely<Database>, user: AdminUser, limit?: number): Promise<SdltCalculatorLeadSummary[]>;
+/** Firms applying to join the panel via the "join our panel" page. */
+export declare function listFirmRecruitmentLeads(db: Kysely<Database>, user: AdminUser, limit?: number): Promise<FirmRecruitmentLeadSummary[]>;
 export interface LeadDetail {
     quoteReference: string;
     transactionType: TransactionType;

@@ -21,6 +21,7 @@ const ABOUT_LINKS = [
   { href: "/about", label: "Who we are" },
   { href: "/faq", label: "How we verify firms" },
   { href: "/contact", label: "Contact us" },
+  { href: "/join-our-panel", label: "Join our panel" },
 ];
 
 const LEGAL_LINKS = [

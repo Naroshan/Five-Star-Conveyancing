@@ -12,9 +12,11 @@ import {
   getQuoteByReference,
   listRecentLeads,
   listRecentSdltCalculatorLeads,
+  listRecentFirmRecruitmentLeads,
   loadFirmsByIds,
   type LeadSummary,
   type SdltCalculatorLeadSummary,
+  type FirmRecruitmentLeadSummary,
 } from '../db/repository.js';
 import { toPublicResult, type PublicQuoteResult } from '../api/publicResult.js';
 import { assertPermission } from './roles.js';
@@ -28,6 +30,12 @@ export async function listLeads(db: Kysely<Database>, user: AdminUser, limit?: n
 export async function listSdltCalculatorLeads(db: Kysely<Database>, user: AdminUser, limit?: number): Promise<SdltCalculatorLeadSummary[]> {
   assertPermission(user, 'leads:view');
   return listRecentSdltCalculatorLeads(db, limit);
+}
+
+/** Firms applying to join the panel via the "join our panel" page. */
+export async function listFirmRecruitmentLeads(db: Kysely<Database>, user: AdminUser, limit?: number): Promise<FirmRecruitmentLeadSummary[]> {
+  assertPermission(user, 'leads:view');
+  return listRecentFirmRecruitmentLeads(db, limit);
 }
 
 export interface LeadDetail {

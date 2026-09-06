@@ -260,6 +260,34 @@ export async function listRecentSdltCalculatorLeads(db, limit = 200) {
         createdAt: r.created_at,
     }));
 }
+export async function saveFirmRecruitmentLead(db, input) {
+    await db
+        .insertInto('firm_recruitment_leads')
+        .values({
+        contact_name: input.contactName,
+        firm_name: input.firmName,
+        sra_or_clc_number: input.sraOrClcNumber ?? null,
+        email: input.email,
+        phone: input.phone,
+        coverage_area: input.coverageArea,
+        message: input.message ?? null,
+    })
+        .execute();
+}
+export async function listRecentFirmRecruitmentLeads(db, limit = 200) {
+    const rows = await db.selectFrom('firm_recruitment_leads').selectAll().orderBy('created_at', 'desc').limit(limit).execute();
+    return rows.map((r) => ({
+        leadId: r.lead_id,
+        contactName: r.contact_name,
+        firmName: r.firm_name,
+        sraOrClcNumber: r.sra_or_clc_number ?? undefined,
+        email: r.email,
+        phone: r.phone,
+        coverageArea: r.coverage_area,
+        message: r.message ?? undefined,
+        createdAt: r.created_at,
+    }));
+}
 export async function markQuoteExpired(db, quoteId) {
     await db.updateTable('quotes').set({ status: 'expired' }).where('quote_id', '=', quoteId).where('status', '=', 'active').execute();
 }

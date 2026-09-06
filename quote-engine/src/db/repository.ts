@@ -352,6 +352,51 @@ export async function listRecentSdltCalculatorLeads(db: Kysely<Database>, limit 
   }));
 }
 
+export interface FirmRecruitmentLeadInput {
+  contactName: string;
+  firmName: string;
+  sraOrClcNumber?: string;
+  email: string;
+  phone: string;
+  coverageArea: string;
+  message?: string;
+}
+
+export async function saveFirmRecruitmentLead(db: Kysely<Database>, input: FirmRecruitmentLeadInput): Promise<void> {
+  await db
+    .insertInto('firm_recruitment_leads')
+    .values({
+      contact_name: input.contactName,
+      firm_name: input.firmName,
+      sra_or_clc_number: input.sraOrClcNumber ?? null,
+      email: input.email,
+      phone: input.phone,
+      coverage_area: input.coverageArea,
+      message: input.message ?? null,
+    })
+    .execute();
+}
+
+export interface FirmRecruitmentLeadSummary extends FirmRecruitmentLeadInput {
+  leadId: string;
+  createdAt: Date;
+}
+
+export async function listRecentFirmRecruitmentLeads(db: Kysely<Database>, limit = 200): Promise<FirmRecruitmentLeadSummary[]> {
+  const rows = await db.selectFrom('firm_recruitment_leads').selectAll().orderBy('created_at', 'desc').limit(limit).execute();
+  return rows.map((r) => ({
+    leadId: r.lead_id,
+    contactName: r.contact_name,
+    firmName: r.firm_name,
+    sraOrClcNumber: r.sra_or_clc_number ?? undefined,
+    email: r.email,
+    phone: r.phone,
+    coverageArea: r.coverage_area,
+    message: r.message ?? undefined,
+    createdAt: r.created_at as unknown as Date,
+  }));
+}
+
 export async function markQuoteExpired(db: Kysely<Database>, quoteId: string): Promise<void> {
   await db.updateTable('quotes').set({ status: 'expired' }).where('quote_id', '=', quoteId).where('status', '=', 'active').execute();
 }

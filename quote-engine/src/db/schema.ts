@@ -195,6 +195,18 @@ export interface AuditLogTable {
   created_at: Generated<Timestamp>;
 }
 
+export interface FirmRecruitmentLeadsTable {
+  lead_id: Generated<string>;
+  contact_name: string;
+  firm_name: string;
+  sra_or_clc_number: string | null;
+  email: string;
+  phone: string;
+  coverage_area: string;
+  message: string | null;
+  created_at: Generated<Timestamp>;
+}
+
 export interface Database {
   firms: FirmsTable;
   firm_transaction_types: FirmTransactionTypesTable;
@@ -209,4 +221,5 @@ export interface Database {
   quotes: QuotesTable;
   quote_results: QuoteResultsTable;
   sdlt_calculator_leads: SdltCalculatorLeadsTable;
+  firm_recruitment_leads: FirmRecruitmentLeadsTable;
 }
