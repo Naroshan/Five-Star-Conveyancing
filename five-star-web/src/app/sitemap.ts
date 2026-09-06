@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { SERVICE_TYPES } from "@/lib/serviceTypes";
 import { GUIDES } from "@/lib/guides";
 import { ALL_LOCATIONS } from "@/lib/locations";
+import { TRANSACTION_MODIFIERS } from "@/lib/transactionModifiers";
 
 // Only genuinely public, indexable, canonical pages belong here. Admin
 // pages are excluded (see robots.ts) and per-quote results pages are
@@ -66,6 +67,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.4,
     })),
+    ...TRANSACTION_MODIFIERS.flatMap((m) =>
+      ALL_LOCATIONS.map((l) => ({
+        url: `${SITE_URL}/locations/${m.slug}/${l.slug}`,
+        changeFrequency: "monthly" as const,
+        priority: 0.3,
+      }))
+    ),
     {
       url: `${SITE_URL}/faq`,
       changeFrequency: "monthly",

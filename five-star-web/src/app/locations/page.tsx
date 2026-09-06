@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, BORDER, RADIUS, SHADOW, display } from "@/lib/theme";
 import { LOCATIONS, ALL_LOCATIONS } from "@/lib/locations";
+import { TRANSACTION_MODIFIERS } from "@/lib/transactionModifiers";
 import { HomeIcon } from "@/components/icons";
 import contentStyles from "@/styles/contentPage.module.css";
 import styles from "@/styles/tileGrid.module.css";
@@ -38,6 +39,33 @@ export default function LocationsPage() {
             Conveyancing works the same way everywhere in England and Wales — SRA-regulated firms, itemised quotes,
             no obligation. Here&apos;s what to know for {ALL_LOCATIONS.length}+ specific towns and cities.
           </p>
+        </section>
+
+        <section className={contentStyles.ctaSection} style={{ paddingTop: 0 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 700, color: NAVY, margin: "0 0 6px" }}>Browse by what you&apos;re doing</h2>
+          <p style={{ fontSize: 13.5, color: TEXT_MUTED, margin: "0 0 16px", maxWidth: 620 }}>
+            Every one of the {ALL_LOCATIONS.length}+ towns and cities below has its own page for each transaction
+            type — buying, selling, remortgaging, and more — so what you see is specific to what you&apos;re actually
+            doing, not a generic town overview.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {TRANSACTION_MODIFIERS.map((m) => (
+              <details key={m.slug} style={{ background: "white", borderRadius: RADIUS.md, boxShadow: SHADOW.sm, padding: "14px 18px" }}>
+                <summary style={{ cursor: "pointer", fontSize: 14, fontWeight: 700, color: TEXT_HEADING, listStyle: "none" }}>
+                  {m.heading} <span style={{ fontWeight: 500, color: TEXT_MUTED }}>({ALL_LOCATIONS.length} towns)</span>
+                </summary>
+                <div style={{ marginTop: 14, columns: "160px 4", columnGap: 20 }}>
+                  {ALL_LOCATIONS.map((l) => (
+                    <div key={l.slug} style={{ breakInside: "avoid", marginBottom: 4 }}>
+                      <Link href={`/locations/${m.slug}/${l.slug}`} style={{ fontSize: 12.5, color: TEAL, textDecoration: "none" }}>
+                        {l.city}
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              </details>
+            ))}
+          </div>
         </section>
 
         <section className={styles.gridSection}>

@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ALL_LOCATIONS, LOCATION_ICONS, getLocation, getNearbyLocations } from "@/lib/locations";
 import { buildExtendedContent } from "@/lib/locationExtendedContent";
+import { TRANSACTION_MODIFIERS } from "@/lib/transactionModifiers";
 import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, BORDER, GRADIENT_CTA, RADIUS, SHADOW, display } from "@/lib/theme";
 import contentStyles from "@/styles/contentPage.module.css";
 import styles from "@/styles/tileGrid.module.css";
@@ -106,6 +107,31 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
           >
             Get my quote →
           </Link>
+        </section>
+
+        <section className={contentStyles.ctaSection} style={{ paddingTop: 0, maxWidth: 640, margin: "0 auto" }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: TEXT_HEADING, margin: "0 0 10px" }}>
+            What are you doing in {location.city}?
+          </p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {TRANSACTION_MODIFIERS.map((m) => (
+              <Link
+                key={m.slug}
+                href={`/locations/${m.slug}/${slug}`}
+                style={{
+                  fontSize: 13,
+                  color: TEAL,
+                  textDecoration: "none",
+                  border: `1px solid ${BORDER}`,
+                  borderRadius: RADIUS.pill,
+                  padding: "6px 14px",
+                  background: "white",
+                }}
+              >
+                {m.heading}
+              </Link>
+            ))}
+          </div>
         </section>
 
         {nearby.length > 0 && (
