@@ -6,6 +6,8 @@ import type { PublicQuoteResult } from "five-star-conveyancing-quote-engine/api/
 import { CREAM, BORDER, NAVY, TEAL, TEXT_HEADING, TEXT_MUTED, GRADIENT_CTA, ERROR, RADIUS, SHADOW } from "@/lib/theme";
 import { UserIcon, MailIcon, PhoneIcon } from "@/components/icons";
 import { hasAnalyticsConsent } from "@/components/CookieConsent";
+import { useIsRegionRestricted } from "@/lib/useRegionRestriction";
+import { REGION_RESTRICTED_MESSAGE } from "@/lib/regionRestriction";
 
 // Formspree form ID for lead notifications — same form used by the Contact
 // page (ContactForm.tsx) and by quote generation (GetAQuoteForm.tsx); all
@@ -24,11 +26,18 @@ export function ResultsInteractive({ quoteReference, results }: { quoteReference
   const [isSendingEmailQuote, setIsSendingEmailQuote] = useState(false);
   const [emailQuoteError, setEmailQuoteError] = useState<string | null>(null);
 
+  const regionRestricted = useIsRegionRestricted();
+
   // Opens the LiveChat widget already loaded site-wide (see layout.tsx). The
   // widget's own script defines window.LiveChatWidget lazily — on the very
   // rare chance it hasn't finished loading yet, fall back to visible
   // feedback rather than doing nothing.
   function handleSpeakToAdviser() {
+    if (regionRestricted) {
+      setActionMessage(REGION_RESTRICTED_MESSAGE);
+      setTimeout(() => setActionMessage(null), 4000);
+      return;
+    }
     const widget = (window as unknown as { LiveChatWidget?: { call: (method: string) => void } }).LiveChatWidget;
     if (widget) {
       widget.call("maximize");

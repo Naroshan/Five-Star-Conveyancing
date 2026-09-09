@@ -7,6 +7,8 @@ import { TRANSACTION_TYPES, tenureIsFixedLeasehold } from "@/lib/transactionType
 import { toDigits, formatThousands } from "@/lib/formatNumber";
 import { ERROR, NAVY, TEAL, GRADIENT_CTA, TEXT_MUTED, TEXT_HEADING, BORDER, ICON_BADGE_BG, RADIUS, SHADOW } from "@/lib/theme";
 import { SearchPostcodeIcon, ChevronDownIcon } from "./icons";
+import { useIsRegionRestricted } from "@/lib/useRegionRestriction";
+import { RegionRestrictedNotice } from "@/components/RegionRestrictedNotice";
 import styles from "./HeroQuoteWidget.module.css";
 import type { TransactionType } from "five-star-conveyancing-quote-engine/types";
 
@@ -27,6 +29,7 @@ export function HeroQuoteWidget() {
   const typeFieldRef = useRef<HTMLDivElement>(null);
 
   const selectedType = TRANSACTION_TYPES.find((opt) => opt.value === transactionType) ?? TRANSACTION_TYPES[0];
+  const regionRestricted = useIsRegionRestricted();
 
   useEffect(() => {
     if (!typeMenuOpen) return;
@@ -57,6 +60,17 @@ export function HeroQuoteWidget() {
       mortgageInvolved: true,
       flags: {},
     });
+  }
+
+  if (regionRestricted) {
+    return (
+      <div
+        className={styles.card}
+        style={{ borderRadius: RADIUS.lg, padding: 10, background: "white", border: `1px solid ${BORDER}`, boxShadow: SHADOW.md }}
+      >
+        <RegionRestrictedNotice compact />
+      </div>
+    );
   }
 
   return (

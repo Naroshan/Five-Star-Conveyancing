@@ -21,6 +21,8 @@ import {
 } from "@/lib/theme";
 import { CheckCircleIcon } from "@/components/icons";
 import { registerQuoteExitGuard, clearQuoteExitGuard } from "@/lib/quoteExitGuard";
+import { useIsRegionRestricted } from "@/lib/useRegionRestriction";
+import { RegionRestrictedNotice } from "@/components/RegionRestrictedNotice";
 import styles from "./GetAQuoteForm.module.css";
 import type { TransactionType } from "five-star-conveyancing-quote-engine/types";
 
@@ -85,6 +87,7 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
   const availableFlags = flagOptionsFor(transactionType);
   const tenureFixed = tenureIsFixedLeasehold(transactionType);
   const currentStep: StepName = STEPS[stepIndex];
+  const regionRestricted = useIsRegionRestricted();
 
   function resetToStart() {
     setStepIndex(0);
@@ -153,6 +156,17 @@ export function GetAQuoteForm({ initialTransactionType }: { initialTransactionTy
       mortgageInvolved: mortgageFlag,
       flags: submittedFlags,
     }, recoveryEmail.trim() || undefined);
+  }
+
+  if (regionRestricted) {
+    return (
+      <div style={{ background: "white", borderRadius: RADIUS.lg, boxShadow: SHADOW.lg, overflow: "hidden" }}>
+        <div style={{ height: 6, background: GRADIENT_CTA }} />
+        <div style={{ padding: "20px 24px 26px" }}>
+          <RegionRestrictedNotice />
+        </div>
+      </div>
+    );
   }
 
   return (

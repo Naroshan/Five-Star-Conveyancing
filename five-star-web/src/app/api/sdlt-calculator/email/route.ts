@@ -7,6 +7,7 @@ import { calculateSdlt, type BuyerType, type Jurisdiction } from "@/lib/sdlt";
 import { sendEmail } from "@/lib/email";
 import { db } from "@/lib/db";
 import { saveSdltCalculatorLead } from "five-star-conveyancing-quote-engine/db/repository";
+import { isRegionRestricted, REGION_RESTRICTED_MESSAGE } from "@/lib/regionRestriction";
 
 const bodySchema = z.object({
   email: z.string().email(),
@@ -54,6 +55,10 @@ function buildEmailHtml(price: number, jurisdiction: Jurisdiction, buyerType: Bu
 }
 
 export async function POST(request: Request): Promise<Response> {
+  if (isRegionRestricted(request)) {
+    return Response.json({ error: { message: REGION_RESTRICTED_MESSAGE } }, { status: 403 });
+  }
+
   let body: z.infer<typeof bodySchema>;
   try {
     body = bodySchema.parse(await request.json());

@@ -1,3 +1,6 @@
+"use client";
+
+import { useIsRegionRestricted } from "@/lib/useRegionRestriction";
 import { WhatsAppIcon } from "./icons";
 
 const WHATSAPP_GREEN = "#25D366";
@@ -8,6 +11,9 @@ const PREFILLED_MESSAGE = "Hi, I'd like some help with my conveyancing quote.";
 // Fixed bottom-left — the LiveChat widget docks bottom-right, so this sits
 // on the opposite corner rather than stacking above it.
 export function WhatsAppFloatButton() {
+  const regionRestricted = useIsRegionRestricted();
+  if (regionRestricted) return null;
+
   return (
     <a
       href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(PREFILLED_MESSAGE)}`}

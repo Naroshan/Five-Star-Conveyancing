@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { loadQuoteResultForFirm } from "@/lib/pdf/loadQuoteResult";
 import { generateQuotePdf } from "@/lib/pdf/generateQuotePdf";
 import { sendEmail } from "@/lib/email";
+import { isRegionRestricted, REGION_RESTRICTED_MESSAGE } from "@/lib/regionRestriction";
 
 // Confirmed with the client as the inbox to receive instructed-firm quote
 // PDFs — not a secret, so a plain constant (same convention as
@@ -15,6 +16,10 @@ export async function POST(
   { params }: { params: Promise<{ reference: string }> }
 ): Promise<Response> {
   const { reference } = await params;
+
+  if (isRegionRestricted(request)) {
+    return Response.json({ error: { message: REGION_RESTRICTED_MESSAGE } }, { status: 403 });
+  }
 
   // selectFirmHandler consumes the request body via request.json() — clone
   // it first so we can also read firmId here without racing that call.

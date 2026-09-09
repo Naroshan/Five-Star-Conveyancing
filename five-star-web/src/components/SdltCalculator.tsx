@@ -5,6 +5,8 @@ import { calculateSdlt, type BuyerType, type Jurisdiction, type SdltCalculationR
 import { toDigits, formatThousands } from "@/lib/formatNumber";
 import { NAVY, TEAL, ERROR, TEXT_HEADING, TEXT_MUTED, BORDER, ICON_BADGE_BG, RADIUS, SHADOW, GRADIENT_CTA } from "@/lib/theme";
 import { MailIcon, ChevronDownIcon, WhatsAppIcon } from "@/components/icons";
+import { useIsRegionRestricted } from "@/lib/useRegionRestriction";
+import { RegionRestrictedNotice } from "@/components/RegionRestrictedNotice";
 
 const WHATSAPP_GREEN = "#25D366";
 
@@ -174,6 +176,7 @@ export function SdltCalculator({ compact = false }: { compact?: boolean }) {
   const numericPrice = Number(price) || 0;
   const result = useMemo(() => calculateSdlt(numericPrice, jurisdiction, buyerType), [numericPrice, jurisdiction, buyerType]);
   const taxName = jurisdiction === "wales" ? "Land Transaction Tax" : "Stamp Duty Land Tax";
+  const regionRestricted = useIsRegionRestricted();
 
   function handleWhatsApp() {
     const text = buildShareText(numericPrice, jurisdiction, buyerType, result);
@@ -297,7 +300,9 @@ export function SdltCalculator({ compact = false }: { compact?: boolean }) {
         )}
       </div>
 
-      {numericPrice > 0 && (
+      {numericPrice > 0 && regionRestricted && <RegionRestrictedNotice compact />}
+
+      {numericPrice > 0 && !regionRestricted && (
         <>
           {!showEmailForm && !emailSent && (
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>

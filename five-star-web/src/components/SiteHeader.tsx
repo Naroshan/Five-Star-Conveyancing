@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { NAVY, TEAL, TEXT_HEADING, GRADIENT_CTA, GRADIENT_TEAL, RADIUS, SHADOW, BORDER } from "@/lib/theme";
 import { interceptQuoteLinkClick, confirmQuoteExit } from "@/lib/quoteExitGuard";
+import { useIsRegionRestricted } from "@/lib/useRegionRestriction";
 import { PhoneIcon } from "./icons";
 import styles from "./SiteHeader.module.css";
 
@@ -29,6 +30,7 @@ const NAV_LINKS = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const regionRestricted = useIsRegionRestricted();
 
   useEffect(() => {
     if (!open) return;
@@ -127,7 +129,7 @@ export function SiteHeader() {
             {link.label}
           </Link>
         ))}
-        {PHONE_NUMBER_READY && (
+        {PHONE_NUMBER_READY && !regionRestricted && (
           <a
             href={`tel:${PHONE_NUMBER_TEL}`}
             style={{

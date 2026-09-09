@@ -9,12 +9,17 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { getQuoteByReference, setRecoveryEmailIfMissing } from "five-star-conveyancing-quote-engine/db/repository";
 import { sendEmail } from "@/lib/email";
+import { isRegionRestricted, REGION_RESTRICTED_MESSAGE } from "@/lib/regionRestriction";
 
 const bodySchema = z.object({ email: z.string().email() });
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fivestarconveyancing.co.uk";
 
 export async function POST(request: Request, { params }: { params: Promise<{ reference: string }> }): Promise<Response> {
   const { reference } = await params;
+
+  if (isRegionRestricted(request)) {
+    return Response.json({ error: { message: REGION_RESTRICTED_MESSAGE } }, { status: 403 });
+  }
 
   let body: z.infer<typeof bodySchema>;
   try {
