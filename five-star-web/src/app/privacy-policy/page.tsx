@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { LegalPageBody, type LegalSection } from "@/components/LegalPageBody";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/privacy-policy",
   title: "Privacy Policy — Five Star Conveyancing",
   description: "How Five Star Conveyancing collects, uses, and protects your personal information.",
-};
+});
 
 const SECTIONS: LegalSection[] = [
   {

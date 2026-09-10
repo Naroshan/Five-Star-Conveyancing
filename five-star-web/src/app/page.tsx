@@ -25,6 +25,7 @@ import {
   display,
 } from "@/lib/theme";
 import { ShieldCheckIcon, PoundCoinIcon, CheckCircleIcon, HomeIcon, SwapIcon, RefreshIcon } from "@/components/icons";
+import { pageMetadata } from "@/lib/seo";
 import styles from "./page.module.css";
 
 const HERO_TILES = [
@@ -66,11 +67,12 @@ const GUIDE_COLUMNS = [
   },
 ];
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "",
   title: "Compare Conveyancing Quotes | Five Star Conveyancing",
   description:
     "Compare itemised conveyancing quotes from SRA & CLC regulated solicitors across England and Wales — legal fee, VAT and disbursements shown separately, free and with no obligation.",
-};
+});
 
 export default function HomePage() {
   return (

@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { LegalPageBody, type LegalSection } from "@/components/LegalPageBody";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/complaints-procedure",
   title: "Complaints Procedure — Five Star Conveyancing",
   description: "How to raise a complaint about the comparison service, or about a firm you instructed through it.",
-};
+});
 
 const SECTIONS: LegalSection[] = [
   {

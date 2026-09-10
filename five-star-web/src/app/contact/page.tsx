@@ -4,12 +4,14 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ContactForm } from "@/components/ContactForm";
 import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, GRADIENT_CTA, RADIUS, SHADOW, display } from "@/lib/theme";
+import { pageMetadata } from "@/lib/seo";
 import contentStyles from "@/styles/contentPage.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/contact",
   title: "Contact — Five Star Conveyancing",
   description: "How to get in touch, and what happens after you select a firm through the comparison.",
-};
+});
 
 export default function ContactPage() {
   return (

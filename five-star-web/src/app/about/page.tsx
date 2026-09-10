@@ -4,13 +4,15 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, GRADIENT_CTA, GRADIENT_TEAL, ACCENT_BOLD, ICON_BADGE_BG_GOLD, RADIUS, SHADOW, display } from "@/lib/theme";
 import { ShieldCheckIcon, PoundCoinIcon, CheckCircleIcon, StarIcon } from "@/components/icons";
+import { pageMetadata } from "@/lib/seo";
 import contentStyles from "@/styles/contentPage.module.css";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/about",
   title: "About — Five Star Conveyancing",
   description: "Why Five Star Conveyancing shows itemised fees from SRA-regulated firms, rather than one bundled quote.",
-};
+});
 
 const PRINCIPLES = [
   { icon: PoundCoinIcon, title: "Itemised, not bundled", body: "Legal fee, VAT and disbursements shown separately on every quote, so you can see exactly what you're paying for and to whom — not a single number that hides how it's actually made up, or that's cheaper on paper only because it excludes costs a competitor included." },

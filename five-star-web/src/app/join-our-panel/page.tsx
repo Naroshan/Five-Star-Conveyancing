@@ -4,15 +4,14 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { FirmRecruitmentForm } from "@/components/FirmRecruitmentForm";
 import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, RADIUS, SHADOW, display } from "@/lib/theme";
+import { pageMetadata } from "@/lib/seo";
 import contentStyles from "@/styles/contentPage.module.css";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fivestarconveyancing.co.uk";
-
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/join-our-panel",
   title: "Join Our Panel — Five Star Conveyancing",
   description: "Apply to join the Five Star Conveyancing comparison panel — for SRA and CLC regulated conveyancing firms in England and Wales.",
-  alternates: { canonical: `${SITE_URL}/join-our-panel` },
-};
+});
 
 const STEPS = [
   {

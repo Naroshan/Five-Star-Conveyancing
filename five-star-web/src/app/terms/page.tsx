@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { LegalPageBody, type LegalSection } from "@/components/LegalPageBody";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/terms",
   title: "Terms & Conditions — Five Star Conveyancing",
   description: "The terms that apply to using the Five Star Conveyancing comparison service.",
-};
+});
 
 const SECTIONS: LegalSection[] = [
   {

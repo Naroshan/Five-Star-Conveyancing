@@ -4,12 +4,14 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { NAVY, TEAL, GOLD, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, GRADIENT_CTA, RADIUS, SHADOW, ICON_BADGE_BG, ICON_BADGE_BG_ACCENT, ICON_BADGE_BG_GOLD, display } from "@/lib/theme";
 import { PoundCoinIcon, ReceiptIcon, ClockIcon, DocumentExtendIcon } from "@/components/icons";
+import { pageMetadata } from "@/lib/seo";
 import contentStyles from "@/styles/contentPage.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/fees-explained",
   title: "Fees explained — Five Star Conveyancing",
   description: "What legal fees, VAT, and disbursements actually mean in a conveyancing quote, and why we show them separately.",
-};
+});
 
 const TERMS = [
   {

@@ -4,13 +4,15 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, GRADIENT_CTA, TEAL, RADIUS, SHADOW, display } from "@/lib/theme";
 import { SERVICE_TYPES } from "@/lib/serviceTypes";
+import { pageMetadata } from "@/lib/seo";
 import contentStyles from "@/styles/contentPage.module.css";
 import styles from "@/styles/tileGrid.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/services",
   title: "Services — Five Star Conveyancing",
   description: "Conveyancing transaction types we compare quotes for: sale, purchase, remortgage, transfer of equity, and lease extension.",
-};
+});
 
 export default function ServicesPage() {
   return (

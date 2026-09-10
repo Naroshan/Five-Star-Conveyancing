@@ -6,13 +6,15 @@ import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, BORDER, RADIUS,
 import { LOCATIONS, ALL_LOCATIONS } from "@/lib/locations";
 import { TRANSACTION_MODIFIERS } from "@/lib/transactionModifiers";
 import { HomeIcon } from "@/components/icons";
+import { pageMetadata } from "@/lib/seo";
 import contentStyles from "@/styles/contentPage.module.css";
 import styles from "@/styles/tileGrid.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/locations",
   title: "Locations — Five Star Conveyancing",
   description: "Compare conveyancing quotes wherever you're buying or selling in England and Wales.",
-};
+});
 
 export default function LocationsPage() {
   const byCounty = new Map<string, typeof ALL_LOCATIONS>();

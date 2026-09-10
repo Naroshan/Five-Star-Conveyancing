@@ -4,13 +4,15 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { NAVY, CREAM, TEAL, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, GRADIENT_CTA, GRADIENT_TEAL, RADIUS, SHADOW, display } from "@/lib/theme";
 import { HomeIcon, ClockIcon, CheckCircleIcon } from "@/components/icons";
+import { pageMetadata } from "@/lib/seo";
 import contentStyles from "@/styles/contentPage.module.css";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/how-it-works",
   title: "How it works — Five Star Conveyancing",
   description: "How our conveyancing comparison works: answer a few questions, see a real itemised comparison, choose a firm.",
-};
+});
 
 const STEPS = [
   {

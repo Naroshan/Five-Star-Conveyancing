@@ -4,12 +4,14 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { NAVY, TEAL, CREAM, TEXT_BODY, GRADIENT_CTA, RADIUS, SHADOW, display } from "@/lib/theme";
 import { FaqAccordion } from "@/components/FaqAccordion";
+import { pageMetadata } from "@/lib/seo";
 import contentStyles from "@/styles/contentPage.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/faq",
   title: "FAQ — Five Star Conveyancing",
   description: "Common questions about comparing conveyancing quotes with Five Star Conveyancing.",
-};
+});
 
 const FAQS = [
   {

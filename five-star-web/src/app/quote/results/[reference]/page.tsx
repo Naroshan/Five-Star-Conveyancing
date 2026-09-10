@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getQuoteHandler } from "five-star-conveyancing-quote-engine/api/getQuote";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -11,6 +12,15 @@ import { NAVY, CREAM, BORDER, TEXT_BODY, ERROR, RADIUS, display } from "@/lib/th
 // connection is available). Force dynamic rendering to keep DB access at
 // request time.
 export const dynamic = "force-dynamic";
+
+// Per-visitor, non-canonical, expiring content — deliberately excluded from
+// sitemap.ts already, but that alone doesn't stop Google from indexing a URL
+// it discovers some other way (a shared link, a referrer header). This is
+// the actual instruction not to.
+export const metadata: Metadata = {
+  title: "Your comparison — Five Star Conveyancing",
+  robots: { index: false, follow: false },
+};
 
 // Server Component: calls the same tested handler used by GET /api/quotes/:reference
 // directly (a function call, not a self-fetch over HTTP — this app already runs

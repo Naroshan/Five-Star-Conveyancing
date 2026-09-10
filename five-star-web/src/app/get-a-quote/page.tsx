@@ -3,13 +3,18 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { GetAQuoteForm } from "@/components/GetAQuoteForm";
 import { CREAM } from "@/lib/theme";
+import { pageMetadata } from "@/lib/seo";
 import type { TransactionType } from "five-star-conveyancing-quote-engine/types";
 
-export const metadata: Metadata = {
+// Canonical is the bare path regardless of the ?type= query variant a
+// visitor arrived with (see below) — those are the same page/content, not
+// separate indexable URLs, so they should consolidate to one canonical.
+export const metadata: Metadata = pageMetadata({
+  path: "/get-a-quote",
   title: "Get a Quote | Five Star Conveyancing",
   description:
     "Answer a few questions about your move and compare itemised conveyancing quotes from SRA & CLC regulated solicitors — free, with no obligation.",
-};
+});
 
 // Service pages link here with ?type=<slug> (slugs are hyphenated, e.g.
 // "sale-and-purchase"; TransactionType values are snake_case) so visitors

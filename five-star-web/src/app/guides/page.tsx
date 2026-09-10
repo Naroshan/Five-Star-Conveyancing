@@ -4,13 +4,15 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, RADIUS, SHADOW, display } from "@/lib/theme";
 import { GUIDES } from "@/lib/guides";
+import { pageMetadata } from "@/lib/seo";
 import contentStyles from "@/styles/contentPage.module.css";
 import styles from "@/styles/tileGrid.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/guides",
   title: "Guides — Five Star Conveyancing",
   description: "Plain-English guides to conveyancing: what's involved, leasehold vs freehold, Stamp Duty Land Tax, and typical timelines.",
-};
+});
 
 export default function GuidesPage() {
   return (

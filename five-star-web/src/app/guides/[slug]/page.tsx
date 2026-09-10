@@ -5,7 +5,10 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { GUIDES, getGuide } from "@/lib/guides";
 import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, GRADIENT_CTA, RADIUS, SHADOW, display } from "@/lib/theme";
+import { pageMetadata } from "@/lib/seo";
 import contentStyles from "@/styles/contentPage.module.css";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fivestarconveyancing.co.uk";
 
 export function generateStaticParams() {
   return GUIDES.map((g) => ({ slug: g.slug }));
@@ -15,10 +18,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const guide = getGuide(slug);
   if (!guide) return {};
-  return {
+  return pageMetadata({
+    path: `/guides/${slug}`,
     title: `${guide.title} — Five Star Conveyancing`,
     description: guide.description,
-  };
+  });
 }
 
 export default async function GuidePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -26,8 +30,34 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
   const guide = getGuide(slug);
   if (!guide) notFound();
 
+  const pageUrl = `${SITE_URL}/guides/${slug}`;
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Guides", item: `${SITE_URL}/guides` },
+        { "@type": "ListItem", position: 2, name: guide.title, item: pageUrl },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: guide.title,
+      description: guide.description,
+      author: { "@type": "Organization", name: "Five Star Conveyancing" },
+      publisher: {
+        "@type": "Organization",
+        name: "Five Star Conveyancing",
+        logo: { "@type": "ImageObject", url: `${SITE_URL}/icon.png` },
+      },
+      mainEntityOfPage: pageUrl,
+    },
+  ];
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SiteHeader />
       <div style={{ background: CREAM }}>
         <section className={contentStyles.hero}>

@@ -6,7 +6,10 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SERVICE_TYPES, getServiceType } from "@/lib/serviceTypes";
 import { CheckCircleIcon } from "@/components/icons";
 import { NAVY, CREAM, TEXT_HEADING, TEXT_BODY, TEXT_MUTED, TEAL, GRADIENT_CTA, RADIUS, SHADOW, display } from "@/lib/theme";
+import { pageMetadata } from "@/lib/seo";
 import contentStyles from "@/styles/contentPage.module.css";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fivestarconveyancing.co.uk";
 
 export function generateStaticParams() {
   return SERVICE_TYPES.map((s) => ({ slug: s.slug }));
@@ -16,10 +19,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const service = getServiceType(slug);
   if (!service) return {};
-  return {
+  return pageMetadata({
+    path: `/services/${slug}`,
     title: `${service.title} conveyancing quotes — Five Star Conveyancing`,
     description: `Compare itemised ${service.title.toLowerCase()} conveyancing quotes from SRA-regulated firms. ${service.short}`,
-  };
+  });
 }
 
 export default async function ServiceTypePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -28,9 +32,37 @@ export default async function ServiceTypePage({ params }: { params: Promise<{ sl
   if (!service) notFound();
 
   const others = SERVICE_TYPES.filter((s) => s.slug !== slug);
+  const pageUrl = `${SITE_URL}/services/${slug}`;
+
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Services", item: `${SITE_URL}/services` },
+        { "@type": "ListItem", position: 2, name: service.title, item: pageUrl },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: `${service.title} conveyancing`,
+      serviceType: service.title,
+      // England & Wales only — not the whole UK, per the site's actual
+      // service area (geo-block.ts restricts conversion to these two).
+      areaServed: [
+        { "@type": "AdministrativeArea", name: "England" },
+        { "@type": "AdministrativeArea", name: "Wales" },
+      ],
+      provider: { "@type": "Organization", name: "Five Star Conveyancing" },
+      description: service.intro,
+      url: pageUrl,
+    },
+  ];
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SiteHeader />
       <div style={{ background: CREAM }}>
         <section className={contentStyles.hero}>

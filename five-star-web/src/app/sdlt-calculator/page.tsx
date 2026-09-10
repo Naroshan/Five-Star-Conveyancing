@@ -4,13 +4,15 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SdltCalculator } from "@/components/SdltCalculator";
 import { NAVY, TEAL, CREAM, TEXT_BODY, TEXT_MUTED, BORDER, GRADIENT_CTA, RADIUS, SHADOW, display } from "@/lib/theme";
+import { pageMetadata } from "@/lib/seo";
 import contentStyles from "@/styles/contentPage.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/sdlt-calculator",
   title: "Stamp Duty & Land Transaction Tax calculator — Five Star Conveyancing",
   description:
     "Work out roughly how much Stamp Duty Land Tax (England) or Land Transaction Tax (Wales) you'll pay on a property, using current published HMRC and Welsh Revenue Authority rates.",
-};
+});
 
 export default function SdltCalculatorPage() {
   return (
